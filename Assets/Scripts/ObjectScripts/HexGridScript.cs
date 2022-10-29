@@ -10,6 +10,7 @@ namespace DefaultNamespace
         private readonly string _hexPath = "prefabs/HexTile";
         private int _row = 1;
         private int _col = 1;
+        
         private float _tileBaseSideLength;
         private List<HexTileScript> _tileScripts = new();
 
@@ -20,27 +21,35 @@ namespace DefaultNamespace
         }
 
 
-        /** This function sets the size to a given field in world space
-         * importantly, you give this the limits, and it fits the tiles accordingly
+
+
+        /** Starts from top left, returns world coordinates
+         * 
          */
-        public void SetSize(Vector2 centre, float width, float height)
+        public Vector2 TwoCoordsToWorld(int r, int c, float smallScale)
         {
-            var baseWidth = HexTileScript.Width * _col;
-            var baseHeight = HexTileScript.Height * .375f * (_row-1) + HexTileScript.SideLength*.5f;
-
-            
-
-            var widthScale = width / baseWidth;
-            var heightScale = height / baseHeight;
-            var smallScale = Math.Min(widthScale, heightScale);
-            
-            var v = new Vector3(smallScale, smallScale,1f);
-
-            gameObject.transform.localScale = v;
-            gameObject.transform.position = new Vector3(centre.x, centre.y, -1f);
+             //_tileScripts.fi
 
 
+             var dw = (c - 1f + 0.5f*((r+1)%2)) * HexTileScript.Width *  smallScale;
+             var dh = (r - 1) * HexTileScript.Height* .375f * smallScale;
+             
+             
+             var topOffset = (_row-1)/2 *  HexTileScript.Height* .375f * smallScale;
+             var leftOffset = -((_col - 1) / 2) * HexTileScript.Width * smallScale;
+
+             //var  p =_tileScripts[c - 1 + (r - 1) * _row + r / 2];
+
+
+             return new Vector2(leftOffset+dw,topOffset-dh);
+
+             //return p.transform.position;
         }
+        
+        
+
+
+        
         
 
         public void InitializeGrid(int row, int col)
@@ -64,7 +73,7 @@ namespace DefaultNamespace
             var diffY = h * .375f;
             var diffX = w;
 
-            for (int i = 0; i < _row; i++)
+            for (int i = _row-1; i >= 0; i--)
             {
                 var valY = (i-(_row-1)*.5f) * diffY;
                 var offset = (i % 2) * w *.5f;
@@ -75,8 +84,10 @@ namespace DefaultNamespace
                     var q = Instantiate(res,this.gameObject.transform);
                     q.transform.position = new Vector3(-offset+valX, valY, 0f);
                     var hts = q.GetComponent<HexTileScript>();
+                    hts.R = i + 1;
+                    hts.C = j + 1 - i%2;
                     _tileScripts.Add(hts);
-                    hts.Paint(i%2==0 ? new Color(.3f,.2f,.2f) : new Color(.2f,.2f,.3f));
+                    hts.Paint(i%2==0 ? new Color(.7f,.6f,.6f) : new Color(.6f,.6f,.7f));
                     
 
                 }
@@ -90,9 +101,14 @@ namespace DefaultNamespace
         
 
 
-        public static HexGridScript Instantiate()
+        public static HexGridScript Instantiate(Transform parent = null)
         {
             var a = new GameObject("hex grid");
+            if (parent is not null)
+            {
+                a.transform.parent = (Transform)parent;
+            }
+            
             var n = a.AddComponent<HexGridScript>();
             return n;
 
