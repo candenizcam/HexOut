@@ -40,6 +40,7 @@ namespace DefaultNamespace.Punity
         {
             MainCamera = Camera.main;
             MainCamera.orthographicSize = Constants.WorldHeight;
+            MainCamera.backgroundColor = Color.black;
         }
 
         protected virtual void InitializeMain(){} // this function must be overriden in the main instead of unity awake
