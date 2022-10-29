@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace DefaultNamespace.GameData
 {
@@ -19,7 +20,7 @@ namespace DefaultNamespace.GameData
             FirstRow = r;
             FirstCol = c;
             Length = length;
-            Angle = angle;
+            Angle = angle%6;
 
 
 
@@ -40,29 +41,38 @@ namespace DefaultNamespace.GameData
 
         public (int LastRow, int LastCol) LastPoint()
         {
-            var a = Angle % 6;
-            var l = Length - 1;
+            
+
+            return PointFromFirst(Length - 1);
+        }
+        
+        public (int LastRow, int LastCol) PointFromFirst(int len)
+        {
+            var a = len<0 ?  (Angle + 3) % 6:Angle;
+            var l = (int) Math.Abs(len);
+            
             switch (a)
             {
                 case 0:
-                    return (FirstRow-l, FirstCol+l / 2 + (FirstRow - 1) % 2);
+                    return (FirstRow-l, FirstCol + (l+(FirstRow+1)%2) / 2);
                 case 1:
                     return (FirstRow, FirstCol+l);
                 case 2:
-                    return (FirstRow+l, FirstCol+l / 2 + (FirstRow -1) % 2);
+                    return (FirstRow+l, FirstCol + (l+(FirstRow+1)%2) / 2);
                 case 3:
-                    return (FirstRow+l, FirstCol-l / 2 - FirstRow  % 2);
+                    return (FirstRow+l, FirstCol- (l+(FirstRow)%2 )/2);
                 case 4:
                     return (FirstRow, FirstCol-l);
                 default:
-                    return (FirstRow-l, FirstCol-l / 2 - (FirstRow ) % 2);
+                    return (FirstRow-l, FirstCol- (l+(FirstRow)%2 )/2);
             }
         }
+        
+        
 
         public float Degrees()
         {
-            var a = Angle % 6;
-            switch (a)
+            switch (Angle)
             {
                 case 0:
                     return 60f;
@@ -76,6 +86,25 @@ namespace DefaultNamespace.GameData
                     return 0f;
                 default:
                     return 120f;
+            }
+        }
+
+        public Vector2 UnitDirection()
+        {
+            switch (Angle)
+            {
+                case 0:
+                    return new Vector2(.366f,.633f);
+                case 1:
+                    return new Vector2(1f,0f);
+                case 2:
+                    return new Vector2(.366f,-.633f);
+                case 3:
+                    return new Vector2(-.366f,-.633f);
+                case 4:
+                    return new Vector2(-1f,0f);
+                default:
+                    return new Vector2(-.366f,.633f);
             }
         }
         

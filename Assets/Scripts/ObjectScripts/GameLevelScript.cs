@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
 using UnityEngine;
@@ -13,13 +14,15 @@ namespace DefaultNamespace
         private float _smallScale = 1f;
         public float SmallScale => _smallScale;
         private Vector2 _gridCentre = new Vector2();
-        private int _col = 5;
-        private int _row = 5;
+        private int _col = 7;
+        private int _row = 7;
+        private Vector2 _startPos = new Vector2(-1f,-1f);
+        
         
         public void SetGrid(Camera c)
         {
             _grid = HexGridScript.Instantiate(gameObject.transform);
-            _grid.InitializeGrid(5,5);
+            _grid.InitializeGrid(_row,_col);
             
             SetSize(new Vector2(0f,0f), 
                 c.orthographicSize*c.aspect*2f,
@@ -63,23 +66,32 @@ namespace DefaultNamespace
             {
                 var res = Resources.Load<GameObject>(capsuleData.Path());
                 var q = Instantiate(res,gameObject.transform);
+                var cs = q.GetComponent<CapsuleScript>();
 
-                var lp = capsuleData.LastPoint();
-                var v1 = _grid.TwoCoordsToWorld(capsuleData.FirstRow,capsuleData.FirstCol,_smallScale);
-                var v2 = _grid.TwoCoordsToWorld(lp.LastRow,lp.LastCol,_smallScale);
-
-                var v3 = v1 * 0.5f + v2 * 0.5f;
+                var v3 = CapsulePosition(capsuleData);
+                
+                
                 q.transform.position = new Vector3(v3.x, v3.y, -2f);
                 q.transform.rotation = Quaternion.Euler(0f,0f,capsuleData.Degrees());
-                var cs = q.GetComponent<CapsuleScript>();
+                
                 cs.Paint(new Color((float)r.NextDouble(),(float)r.NextDouble(),(float)r.NextDouble()));
+                cs.ThisCapsuleData = capsuleData;
                 _capsules.Add(cs);
             }
             
             
             
         }
-        
+
+
+        public Vector3 CapsulePosition(CapsuleData capsuleData)
+        {
+            var lp = capsuleData.LastPoint();
+            var v1 = _grid.TwoCoordsToWorld(capsuleData.FirstRow,capsuleData.FirstCol,_smallScale);
+            var v2 = _grid.TwoCoordsToWorld(lp.LastRow,lp.LastCol,_smallScale);
+
+            return  v1 * 0.5f + v2 * 0.5f;
+        }
         
         
         
@@ -89,10 +101,115 @@ namespace DefaultNamespace
             var a = new GameObject("game level");
             var n = a.AddComponent<GameLevelScript>();
             return n;
+        }
 
 
+        public void TouchBegan(Vector2 startPos)
+        {
+            _startPos = startPos;
+
+            var touched = _capsules.Where(x => x.Touching(startPos));
+            if (touched.Any())
+            {
+                var f = touched.First();
+                
+            }
+            
+            
 
         }
+
+        public void TouchEnded(Vector2 endPos)
+        {
+            var touched = _capsules.Where(x => x.Touching(_startPos));
+            if (touched.Any())
+            {
+                var f = touched.First();
+                var fu = f.UnitVector;
+                //var fa = f.Atan2();
+                var delta = endPos - _startPos;
+                var du = delta.normalized;
+
+
+                var dotProd = fu.x * du.x + fu.y * du.y;
+
+                if (Math.Abs(dotProd) > .2f)
+                {
+                    MoveCapsule(f,dotProd>0);
+                }
+                
+                //var angle = Math.Atan2(delta.x, delta.y);
+                
+                //Debug.Log($"diff {fa -angle}");
+                
+            }
+
+            
+            
+            
+            
+            _startPos = new Vector2(-1f, -1f);
+        }
+
+
+        private void MoveCapsule(CapsuleScript cs, bool forward)
+        {
+            CapsuleData oldData = null;
+            for (int i = 1; i < 100; i++)
+            {
+                //var target = cs.ThisCapsuleData.PointFromFirst(forward ? i+thisLength: -i);
+
+                CapsuleData targetData;
+                (int LastRow, int LastCol) target; 
+                if (forward)
+                {
+                    targetData = cs.TranslateData(i);
+                    target = targetData.LastPoint();   
+                }
+                else
+                {
+                    targetData = cs.TranslateData(-i);
+                    target = (targetData.FirstRow, targetData.FirstCol);
+                }
+
+                
+                if (target.LastCol > _col || target.LastCol < 1 || target.LastRow < 1 || target.LastRow > _row)
+                {
+                    if (oldData is not null)
+                    {
+                        var nd = oldData;
+                        var v3 = CapsulePosition(nd);
+                        cs.gameObject.transform.position = new Vector3(v3.x, v3.y, -2f);
+                        cs.ThisCapsuleData = oldData;
+                        
+                    }
+                    break;
+                    
+                }
+                
+                var targetWorld = _grid.TwoCoordsToWorld(target.LastRow, target.LastCol,_smallScale);
+                var collision = _capsules.Any(x => x.Touching(targetWorld)&&x!=cs);
+                if (collision)
+                {
+                    if (oldData is not null)
+                    {
+                        var nd = oldData;
+                        var v3 = CapsulePosition(nd);
+                        cs.gameObject.transform.position = new Vector3(v3.x, v3.y, -2f);
+                        cs.ThisCapsuleData = oldData;
+                        
+                    }
+                    break;
+                    
+                }
+
+                oldData = targetData;
+
+            }
+        }
+        
+        
+        
         
     }
 }
