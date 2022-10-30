@@ -8,6 +8,12 @@ namespace DefaultNamespace
     public class TestMainScript : MainScript
     {
         private GameLevelScript _activeLevel;
+        public int testRow;
+        public int testCol;
+        public int testObstacleSeed;
+        public int testCapsuleSeed;
+        public int testCapsuleNumber;
+        public int testObstacleNumber;
         
         
         protected override void InitializeMain()
@@ -24,13 +30,15 @@ namespace DefaultNamespace
             MainCamera.backgroundColor = Color.white;
 
 
-            var r = 7;
-            var c = 5;
+            var r = testRow;
+            var c = testCol;
+            var capsuleSeed = testCapsuleSeed;
+            var obstacleSeed = testObstacleSeed;
+            var capsuleNumber = testCapsuleNumber;
+            var obstacleNumber = testObstacleNumber;
             
             
-            
-            
-            var d = LevelGenerator.GenerateFrameLevel(2003,2001,r,c,3,10);
+            var d = LevelGenerator.GenerateFrameLevel(capsuleSeed,obstacleSeed,r,c,capsuleNumber,obstacleNumber);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
             
