@@ -26,6 +26,7 @@ namespace DefaultNamespace
             
             
             _activeLevel.SetGrid(MainCamera);
+            /*
             _activeLevel.SetCapsules(new CapsuleData[]
             {
                 new CapsuleData(2,3,2,1),
@@ -34,6 +35,8 @@ namespace DefaultNamespace
                 new CapsuleData(4,3,2,2),
                 //new CapsuleData(4,3,2,1),
             });
+            */
+            _activeLevel.ProcedurallyGenerate(2001,5);
 
 
         }

@@ -15,7 +15,7 @@ namespace DefaultNamespace
         public float SmallScale => _smallScale;
         private Vector2 _gridCentre = new Vector2();
         private int _col = 7;
-        private int _row = 7;
+        private int _row = 9;
         private Vector2 _startPos = new Vector2(-1f,-1f);
         
         
@@ -60,27 +60,73 @@ namespace DefaultNamespace
         public void SetCapsules(CapsuleData[] capsuleDataList)
         {
             var r = new System.Random();
-            
-            
             foreach (var capsuleData in capsuleDataList)
             {
-                var res = Resources.Load<GameObject>(capsuleData.Path());
-                var q = Instantiate(res,gameObject.transform);
-                var cs = q.GetComponent<CapsuleScript>();
+                SetCapsule(capsuleData,new Color((float)r.NextDouble(),(float)r.NextDouble(),(float)r.NextDouble()));
+            }
+        }
 
-                var v3 = CapsulePosition(capsuleData);
-                
-                
-                q.transform.position = new Vector3(v3.x, v3.y, -2f);
-                q.transform.rotation = Quaternion.Euler(0f,0f,capsuleData.Degrees());
-                
-                cs.Paint(new Color((float)r.NextDouble(),(float)r.NextDouble(),(float)r.NextDouble()));
-                cs.ThisCapsuleData = capsuleData;
-                _capsules.Add(cs);
+        public void ProcedurallyGenerate(int seed, int sprayNumber )
+        {
+            var procedural = new System.Random(seed);
+
+            var capsules = new List<CapsuleData>();
+
+            var rList = Enumerable.Range(3, _row-4).ToList();
+            var cList = Enumerable.Range(3, _col-4).ToList();
+            var aList = Enumerable.Range(0, 6).ToList();
+            var lList = Enumerable.Repeat(2, sprayNumber).ToList(); // this will make sure procedural generator works with multiple length types,
+                                                                    // lList can be replaced by something else in the future
+            
+            
+            for(int i=0;i<100;i++)
+            {
+                var r = rList.OrderBy(a => procedural.Next()).First();
+                var c = cList.OrderBy(a => procedural.Next()).First();
+                var l = lList.OrderBy(a => procedural.Next()).First();
+                var a = aList.OrderBy(a => procedural.Next()).First();
+                var d = new CapsuleData(r,c,l,a);
+
+
+                if (d.TwoIndexTiles().Any(t => t.row < 1 || t.row > _row || t.col < 1 || t.col > _col))
+                {
+                    continue;
+                }
+
+                if (!capsules.Any(x => x.CollidesWith(d)))
+                {
+                    capsules.Add(d);
+                    if (capsules.Count > sprayNumber)
+                    {
+                        Debug.Log($"done in {i}");
+                        break;
+                    }
+                }
             }
             
+            SetCapsules(capsules.ToArray());
             
             
+
+        }
+        
+
+        public void SetCapsule(CapsuleData capsuleData, Color? col = null)
+        {
+            var res = Resources.Load<GameObject>(capsuleData.Path());
+            var q = Instantiate(res,gameObject.transform);
+            var cs = q.GetComponent<CapsuleScript>();
+
+            var v3 = CapsulePosition(capsuleData);
+                
+                
+            q.transform.position = new Vector3(v3.x, v3.y, -2f);
+            q.transform.rotation = Quaternion.Euler(0f,0f,capsuleData.Degrees());
+                
+            
+            cs.Paint(col ??= Color.white);
+            cs.ThisCapsuleData = capsuleData;
+            _capsules.Add(cs);
         }
 
 
@@ -96,12 +142,7 @@ namespace DefaultNamespace
         
         
         
-        public static GameLevelScript Instantiate()
-        {
-            var a = new GameObject("game level");
-            var n = a.AddComponent<GameLevelScript>();
-            return n;
-        }
+        
 
 
         public void TouchBegan(Vector2 startPos)
@@ -138,16 +179,7 @@ namespace DefaultNamespace
                     MoveCapsule(f,dotProd>0);
                 }
                 
-                //var angle = Math.Atan2(delta.x, delta.y);
-                
-                //Debug.Log($"diff {fa -angle}");
-                
             }
-
-            
-            
-            
-            
             _startPos = new Vector2(-1f, -1f);
         }
 
@@ -157,8 +189,6 @@ namespace DefaultNamespace
             CapsuleData oldData = null;
             for (int i = 1; i < 100; i++)
             {
-                //var target = cs.ThisCapsuleData.PointFromFirst(forward ? i+thisLength: -i);
-
                 CapsuleData targetData;
                 (int LastRow, int LastCol) target; 
                 if (forward)
@@ -177,14 +207,14 @@ namespace DefaultNamespace
                 {
                     if (oldData is not null)
                     {
-                        var nd = oldData;
-                        var v3 = CapsulePosition(nd);
-                        cs.gameObject.transform.position = new Vector3(v3.x, v3.y, -2f);
-                        cs.ThisCapsuleData = oldData;
-                        
+                        //var nd = oldData;
+                        //var v3 = CapsulePosition(nd);
+                        //cs.gameObject.transform.position = new Vector3(v3.x, v3.y, -2f);
+                        //cs.ThisCapsuleData = oldData;
+                        Destroy(cs.gameObject);
+                        _capsules.Remove(cs);
                     }
                     break;
-                    
                 }
                 
                 var targetWorld = _grid.TwoCoordsToWorld(target.LastRow, target.LastCol,_smallScale);
@@ -197,19 +227,20 @@ namespace DefaultNamespace
                         var v3 = CapsulePosition(nd);
                         cs.gameObject.transform.position = new Vector3(v3.x, v3.y, -2f);
                         cs.ThisCapsuleData = oldData;
-                        
                     }
                     break;
-                    
                 }
-
                 oldData = targetData;
-
             }
         }
         
         
-        
+        public static GameLevelScript Instantiate()
+        {
+            var a = new GameObject("game level");
+            var n = a.AddComponent<GameLevelScript>();
+            return n;
+        }
         
     }
 }

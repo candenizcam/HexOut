@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace DefaultNamespace.GameData
@@ -106,6 +108,27 @@ namespace DefaultNamespace.GameData
                 default:
                     return new Vector2(-.366f,.633f);
             }
+        }
+
+        public List<(int row, int col)> TwoIndexTiles()
+        {
+            var n = new List<(int row, int col)>();
+
+            n.Add((FirstRow,FirstCol));
+            for (int l=1;l<Length;l++)
+            {
+                var p = PointFromFirst(l);
+                n.Add(p);
+            }
+            return n;
+        }
+
+
+        public bool CollidesWith(CapsuleData other)
+        {
+            var theseTiles = TwoIndexTiles();
+            var otherTiles = other.TwoIndexTiles();
+            return theseTiles.Any(x => otherTiles.Any(y => x.row == y.row && x.col == y.col));
         }
         
         
