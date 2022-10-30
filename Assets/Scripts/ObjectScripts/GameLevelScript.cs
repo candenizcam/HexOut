@@ -14,15 +14,18 @@ namespace DefaultNamespace
         private float _smallScale = 1f;
         public float SmallScale => _smallScale;
         private Vector2 _gridCentre = new Vector2();
-        private int _col = 7;
-        private int _row = 9;
+        private int _col = 0;
+        private int _row = 0;
         private Vector2 _startPos = new Vector2(-1f,-1f);
+        private  ObstacleData[] _obstacles;
         
-        
-        public void SetGrid(Camera c)
+        public void SetGrid(Camera c, int row, int col, ObstacleData[] obstacles)
         {
+            _row = row;
+            _col = col;
             _grid = HexGridScript.Instantiate(gameObject.transform);
-            _grid.InitializeGrid(_row,_col);
+            _grid.InitializeGrid(_row,_col, obstacles);
+            _obstacles = obstacles;
             
             SetSize(new Vector2(0f,0f), 
                 c.orthographicSize*c.aspect*2f,
@@ -62,53 +65,12 @@ namespace DefaultNamespace
             var r = new System.Random();
             foreach (var capsuleData in capsuleDataList)
             {
-                SetCapsule(capsuleData,new Color((float)r.NextDouble(),(float)r.NextDouble(),(float)r.NextDouble()));
+                var c = Constants.CapsuleColours.OrderBy(x => r.NextDouble()).First();
+                SetCapsule(capsuleData,c);
             }
         }
 
-        public void ProcedurallyGenerate(int seed, int sprayNumber )
-        {
-            var procedural = new System.Random(seed);
-
-            var capsules = new List<CapsuleData>();
-
-            var rList = Enumerable.Range(3, _row-4).ToList();
-            var cList = Enumerable.Range(3, _col-4).ToList();
-            var aList = Enumerable.Range(0, 6).ToList();
-            var lList = Enumerable.Repeat(2, sprayNumber).ToList(); // this will make sure procedural generator works with multiple length types,
-                                                                    // lList can be replaced by something else in the future
-            
-            
-            for(int i=0;i<100;i++)
-            {
-                var r = rList.OrderBy(a => procedural.Next()).First();
-                var c = cList.OrderBy(a => procedural.Next()).First();
-                var l = lList.OrderBy(a => procedural.Next()).First();
-                var a = aList.OrderBy(a => procedural.Next()).First();
-                var d = new CapsuleData(r,c,l,a);
-
-
-                if (d.TwoIndexTiles().Any(t => t.row < 1 || t.row > _row || t.col < 1 || t.col > _col))
-                {
-                    continue;
-                }
-
-                if (!capsules.Any(x => x.CollidesWith(d)))
-                {
-                    capsules.Add(d);
-                    if (capsules.Count > sprayNumber)
-                    {
-                        Debug.Log($"done in {i}");
-                        break;
-                    }
-                }
-            }
-            
-            SetCapsules(capsules.ToArray());
-            
-            
-
-        }
+        
         
 
         public void SetCapsule(CapsuleData capsuleData, Color? col = null)
@@ -186,6 +148,9 @@ namespace DefaultNamespace
 
         private void MoveCapsule(CapsuleScript cs, bool forward)
         {
+            var otherData = _capsules.Where(x => x != cs).Select(x => x.ThisCapsuleData);
+            
+            
             CapsuleData oldData = null;
             for (int i = 1; i < 100; i++)
             {
@@ -205,6 +170,7 @@ namespace DefaultNamespace
                 
                 if (target.LastCol > _col || target.LastCol < 1 || target.LastRow < 1 || target.LastRow > _row)
                 {
+                    // escape
                     if (oldData is not null)
                     {
                         //var nd = oldData;
@@ -217,8 +183,29 @@ namespace DefaultNamespace
                     break;
                 }
                 
-                var targetWorld = _grid.TwoCoordsToWorld(target.LastRow, target.LastCol,_smallScale);
-                var collision = _capsules.Any(x => x.Touching(targetWorld)&&x!=cs);
+                //targetData.CollidesWith()
+
+                var obstacled = _obstacles.Any(x => targetData.ObstaclesBy(x));
+                if (obstacled)
+                {
+                    if (oldData is not null)
+                    {
+                        var nd = oldData;
+                        var v3 = CapsulePosition(nd);
+                        cs.gameObject.transform.position = new Vector3(v3.x, v3.y, -2f);
+                        cs.ThisCapsuleData = oldData;
+                    }
+                    break;
+                }
+                
+                
+                
+
+
+                var collision = otherData.Any(x => x.CollidesWith(targetData));
+                
+                //var targetWorld = _grid.TwoCoordsToWorld(target.LastRow, target.LastCol,_smallScale);
+                //var collision = _capsules.Any(x => x.Touching(targetWorld)&&x!=cs);
                 if (collision)
                 {
                     if (oldData is not null)

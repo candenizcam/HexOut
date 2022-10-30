@@ -23,21 +23,17 @@ namespace DefaultNamespace
             
             MainCamera.backgroundColor = Color.white;
 
-            
-            
-            _activeLevel.SetGrid(MainCamera);
-            /*
-            _activeLevel.SetCapsules(new CapsuleData[]
-            {
-                new CapsuleData(2,3,2,1),
-                new CapsuleData(3,3,2,3),
-                new CapsuleData(5,2,2,1),
-                new CapsuleData(4,3,2,2),
-                //new CapsuleData(4,3,2,1),
-            });
-            */
-            _activeLevel.ProcedurallyGenerate(2001,5);
 
+            var r = 7;
+            var c = 5;
+            
+            
+            
+            
+            var d = LevelGenerator.GenerateFrameLevel(2003,2001,r,c,3,10);
+            _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
+            _activeLevel.SetCapsules(d.CapsuleDatas);
+            
 
         }
 

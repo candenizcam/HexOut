@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
 using UnityEngine;
 
@@ -52,7 +54,7 @@ namespace DefaultNamespace
         
         
 
-        public void InitializeGrid(int row, int col)
+        public void InitializeGrid(int row, int col, ObstacleData[] obstacles)
         {
             foreach (var hexTileScript in _tileScripts)
             {
@@ -84,10 +86,16 @@ namespace DefaultNamespace
                     var q = Instantiate(res,this.gameObject.transform);
                     q.transform.position = new Vector3(-offset+valX, valY, 0f);
                     var hts = q.GetComponent<HexTileScript>();
-                    hts.R = i + 1;
+                    hts.R = _row - (i );
                     hts.C = j + 1 - i%2;
+                    hts.ActivateObstacles(obstacles
+                        .Where(x => hts.R == x.Row && hts.C == x.Col)
+                        .Select(x=> x.Direction)
+                        .ToArray());
+
+                    
                     _tileScripts.Add(hts);
-                    hts.Paint(i%2==0 ? new Color(.7f,.6f,.6f) : new Color(.6f,.6f,.7f));
+                    //hts.Paint(i%2==0 ? new Color(.7f,.6f,.6f) : new Color(.6f,.6f,.7f));
                     
 
                 }
