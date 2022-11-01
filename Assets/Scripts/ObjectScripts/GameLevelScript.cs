@@ -125,7 +125,7 @@ namespace DefaultNamespace
         {
             _startPos = startPos;
 
-            var touched = _capsules.Where(x => x.Touching(startPos));
+            var touched = _capsules.Where(x => x.Touching(startPos) && x.MovementState==0);
             if (touched.Any())
             {
                 _touchedGuy = touched.First();
@@ -294,6 +294,8 @@ namespace DefaultNamespace
         
         protected override void UpdateFunction()
         {
+            var destroyList = new List<CapsuleScript>();
+            
             foreach (var capsuleScript in _capsules)
             {
                 if (capsuleScript.MovementState == 1)
@@ -309,8 +311,8 @@ namespace DefaultNamespace
                     {
                         if (endType == 1)
                         {
-                            Destroy(capsuleScript.gameObject);
-                            _capsules.Remove(capsuleScript);
+                            destroyList.Add(capsuleScript);
+                            
                         }
                         else
                         {
@@ -326,6 +328,12 @@ namespace DefaultNamespace
                         capsuleScript.NewTarget(newData,CapsulePosition(newData));
                     }
                 }
+            }
+            
+            foreach (var capsuleScript in destroyList)
+            {
+                Destroy(capsuleScript.gameObject);
+                _capsules.Remove(capsuleScript);
             }
         }
         

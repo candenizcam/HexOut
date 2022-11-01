@@ -73,7 +73,6 @@ namespace DefaultNamespace
                     capsules.Add(d);
                     if (capsules.Count >= capsuleNumber)
                     {
-                        Debug.Log($"done in {i}");
                         break;
                     }
                 }
