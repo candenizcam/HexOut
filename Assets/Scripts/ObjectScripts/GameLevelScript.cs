@@ -4,6 +4,7 @@ using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 namespace DefaultNamespace
 {
@@ -84,11 +85,22 @@ namespace DefaultNamespace
                 
             q.transform.position = new Vector3(v3.x, v3.y, -2f);
             q.transform.rotation = Quaternion.Euler(0f,0f,capsuleData.Degrees());
-                
+            q.transform.localScale = new Vector3(0.01f, 0.01f, 1f);
             
             cs.Paint(col ??= Color.white);
             cs.ThisCapsuleData = capsuleData;
             _capsules.Add(cs);
+        }
+
+
+        public void StartAnimation(float alpha)
+        {
+            
+            var capsuleSize = Easing.OutBack(alpha);
+            foreach (var capsuleScript in _capsules)
+            {
+                capsuleScript.transform.localScale = new Vector3(capsuleSize, capsuleSize, 1f);
+            }
         }
 
 

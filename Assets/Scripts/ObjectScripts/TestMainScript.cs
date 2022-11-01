@@ -29,20 +29,31 @@ namespace DefaultNamespace
             
             MainCamera.backgroundColor = Color.white;
 
+            
+            //_activeLevel.StartAnimation();
+            var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
+                testObstacleNumber,LevelSeedData.SeedType.FrameLevel);
 
-            var r = testRow;
-            var c = testCol;
-            var capsuleSeed = testCapsuleSeed;
-            var obstacleSeed = testObstacleSeed;
-            var capsuleNumber = testCapsuleNumber;
-            var obstacleNumber = testObstacleNumber;
+            ActivateLevel(editorSeed);
+        }
+
+
+
+        private void ActivateLevel(LevelSeedData seed)
+        {
             
-            
-            var d = LevelGenerator.GenerateFrameLevel(capsuleSeed,obstacleSeed,r,c,capsuleNumber,obstacleNumber);
+            var d = LevelGenerator.GenerateSeededLevel(seed);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
             
 
+            TweenHolder.NewTween(0.5f,duringAction: (alpha) =>
+            {
+                _activeLevel.StartAnimation(alpha);
+            }, exitAction: () =>
+            {
+                _activeLevel.StartAnimation(1f);
+            }, delay:.4f);
         }
 
 

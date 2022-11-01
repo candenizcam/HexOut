@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
 using UnityEngine;
@@ -9,6 +10,19 @@ namespace DefaultNamespace
     public class LevelGenerator
     {
 
+        public static LevelData GenerateSeededLevel(LevelSeedData lsd)
+        {
+            if (lsd.LevelType == LevelSeedData.SeedType.FrameLevel)
+            {
+                return GenerateFrameLevel(lsd.CapsuleSeed, lsd.ObstacleSeed, lsd.Row, lsd.Col, lsd.CapsuleNumber,
+                    lsd.ObstacleNumber);
+            }
+            else
+            {
+                throw new Exception("invalid level type");
+            }
+        }
+        
         public static LevelData GenerateFrameLevel(int capsuleSeed, int obstacleSeed, int row, int col, int capsuleNumber, int obstacleNumber)
         {
             var capsuleProcedural = new System.Random(capsuleSeed);
