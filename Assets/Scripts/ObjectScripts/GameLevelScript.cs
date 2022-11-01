@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
@@ -18,6 +19,7 @@ namespace DefaultNamespace
         private int _col = 0;
         private int _row = 0;
         private Vector2 _startPos = new Vector2(-1f,-1f);
+        private CapsuleScript _touchedGuy;
         private  ObstacleData[] _obstacles;
         
         public void SetGrid(Camera c, int row, int col, ObstacleData[] obstacles)
@@ -126,39 +128,101 @@ namespace DefaultNamespace
             var touched = _capsules.Where(x => x.Touching(startPos));
             if (touched.Any())
             {
-                var f = touched.First();
-                
+                _touchedGuy = touched.First();
+            }
+            else
+            {
+                _touchedGuy = null;
             }
             
             
 
+        }
+
+        public void DuringTouch(Vector2 duringPos)
+        {
+            if (_touchedGuy is not null)
+            {
+                var allowed = AllowedMoves(_touchedGuy);
+
+                (int r , int c) terminalFw = allowed.forward.LastPoint();
+                (int r , int c) terminalBw = (allowed.backward.FirstRow,allowed.backward.FirstCol);
+
+                var worldFw = _grid.TwoCoordsToWorld(terminalFw.r, terminalFw.c, _smallScale);
+                var worldBw = _grid.TwoCoordsToWorld(terminalBw.r, terminalBw.c, _smallScale);
+
+                var m = (worldFw - worldBw).magnitude + _grid.SideLength*_smallScale;
+                var c = worldFw * .5f + worldBw * .5f;
+                _touchedGuy.ActivateTrackShadow(
+                    new Vector2(c.x, c.y),
+                    new Vector3(m/_smallScale, 1f, 1f));
+            }
         }
 
         public void TouchEnded(Vector2 endPos)
         {
-            var touched = _capsules.Where(x => x.Touching(_startPos));
-            if (touched.Any())
+            if (_touchedGuy is not null)
             {
-                var f = touched.First();
-                var fu = f.UnitVector;
-                //var fa = f.Atan2();
-                var delta = endPos - _startPos;
-                var du = delta.normalized;
-
-
-                var dotProd = fu.x * du.x + fu.y * du.y;
-
-                if (Math.Abs(dotProd) > .2f)
+                _touchedGuy.DeactivateTrackShadow();
+                var m = TouchMagnitude(_startPos, endPos, _touchedGuy.UnitVector);
+                if (Math.Abs(m) > .2f)
                 {
-                    MoveCapsule(f,dotProd>0);
+                    _touchedGuy.SetToMovement(m>0);
+                    //MoveCapsule(_touchedGuy,m>0);
                 }
-                
             }
+
             _startPos = new Vector2(-1f, -1f);
         }
 
+        
 
-        private void MoveCapsule(CapsuleScript cs, bool forward)
+
+
+
+        private static float TouchMagnitude(Vector2 startPos, Vector2 endPos, Vector2 touchedUnitVector)
+        {
+            var delta = (endPos - startPos);
+            var du = delta.normalized;
+            var dotProd = touchedUnitVector.x * du.x + touchedUnitVector.y * du.y;
+            return  dotProd < -.2f ? -delta.magnitude : dotProd > .2f ? delta.magnitude : 0f;
+        }
+
+
+        private (CapsuleData forward, CapsuleData backward, int forwardEnd, int backwardEnd) AllowedMoves(CapsuleScript cs)
+        {
+            var otherData = _capsules
+                .Where(x => x != cs)
+                .SelectMany(x => x.Occupies())
+                .Distinct()
+                .ToList();
+
+
+            var rf = RecursiveMovementCheck(cs.ThisCapsuleData, otherData, true);
+            var rb = RecursiveMovementCheck(cs.ThisCapsuleData, otherData, false);
+            return (rf.cd,rb.cd, rf.EndType, rb.EndType
+                );
+
+        }
+
+
+        private (CapsuleData cd, int EndType) RecursiveMovementCheck(CapsuleData cd, List<(int row, int col)> otherData, bool forward)
+        {
+            var newData = cd.DataFromFirst(forward ? 1:-1);
+
+            if (!newData.WithinBounds(_row, _col)) return (cd,1); // out of bounds
+            if (_obstacles.Any(x => newData.ObstaclesBy(x))) return (cd,2); //obstacle
+            if (otherData.Any(x => newData.CollidesTo(x.row,x.col))) return (cd,3); // collision
+            return RecursiveMovementCheck(newData, otherData, forward);
+        }
+        
+        
+        
+        
+        
+
+
+        private CapsuleData MoveCapsule(CapsuleScript cs, bool forward)
         {
             var otherData = _capsules.Where(x => x != cs).Select(x => x.ThisCapsuleData);
             
@@ -167,22 +231,17 @@ namespace DefaultNamespace
             for (int i = 1; i < 100; i++)
             {
                 CapsuleData targetData;
-                (int LastRow, int LastCol) target; 
                 if (forward)
                 {
                     targetData = cs.TranslateData(i);
-                    target = targetData.LastPoint();   
                 }
                 else
                 {
                     targetData = cs.TranslateData(-i);
-                    target = (targetData.FirstRow, targetData.FirstCol);
                 }
 
-                
-                if (target.LastCol > _col || target.LastCol < 1 || target.LastRow < 1 || target.LastRow > _row)
+                if (!targetData.WithinBounds(_row,_col))
                 {
-                    // escape
                     if (oldData is not null)
                     {
                         //var nd = oldData;
@@ -195,7 +254,6 @@ namespace DefaultNamespace
                     break;
                 }
                 
-                //targetData.CollidesWith()
 
                 var obstacled = _obstacles.Any(x => targetData.ObstaclesBy(x));
                 if (obstacled)
@@ -230,6 +288,44 @@ namespace DefaultNamespace
                     break;
                 }
                 oldData = targetData;
+            }
+            return oldData;
+        }
+        
+        protected override void UpdateFunction()
+        {
+            foreach (var capsuleScript in _capsules)
+            {
+                if (capsuleScript.MovementState == 1)
+                {
+                    capsuleScript.DoMovement();
+                }else if (capsuleScript.MovementState == 2)
+                {
+                    //capsuleScript.MovesForward
+                    var allowed = AllowedMoves(capsuleScript);
+                    var newData = capsuleScript.MovesForward ? allowed.forward : allowed.backward;
+                    var endType = capsuleScript.MovesForward ? allowed.forwardEnd : allowed.backwardEnd;
+                    if (newData.SameData(capsuleScript.ThisCapsuleData))
+                    {
+                        if (endType == 1)
+                        {
+                            Destroy(capsuleScript.gameObject);
+                            _capsules.Remove(capsuleScript);
+                        }
+                        else
+                        {
+                            capsuleScript.StopMovement();
+                        }
+                        
+                    }
+                    else
+                    {
+                        
+                        
+                        
+                        capsuleScript.NewTarget(newData,CapsulePosition(newData));
+                    }
+                }
             }
         }
         

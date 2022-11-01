@@ -14,10 +14,12 @@ namespace DefaultNamespace
         public int testCapsuleSeed;
         public int testCapsuleNumber;
         public int testObstacleNumber;
+        private GameState _gameState;
         
         
         protected override void InitializeMain()
         {
+            _gameState = GameState.Standby;
             UIDocument.rootVisualElement.style.paddingBottom = Constants.UnsafeBottomUi;
             UIDocument.rootVisualElement.style.paddingTop = Constants.UnsafeTopUi;
             Application.targetFrameRate = 60;
@@ -33,7 +35,7 @@ namespace DefaultNamespace
             //_activeLevel.StartAnimation();
             var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
                 testObstacleNumber,LevelSeedData.SeedType.FrameLevel);
-
+            
             ActivateLevel(editorSeed);
         }
 
@@ -53,6 +55,7 @@ namespace DefaultNamespace
             }, exitAction: () =>
             {
                 _activeLevel.StartAnimation(1f);
+                _gameState = GameState.Game;
             }, delay:.4f);
         }
 
@@ -78,7 +81,8 @@ namespace DefaultNamespace
                 }
                 else
                 {
-                    
+                    var wp = MainCamera.ScreenToWorldPoint(Input.touches[0].position);
+                    _activeLevel.DuringTouch(wp);
                 }
 
 
@@ -94,8 +98,18 @@ namespace DefaultNamespace
 
         protected override void UpdateMain()
         {
-            HandleTouch();
+            if (_gameState == GameState.Game)
+            {
+                HandleTouch();
+            }
+            
 
+        }
+
+
+        private enum GameState
+        {
+            Game, Standby
         }
         
     }

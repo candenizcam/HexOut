@@ -14,6 +14,7 @@ namespace DefaultNamespace
         private int _col = 1;
         
         private float _tileBaseSideLength;
+        public float SideLength => _tileBaseSideLength;
         private List<HexTileScript> _tileScripts = new();
 
         protected override void AwakeFunction()

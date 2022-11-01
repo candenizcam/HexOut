@@ -23,10 +23,11 @@ namespace DefaultNamespace.GameData
             FirstCol = c;
             Length = length;
             Angle = angle%6;
+        }
 
-
-
-
+        public bool SameData(CapsuleData other)
+        {
+            return FirstRow == other.FirstRow && FirstCol == other.FirstCol && Length == other.Length && Angle == other.Angle;
         }
 
         public string Path()
@@ -47,6 +48,8 @@ namespace DefaultNamespace.GameData
 
             return PointFromFirst(Length - 1);
         }
+
+        
         
         public (int LastRow, int LastCol) PointFromFirst(int len)
         {
@@ -68,6 +71,12 @@ namespace DefaultNamespace.GameData
                 default:
                     return (FirstRow-l, FirstCol- (l+(FirstRow)%2 )/2);
             }
+        }
+
+        public CapsuleData DataFromFirst(int len)
+        {
+            var l = PointFromFirst(len);
+            return new CapsuleData(l.LastRow, l.LastCol, Length, Angle);
         }
         
         
@@ -124,6 +133,12 @@ namespace DefaultNamespace.GameData
         }
 
 
+        public bool CollidesTo(int row, int col)
+        {
+            return TwoIndexTiles().Any(x => x.row == row && x.col == col);
+        }
+        
+        
         public bool CollidesWith(CapsuleData other)
         {
             var theseTiles = TwoIndexTiles();
@@ -141,7 +156,12 @@ namespace DefaultNamespace.GameData
             return first && second;
 
         }
-        
+
+
+        public bool WithinBounds(int maxRow, int maxCol, int minRow = 1, int minCol = 1)
+        {
+            return !TwoIndexTiles().Any(x => x.row < minRow || x.row > maxRow || x.col < minCol || x.col > maxCol);
+        }
         
     }
     

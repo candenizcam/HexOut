@@ -20,6 +20,7 @@ namespace DefaultNamespace
         public static float UnsafeRightUi => (Screen.width -  Screen.safeArea.xMax)/ Screen.width * Constants.UiWidth;
 
         public const float WorldPickDistance = 1f;
+        public const float SprayMovementPerTile = .5f;
 
         public static readonly Color ObstacleColour = new Color(62f/255f, 0f/255f, 160f/255f);
         public static readonly Color[] CapsuleColours = new Color[]
