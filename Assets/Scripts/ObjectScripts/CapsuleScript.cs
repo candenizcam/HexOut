@@ -102,6 +102,7 @@ namespace DefaultNamespace
         public void DoMovement()
         {
             _moveAlpha += Time.deltaTime / Constants.SprayMovementPerTile;
+            
 
             if (_moveAlpha > 1f)
             {
@@ -109,6 +110,7 @@ namespace DefaultNamespace
                 ThisCapsuleData = _targetData;
                 _targetData = null;
                 MovementState = 2;
+                
             }
 
             transform.position = new Vector3(_newPosition.x * _moveAlpha + _oldPosition.x * (1f - _moveAlpha),
@@ -118,6 +120,6 @@ namespace DefaultNamespace
             //transform.position 
 
         }
-        
+
     }
 }

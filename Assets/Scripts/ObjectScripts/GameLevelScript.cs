@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Punity;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
@@ -11,6 +12,8 @@ namespace DefaultNamespace
 {
     public class GameLevelScript: WorldObject
     {
+        public Action<Tween, float> AddTweenAction;
+        
         private HexGridScript _grid;
         private List<CapsuleScript> _capsules = new();
         private float _smallScale = 1f;
@@ -316,7 +319,24 @@ namespace DefaultNamespace
                         }
                         else
                         {
+                            (int row, int col) terminal = capsuleScript.MovesForward
+                                ? newData.LastPoint()
+                                : (newData.FirstRow, newData.FirstCol);
+                            var worldPoint = _grid.TwoCoordsToWorld(terminal.row, terminal.col, _smallScale);
+                            
+                            
                             capsuleScript.StopMovement();
+
+                            var p1 = capsuleScript.transform.position;
+                            var p2 = new Vector3(worldPoint.x,worldPoint.y,p1.z);
+                            NewTween(.2f,duringAction: (alpha) =>
+                            {
+                                var a = (float)Math.Sin(alpha * 3.141);
+                                capsuleScript.transform.position = p2 * a + p1 * (1f - a);
+
+
+
+                            });
                         }
                         
                     }
@@ -336,7 +356,15 @@ namespace DefaultNamespace
                 _capsules.Remove(capsuleScript);
             }
         }
-        
+
+
+        public void NewTween(float sec, Action startAction = null, Action exitAction = null,
+            Action<float> duringAction = null, int repeat = 1, bool callDuringWithStartFunction = false,
+            float delay = 0f)
+        {
+            AddTweenAction(new Tween(sec, startAction, exitAction, duringAction, repeat, callDuringWithStartFunction),
+                delay);
+        }
         
         public static GameLevelScript Instantiate()
         {

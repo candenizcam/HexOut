@@ -25,7 +25,7 @@ namespace DefaultNamespace
             Application.targetFrameRate = 60;
 
 
-            _activeLevel = GameLevelScript.Instantiate();
+            
             
             
             
@@ -43,11 +43,14 @@ namespace DefaultNamespace
 
         private void ActivateLevel(LevelSeedData seed)
         {
-            
+            _activeLevel = GameLevelScript.Instantiate();
             var d = LevelGenerator.GenerateSeededLevel(seed);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
-            
+            _activeLevel.AddTweenAction = (tween, delay) =>
+            {
+                TweenHolder.NewTween(tween, delay);
+            }; 
 
             TweenHolder.NewTween(0.5f,duringAction: (alpha) =>
             {
