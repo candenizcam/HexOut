@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Punity.ui;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace DefaultNamespace
 {
@@ -32,6 +34,10 @@ namespace DefaultNamespace
                 testObstacleNumber,LevelSeedData.SeedType.FrameLevel);
             
             ActivateLevel(editorSeed);
+            
+
+            UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
+
         }
 
 

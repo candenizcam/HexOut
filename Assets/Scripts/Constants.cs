@@ -13,6 +13,15 @@ namespace DefaultNamespace
         
         public static float UiWidth => 2532f / (float)Screen.height* (float)Screen.width;
         public const float UiHeight = 2532f;
+
+        //public static readonly Vector2 Frame = new Vector2(946,2048);
+        //public static readonly Vector2 FrameInner = new Vector2(150,510);
+        public static readonly float FrameSolid = 50f;
+        public static readonly float FrameSlice = 100f;
+
+        public static float GameFieldSide => FrameSolid;
+        public static float GameFieldTop => FrameSolid+300f;
+        public static float GameFieldBottom => FrameSolid + 300f;
         
         public static float UnsafeTopUi => (Screen.height - Screen.safeArea.yMax)/ Screen.height * Constants.UiHeight;
         public static float UnsafeBottomUi => Screen.safeArea.yMin/ Screen.height * Constants.UiHeight;
@@ -32,5 +41,7 @@ namespace DefaultNamespace
             new Color(0f/255f, 183f/255f, 255f/255f),
             new Color(74f/255f, 0f/255f, 255f/255f),
         };
+
+        public static readonly Color BackgroundColour = new Color(217f / 255f, 221f / 255f, 232f / 255f);
     }
 }

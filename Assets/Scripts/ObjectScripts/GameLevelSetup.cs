@@ -5,12 +5,16 @@ using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
 namespace DefaultNamespace
 {
     public partial class GameLevelScript : WorldObject
     {
+        public GameFieldFrame FieldFrame;
+        //public float UiFieldHeight;
+        //public float UiFieldWidth;
         public void SetGrid(Camera c, int row, int col, ObstacleData[] obstacles)
         {
             _row = row;
@@ -18,10 +22,28 @@ namespace DefaultNamespace
             _grid = HexGridScript.Instantiate(gameObject.transform);
             _grid.InitializeGrid(_row,_col, obstacles);
             _obstacles = obstacles;
+
+
+            //var frame = Constants.Frame;
+            //var inner = Constants.FrameInner;
+
+            var newY = 2f*c.orthographicSize/Constants.UiHeight*(Constants.UiHeight - Constants.GameFieldTop - Constants.GameFieldBottom);
+            var newX = (2f * c.orthographicSize * c.aspect) / Constants.UiWidth * (Constants.UiWidth - Constants.GameFieldSide*2f);
+            var centreY = (Constants.GameFieldBottom - Constants.GameFieldTop) * 0.5f;
             
-            SetSize(new Vector2(0f,0f), 
-                c.orthographicSize*c.aspect*2f,
-                c.orthographicSize*2f);
+            
+            SetSize(new Vector2(0f,centreY), 
+                newX,
+                newY);
+            
+            
+            
+            var uiFieldWidth = (HexTileScript.Width * _col)*_smallScale/(2f * c.orthographicSize * c.aspect) *Constants.UiWidth;
+            var uiFieldHeight = (HexTileScript.Height * .375f * (_row-1) + HexTileScript.SideLength*.5f)*_smallScale/(2f * c.orthographicSize ) *Constants.UiHeight;
+            var uiFieldX = (Constants.UiWidth - uiFieldWidth) / 2f;
+            var uiFieldY = (Constants.UiHeight - uiFieldHeight) / 2f- centreY;
+            FieldFrame = new GameFieldFrame(uiFieldX, uiFieldY, uiFieldWidth, uiFieldHeight);
+
         }
 
         
