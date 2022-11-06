@@ -49,8 +49,16 @@ namespace DefaultNamespace.Punity
         {
             return new Vector3(v.x / f, v.y / f, v.z / f);
         }
-        
-        
+
+        public static Vector3 ToVector3(this Vector2 v, float? x = null, float? y = null, float? z = null)
+        {
+            return new Vector3(x??=v.x, y??=v.y, z??=0f);
+        }
+
+        public static float Magnitude2D(this Vector3 v)
+        {
+            return ((Vector2) v).magnitude;
+        }
         
         
         

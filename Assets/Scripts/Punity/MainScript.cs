@@ -22,11 +22,15 @@ namespace DefaultNamespace.Punity
 
         private void Update()
         {
-            TweenHolder.Update(Time.deltaTime);
             UpdateMain();
+            
         }
-        
-        
+
+        private void LateUpdate()
+        {
+            TweenHolder.Update(Time.deltaTime);
+        }
+
 
         private void InitializeUi()
         {
