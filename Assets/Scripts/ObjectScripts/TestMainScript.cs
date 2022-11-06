@@ -23,11 +23,6 @@ namespace DefaultNamespace
             UIDocument.rootVisualElement.style.paddingBottom = Constants.UnsafeBottomUi;
             UIDocument.rootVisualElement.style.paddingTop = Constants.UnsafeTopUi;
             Application.targetFrameRate = 60;
-
-
-            
-            
-            
             
             MainCamera.backgroundColor = Color.white;
 
@@ -41,6 +36,10 @@ namespace DefaultNamespace
 
 
 
+        /** This one starts from a seed and generates the relevant level
+         * seed contains all the relevant data, including row & col
+         * grid is initiated here too
+         */
         private void ActivateLevel(LevelSeedData seed)
         {
             _activeLevel = GameLevelScript.Instantiate();
@@ -84,8 +83,7 @@ namespace DefaultNamespace
                 }
                 else
                 {
-                    var wp = MainCamera.ScreenToWorldPoint(Input.touches[0].position);
-                    _activeLevel.DuringTouch(wp);
+                    _activeLevel.DuringTouch();
                 }
 
 
