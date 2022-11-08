@@ -7,17 +7,19 @@
         public int CapsuleSeed;
         public int ObstacleSeed;
         public int CapsuleNumber;
-        public int ObstacleNumber;
+        public int SingleObstacleNumber;
+        public int DoubleObstacleNumber;
         public SeedType LevelType;
         
-        public LevelSeedData(int row, int col, int capsuleSeed, int obstacleSeed, int capsuleNumber, int obstacleNumber, SeedType levelType)
+        public LevelSeedData(int row, int col, int capsuleSeed, int obstacleSeed, int capsuleNumber, int singleObstacleNumber, int doubleObstacleNumber, SeedType levelType)
         {
             Row = row;
             Col = col;
             CapsuleSeed = capsuleSeed;
             ObstacleSeed = obstacleSeed;
             CapsuleNumber = capsuleNumber;
-            ObstacleNumber = obstacleNumber;
+            SingleObstacleNumber = doubleObstacleNumber;
+            DoubleObstacleNumber = singleObstacleNumber;
             LevelType = levelType;
         }
 

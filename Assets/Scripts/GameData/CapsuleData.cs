@@ -150,9 +150,10 @@ namespace DefaultNamespace.GameData
         {
             var theseTiles = TwoIndexTiles();
             var first = theseTiles.Any(x => x.row == obstacle.Row && x.col == obstacle.Col);
-            var obsOps = obstacle.Opposition();
+            var obsOpsList = obstacle.Oppositions();
             
-            var second = theseTiles.Any(x => x.row == obsOps.OtherRow && x.col == obsOps.OtherCol);
+            
+            var second = obsOpsList.Any(obsOps => theseTiles.Any(x => x.row == obsOps.OtherRow && x.col == obsOps.OtherCol));
             return first && second;
 
         }

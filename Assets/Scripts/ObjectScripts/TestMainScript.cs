@@ -16,6 +16,7 @@ namespace DefaultNamespace
         public int testCapsuleSeed;
         public int testCapsuleNumber;
         public int testObstacleNumber;
+        public int testDoubleObstacleNumber;
         private GameState _gameState;
         
         
@@ -31,7 +32,7 @@ namespace DefaultNamespace
             
             //_activeLevel.StartAnimation();
             var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
-                testObstacleNumber,LevelSeedData.SeedType.FrameLevel);
+                testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel);
             
             ActivateLevel(editorSeed);
             
@@ -50,6 +51,7 @@ namespace DefaultNamespace
         {
             _activeLevel = GameLevelScript.Instantiate();
             var d = LevelGenerator.GenerateSeededLevel(seed);
+            //var d = LevelGenerator.GenerateRawFrame(seed,2);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
             _activeLevel.AddTweenAction = (tween, delay) =>

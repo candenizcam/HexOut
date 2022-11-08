@@ -15,7 +15,7 @@ namespace DefaultNamespace
             if (lsd.LevelType == LevelSeedData.SeedType.FrameLevel)
             {
                 return GenerateFrameLevel(lsd.CapsuleSeed, lsd.ObstacleSeed, lsd.Row, lsd.Col, lsd.CapsuleNumber,
-                    lsd.ObstacleNumber);
+                    lsd.SingleObstacleNumber,lsd.DoubleObstacleNumber);
             }
             else
             {
@@ -23,19 +23,25 @@ namespace DefaultNamespace
             }
         }
         
-        public static LevelData GenerateFrameLevel(int capsuleSeed, int obstacleSeed, int row, int col, int capsuleNumber, int obstacleNumber)
+        public static LevelData GenerateFrameLevel(int capsuleSeed, int obstacleSeed, int row, int col, int capsuleNumber, int obstacleNumber, int doubleObstacleNumber)
         {
             var capsuleProcedural = new System.Random(capsuleSeed);
             var obstacleProcedural  = new System.Random(obstacleSeed);
+            //var allObstacles = new List<ObstacleData>();
+            var obstacles = ObstacleGenerator.GenerateMixedObstacles(row, col,obstacleNumber, doubleObstacleNumber,obstacleProcedural);
 
-            var allObstacles = GenerateObstacles(row, col,obstacleNumber, obstacleProcedural);
-
-            
-
-            var capsules = GenerateCapsuleData(row, col, capsuleNumber, allObstacles.raw, capsuleProcedural);
+            var capsules = GenerateCapsuleData(row, col, capsuleNumber,obstacles, capsuleProcedural);
             
             
-            return new LevelData($"level {capsuleProcedural}-{obstacleProcedural}", row, col, capsules.ToArray(),allObstacles.real.ToArray());
+            return new LevelData($"level {capsuleProcedural}-{obstacleProcedural}", row, col, capsules.ToArray(),obstacles.ToArray());
+        }
+
+        public static LevelData GenerateRawFrame(LevelSeedData lsd, int l)
+        {
+            var o = l==1? ObstacleGenerator.SingleFrameObstacles(lsd.Row, lsd.Col) : ObstacleGenerator.DoubleFrameObstacles(lsd.Row,lsd.Col)  ;
+            
+            return new LevelData($"level dud", lsd.Row, lsd.Col, new CapsuleData[]{},o.ToArray());
+            
         }
 
 
@@ -82,43 +88,10 @@ namespace DefaultNamespace
         }
         
 
-        private static (List<ObstacleData> raw, List<ObstacleData> real ) GenerateObstacles(int row, int col, int obstacleNumber, System.Random procedural)
-        {
-            var rawObstacles = new List<ObstacleData>();
-
-            for (int a = 0; a < 3; a++)
-            {
-                rawObstacles.Add(new ObstacleData(2, 2, a + 4));
-                rawObstacles.Add(new ObstacleData(2, col-2, a + 5));
-                rawObstacles.Add(new ObstacleData(row-1, col-2, a+1));
-                rawObstacles.Add(new ObstacleData(row-1, 2, a + 2));
-            }
-            
-            
-            for (int r = 3; r < row - 1; r++)
-            {
-                for(int a=0;a<3;a++)
-                {
-                    rawObstacles.Add(new ObstacleData(r, 2- (r+1)%2, a + 3));
-                    rawObstacles.Add(new ObstacleData(r, col-1,a));
-                }
-            }
-            
-            for (int c = 3; c < col - 2; c++)
-            {
-                for(int a=0;a<2;a++)
-                {
-                    rawObstacles.Add(new ObstacleData(2, c, a + 5));
-                    rawObstacles.Add(new ObstacleData(row-1, c,a + 2));
-                }
-            }
-
-
-            return (rawObstacles,rawObstacles.OrderBy(x => procedural.NextDouble())
-                .ToList()
-                .GetRange(0,obstacleNumber));
-        }
         
+
+
+
         
         
         

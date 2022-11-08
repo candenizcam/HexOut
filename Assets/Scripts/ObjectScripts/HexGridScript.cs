@@ -91,7 +91,7 @@ namespace DefaultNamespace
                     hts.C = j + 1 - i%2;
                     hts.ActivateObstacles(obstacles
                         .Where(x => hts.R == x.Row && hts.C == x.Col)
-                        .Select(x=> x.Direction)
+                        .Select(x=> (x.Direction,x.Length))
                         .ToArray());
 
                     
