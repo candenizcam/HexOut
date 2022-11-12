@@ -60,7 +60,7 @@ namespace DefaultNamespace
                 var c = cList.OrderBy(a => procedural.Next()).First();
                 var l = lList.OrderBy(a => procedural.Next()).First();
                 var a = aList.OrderBy(a => procedural.Next()).First();
-                var d = new CapsuleData(r,c,l,a);
+                var d = new CapsuleData(r,c,l,a,false);
 
 
                 if (d.TwoIndexTiles().Any(t => t.row < 2 || t.row > row-1 || t.col < 2 || t.col > col-1))

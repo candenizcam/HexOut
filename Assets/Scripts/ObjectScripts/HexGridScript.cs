@@ -124,5 +124,13 @@ namespace DefaultNamespace
 
 
         }
+
+
+        public HexTileScript GetTile(int r, int c)
+        {
+            return _tileScripts.First(x => x.R == r && x.C == c);
+        }
+        
+        
     }
 }

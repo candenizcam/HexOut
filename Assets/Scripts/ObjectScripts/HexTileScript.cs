@@ -33,6 +33,8 @@ namespace DefaultNamespace
         }
         
         
+        
+        
         public void Paint(Color c)
         {
             hexRenderer.color = c;

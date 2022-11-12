@@ -11,18 +11,20 @@ namespace DefaultNamespace.GameData
         public int FirstCol;
         public int Length;
         public int Angle;
+        public bool Collapsed;
         
         /** r is first row
          * c is first col
          * length is a the number of tiles capsule sits on
          * angle starts from top right and goes clockwise up to 6
          */
-        public CapsuleData(int r, int c, int length, int angle)
+        public CapsuleData(int r, int c, int length, int angle, bool collapsed)
         {
             FirstRow = r;
             FirstCol = c;
             Length = length;
             Angle = angle%6;
+            Collapsed = collapsed;
         }
 
         public bool SameData(CapsuleData other)
@@ -76,7 +78,7 @@ namespace DefaultNamespace.GameData
         public CapsuleData DataFromFirst(int len)
         {
             var l = PointFromFirst(len);
-            return new CapsuleData(l.LastRow, l.LastCol, Length, Angle);
+            return new CapsuleData(l.LastRow, l.LastCol, Length, Angle,Collapsed);
         }
         
         
@@ -124,6 +126,7 @@ namespace DefaultNamespace.GameData
             var n = new List<(int row, int col)>();
 
             n.Add((FirstRow,FirstCol));
+            if (Collapsed) return n;
             for (int l=1;l<Length;l++)
             {
                 var p = PointFromFirst(l);
@@ -141,6 +144,8 @@ namespace DefaultNamespace.GameData
         
         public bool CollidesWith(CapsuleData other)
         {
+            
+            
             var theseTiles = TwoIndexTiles();
             var otherTiles = other.TwoIndexTiles();
             return theseTiles.Any(x => otherTiles.Any(y => x.row == y.row && x.col == y.col));
@@ -163,7 +168,32 @@ namespace DefaultNamespace.GameData
         {
             return !TwoIndexTiles().Any(x => x.row < minRow || x.row > maxRow || x.col < minCol || x.col > maxCol);
         }
-        
+
+        public CapsuleData Collapse()
+        {
+            return new CapsuleData(FirstRow, FirstCol, Length, Angle, true);
+        }
+
+        public CapsuleData UnCollapse()
+        {
+            return new CapsuleData(FirstRow,FirstCol,Length,Angle,false);
+        }
+
+        public CapsuleData Revert()
+        {
+            if (Collapsed)
+            {
+                return new CapsuleData(FirstRow,FirstCol, Length,Angle+3,Collapsed);
+            }
+            else
+            {
+                var lp = LastPoint();
+                return new CapsuleData(lp.LastRow,lp.LastCol, Length,Angle+3,Collapsed);
+                
+            }
+            
+
+        }
     }
     
     

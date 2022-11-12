@@ -19,10 +19,20 @@ namespace DefaultNamespace
         private Vector2 _newPosition;
         private Vector2 _oldPosition;
         private float _moveAlpha;
-        private bool _direction;
-        public bool MovesForward => _direction;
-        
-        
+
+        private float _initSpriteX;
+
+        private float _initSpriteY;
+        //private bool _direction;
+        //public bool MovesForward => _direction;
+
+        protected override void AwakeFunction()
+        {
+            _initSpriteX = capsuleRenderer.size.x;
+            _initSpriteY = capsuleRenderer.size.y;
+        }
+
+
         public void DeactivateTrackShadow()
         {
             var t = trackShadow.transform;
@@ -54,7 +64,7 @@ namespace DefaultNamespace
 
         public CapsuleData NewData(int r, int c)
         {
-            return new CapsuleData(r,c,ThisCapsuleData.Length,ThisCapsuleData.Angle);
+            return new CapsuleData(r,c,ThisCapsuleData.Length,ThisCapsuleData.Angle,false);
         }
 
         public CapsuleData TranslateData(int d)
@@ -67,10 +77,11 @@ namespace DefaultNamespace
 
         public void SetToMovement(bool forward)
         {
-            _direction = forward;
+            if (!forward)
+            {
+                ThisCapsuleData = ThisCapsuleData.Revert();
+            }
             MovementState = 2;
-
-
         }
 
         public void StopMovement()
@@ -88,10 +99,14 @@ namespace DefaultNamespace
 
             return l.Distinct().ToList();
         }
+
+
+        
         
         
         public void NewTarget(CapsuleData newData, Vector2 newPosition)
         {
+            //gameObject.transform.rotation =  Quaternion.Euler(0f,0f,newData.Degrees());
             _targetData = newData;
             _newPosition = newPosition;
             _oldPosition = transform.position;
@@ -99,6 +114,28 @@ namespace DefaultNamespace
             MovementState = 1;
         }
 
+
+        public void DoThings()
+        {
+            if (_targetData.Collapsed && !ThisCapsuleData.Collapsed)
+            {
+                DoCollapse(true);
+            }
+            else if (!_targetData.Collapsed && ThisCapsuleData.Collapsed)
+            {
+                Debug.Log("uncollapsing");
+                DoCollapse(false);
+            }
+            else if (_targetData.Collapsed && ThisCapsuleData.Collapsed)
+            {
+                DoCollapsedBounce();
+            }
+            else 
+            {
+                DoMovement();
+            }
+        }
+        
         public void DoMovement()
         {
             _moveAlpha += Time.deltaTime / Constants.SprayMovementPerTile;
@@ -108,6 +145,7 @@ namespace DefaultNamespace
             {
                 _moveAlpha = 1f;
                 ThisCapsuleData = _targetData;
+                gameObject.transform.rotation =  Quaternion.Euler(0f,0f,_targetData.Degrees());
                 _targetData = null;
                 MovementState = 2;
                 
@@ -119,6 +157,66 @@ namespace DefaultNamespace
 
             //transform.position 
 
+        }
+
+        public void DoCollapse(bool collapsing)
+        {
+            _moveAlpha += 2f*Time.deltaTime / Constants.SprayMovementPerTile;
+            
+
+            if (_moveAlpha > 1f)
+            {
+                
+                
+                
+                _moveAlpha = 1f;
+                ThisCapsuleData = _targetData;
+                gameObject.transform.rotation =  Quaternion.Euler(0f,0f,_targetData.Degrees());
+                _targetData = null;
+                MovementState = 2;
+                
+                
+                
+            }
+            
+            
+
+            transform.position = new Vector3(_newPosition.x * _moveAlpha + _oldPosition.x * (1f - _moveAlpha),
+                _newPosition.y * _moveAlpha + _oldPosition.y * (1f - _moveAlpha), transform.position.z);
+
+            var sizeX = collapsing
+                ? 0.9f * _moveAlpha + _initSpriteX * (1f - _moveAlpha)
+                : 0.9f * (1f - _moveAlpha) + _initSpriteX * (_moveAlpha); 
+            
+            capsuleRenderer.size = new Vector3(sizeX,_initSpriteY);
+        }
+
+        public void DoCollapsedBounce()
+        {
+            _moveAlpha += 2f*Time.deltaTime / Constants.SprayMovementPerTile;
+            if (_moveAlpha > .5f)
+            {
+                gameObject.transform.rotation =  Quaternion.Euler(0f,0f,_targetData.Degrees());
+            }
+            else
+            {
+                gameObject.transform.rotation =  Quaternion.Euler(0f,0f,ThisCapsuleData.Degrees());
+            }
+
+            if (_moveAlpha > 1f)
+            {
+                _moveAlpha = 1f;
+                ThisCapsuleData = _targetData;
+                gameObject.transform.rotation =  Quaternion.Euler(0f,0f,_targetData.Degrees());
+                _targetData = null;
+                MovementState = 2;
+            }
+
+            var curveAlpha = 2f * _moveAlpha * (1f - _moveAlpha);
+            
+            var sizeX = curveAlpha* (_initSpriteY - 0.9f) + 0.9f;
+
+            capsuleRenderer.size = new Vector3(sizeX,_initSpriteY+curveAlpha*0.2f);
         }
 
     }
