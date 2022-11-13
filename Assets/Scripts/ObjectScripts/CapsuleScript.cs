@@ -21,10 +21,7 @@ namespace DefaultNamespace
         private float _moveAlpha;
 
         private float _initSpriteX;
-
         private float _initSpriteY;
-        //private bool _direction;
-        //public bool MovesForward => _direction;
 
         protected override void AwakeFunction()
         {
@@ -71,7 +68,6 @@ namespace DefaultNamespace
         {
             var p = ThisCapsuleData.PointFromFirst(d);
             return NewData(p.LastRow,p.LastCol);
-
         }
 
 
@@ -106,7 +102,6 @@ namespace DefaultNamespace
         
         public void NewTarget(CapsuleData newData, Vector2 newPosition)
         {
-            //gameObject.transform.rotation =  Quaternion.Euler(0f,0f,newData.Degrees());
             _targetData = newData;
             _newPosition = newPosition;
             _oldPosition = transform.position;
@@ -123,7 +118,6 @@ namespace DefaultNamespace
             }
             else if (!_targetData.Collapsed && ThisCapsuleData.Collapsed)
             {
-                Debug.Log("uncollapsing");
                 DoCollapse(false);
             }
             else if (_targetData.Collapsed && ThisCapsuleData.Collapsed)
@@ -153,32 +147,19 @@ namespace DefaultNamespace
 
             transform.position = new Vector3(_newPosition.x * _moveAlpha + _oldPosition.x * (1f - _moveAlpha),
                 _newPosition.y * _moveAlpha + _oldPosition.y * (1f - _moveAlpha), transform.position.z);
-            //var nd = (_newPosition - _oldPosition) / Constants.SprayMovementPerTile * Time.deltaTime;
-
-            //transform.position 
-
         }
 
         public void DoCollapse(bool collapsing)
         {
             _moveAlpha += 2f*Time.deltaTime / Constants.SprayMovementPerTile;
-            
-
             if (_moveAlpha > 1f)
             {
-                
-                
-                
                 _moveAlpha = 1f;
                 ThisCapsuleData = _targetData;
                 gameObject.transform.rotation =  Quaternion.Euler(0f,0f,_targetData.Degrees());
                 _targetData = null;
                 MovementState = 2;
-                
-                
-                
             }
-            
             
 
             transform.position = new Vector3(_newPosition.x * _moveAlpha + _oldPosition.x * (1f - _moveAlpha),
@@ -213,9 +194,7 @@ namespace DefaultNamespace
             }
 
             var curveAlpha = 2f * _moveAlpha * (1f - _moveAlpha);
-            
             var sizeX = curveAlpha* (_initSpriteY - 0.9f) + 0.9f;
-
             capsuleRenderer.size = new Vector3(sizeX,_initSpriteY+curveAlpha*0.2f);
         }
 

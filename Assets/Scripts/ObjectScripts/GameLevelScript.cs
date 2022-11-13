@@ -22,9 +22,6 @@ namespace DefaultNamespace
         private Vector2 _startPos = new Vector2(-1f,-1f);
         private CapsuleScript _touchedGuy;
         private  ObstacleData[] _obstacles;
-        
-        
-
 
         public Vector3 CapsulePosition(CapsuleData capsuleData)
         {
@@ -43,12 +40,6 @@ namespace DefaultNamespace
             
         }
         
-        
-        
-        
-        
-
-
         public void TouchBegan(Vector2 startPos)
         {
             _startPos = startPos;
@@ -160,26 +151,12 @@ namespace DefaultNamespace
 
             var oldData = capsuleScript.ThisCapsuleData;
             CapsuleData newData;
-            if (oldData.Collapsed)
-            {
-                newData = oldData.UnCollapse();
-            }
-            else
-            {
-                newData = oldData.DataFromFirst(1);
-            }
+            newData = oldData.Collapsed ? oldData.UnCollapse() : oldData.DataFromFirst(1);
             
-            Debug.Log($"new {newData.FirstRow},{newData.FirstCol}, {newData.LastPoint().LastRow},{newData.LastPoint().LastCol}");
-            Debug.Log($"old {oldData.FirstRow},{oldData.FirstCol}, {oldData.LastPoint().LastRow},{oldData.LastPoint().LastCol}");
             
             
             //var endType = 0;
-            if (!newData.WithinBounds(_row, _col)) // out of bounds
-            {
-                return 1;
-            }
-
-            
+            if (!newData.WithinBounds(_row, _col)) return 1; // out of bounds
 
             var obstacled = _obstacles.Where(x => newData.ObstaclesBy(x)).ToList();
 
@@ -190,34 +167,17 @@ namespace DefaultNamespace
                     Debug.LogError("there is a problem, two obstacles are touched");
                 }
                 var clashing = obstacled.First();
-
-                Debug.Log("before elastic");
                 var ret = 0;
                 if (newData.FirstRow == clashing.Row && newData.FirstCol == clashing.Col && clashing.Length==2)
-                {// elastic
-                    Debug.Log("elastic");
+                {
                     var newAngle = (newData.Angle + (newData.Angle == clashing.Direction ? 4:2))%6;
-                    
-                    
-                    
                     var newerData = new CapsuleData(newData.FirstRow, newData.FirstCol, newData.Length, newAngle,true); 
                     capsuleScript.NewTarget(newerData,CapsulePosition(newerData));
-
-
-                    
-                    
-                    //SetTweenForCollision(capsuleScript,newData,2);
-                    
-                    
                 }
                 else
                 {
                     if (oldData.Collapsed)
                     {
-                        //capsuleScript.StopMovement();
-                        
-                        
-                        
                         SetTweenForCollision(capsuleScript,newData.DataFromFirst(1),2,true);
                         
                     }
@@ -225,11 +185,7 @@ namespace DefaultNamespace
                     {
                         SetTweenForCollision(capsuleScript,newData,2,false);
                     }
-
                     ret = 2;
-
-
-                    // blocker
                 }
 
                 var thatTile = _grid.GetTile(clashing.Row, clashing.Col);
@@ -253,102 +209,19 @@ namespace DefaultNamespace
 
             if (otherGuys.Any())
             {
-                Debug.Log("other guy");
-                //var theGuy = otherGuys.First();
-                //theGuy.ThisCapsuleData.CollidesTo(newData.FirstRow,newData.)
                 if (oldData.Collapsed)
                 {
-                    SetTweenForCollision(capsuleScript,newData.DataFromFirst(1),2,true);
-                    //SetTweenForCollision(capsuleScript,newData.Collapse(),2);
+                    SetTweenForCollision(capsuleScript, newData.DataFromFirst(1), 2, true);
                 }
                 else
                 {
                     SetTweenForCollision(capsuleScript,newData,1,false);
                 }
-                // collision
-                //
-                
                 return 3;
             }
             
-            Debug.Log("and moving on");
             capsuleScript.NewTarget(newData,CapsulePosition(newData));
-
-            
             return 0;
-            /*
-            var otherData = OtherData(capsuleScript);
-            var newOut =  SingleMovementCheck(capsuleScript.ThisCapsuleData, otherData, true);
-            var newData = newOut.cd;
-            var endType = newOut.EndType;
-            //var allowed = AllowedMoves(capsuleScript);
-            //var newData = capsuleScript.MovesForward ? allowed.forward : allowed.backward;
-            //var endType = capsuleScript.MovesForward ? allowed.forwardEnd : allowed.backwardEnd;
-            if (endType != 0)
-            {
-                if (endType == 1)
-                {
-                    //destroyList.Add(capsuleScript);
-                }
-                else
-                {
-                    var thisPoint = _grid.TwoCoordsToWorld(capsuleScript.ThisCapsuleData.FirstRow,
-                        capsuleScript.ThisCapsuleData.FirstCol, _smallScale);
-                    var otherPoint = _grid.TwoCoordsToWorld(newData.FirstRow, newData.FirstCol, _smallScale);
-                    
-                    capsuleScript.StopMovement();
-                    var targetPoint = capsuleScript.transform.position;
-                    
-                    var delta = ( otherPoint - thisPoint).ToVector3(z:targetPoint.z); // single tile length
-                    
-                    var oneTileDiff = delta.Magnitude2D();
-                    
-                    var initX = capsuleScript.capsuleRenderer.size.x;
-                    
-                    var initY = capsuleScript.capsuleRenderer.size.y;
-
-                    var side = initX / oneTileDiff * 0.5f * delta;
-                    var x1_0 = targetPoint + side;
-                    var x3_0 = targetPoint - side;
-
-                    var md = endType == 2 ? oneTileDiff / 2f : oneTileDiff-initY/2f;
-                    
-
-                    var maxDistance = md; //whole distance to travel
-                    var travelSpeed = oneTileDiff / Constants.SprayMovementPerTile;
-                    var travelTime = maxDistance * 2f / travelSpeed;
-                    var cutoffTime = 0.25f*oneTileDiff / travelSpeed/travelTime;
-                    var relta = (maxDistance * 2f)/oneTileDiff*delta;
-                    
-                    
-                    NewTween(travelTime, duringAction: (alpha) =>
-                    {
-                        var x3 = alpha < .5f ? x3_0 + alpha * relta : x3_0 + (1f - alpha) * relta;
-                        
-                        var x1 = alpha < .5f-cutoffTime ? x1_0 + alpha * relta : 
-                            alpha>.5f+cutoffTime ? x1_0 + (1f - alpha) * relta : x1_0 + ( .5f-cutoffTime)*relta;
-
-                        var x2 = x1 * 0.5f + x3 * 0.5f;
-                        capsuleScript.transform.position = x2;
-                        
-
-                        
-                        var newMagnitude = (x3-x1).Magnitude2D();
-                        var delX = (initX-newMagnitude)/initX;
-                        
-                        capsuleScript.capsuleRenderer.size = new Vector2(newMagnitude,initY+delX*0.5f);
-
-                    },callDuringWithStartFunction:true);
-                    
-                }
-            }
-            else
-            {
-                capsuleScript.NewTarget(newData,CapsulePosition(newData));
-            }
-
-            return endType;
-            */
         }
 
 
