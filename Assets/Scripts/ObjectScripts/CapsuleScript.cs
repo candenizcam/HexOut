@@ -10,6 +10,7 @@ namespace DefaultNamespace
     public class CapsuleScript: WorldObject
     {
         public SpriteRenderer capsuleRenderer;
+        public SpriteRenderer innerCapsuleRenderer;
         public BoxCollider2D boxCollider;
         public SpriteRenderer trackShadow;
         public Vector2 UnitVector => ThisCapsuleData.UnitDirection();
@@ -48,9 +49,10 @@ namespace DefaultNamespace
         }
 
         
-        public void Paint(Color c)
+        public void Paint(Color c, Color dc)
         {
-            capsuleRenderer.color = c;
+            capsuleRenderer.color = dc;
+            innerCapsuleRenderer.color = c;
             trackShadow.color = new Color(c.r, c.g, c.b, .1f);
         }
 
@@ -170,6 +172,7 @@ namespace DefaultNamespace
                 : 0.9f * (1f - _moveAlpha) + _initSpriteX * (_moveAlpha); 
             
             capsuleRenderer.size = new Vector3(sizeX,_initSpriteY);
+            innerCapsuleRenderer.size= new Vector3(sizeX,_initSpriteY);
         }
 
         public void DoCollapsedBounce()
@@ -196,6 +199,7 @@ namespace DefaultNamespace
             var curveAlpha = 2f * _moveAlpha * (1f - _moveAlpha);
             var sizeX = curveAlpha* (_initSpriteY - 0.9f) + 0.9f;
             capsuleRenderer.size = new Vector3(sizeX,_initSpriteY+curveAlpha*0.2f);
+            innerCapsuleRenderer.size = new Vector3(sizeX,_initSpriteY+curveAlpha*0.2f);
         }
 
     }

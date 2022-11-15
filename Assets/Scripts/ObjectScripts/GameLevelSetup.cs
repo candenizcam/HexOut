@@ -79,15 +79,16 @@ namespace DefaultNamespace
             var r = new System.Random();
             foreach (var capsuleData in capsuleDataList)
             {
-                var c = Constants.CapsuleColours.OrderBy(x => r.NextDouble()).First();
-                SetCapsule(capsuleData,c);
+                var colorIndex = r.Next(0, Constants.CapsuleColours.Length);
+                
+                SetCapsule(capsuleData,colorIndex);
             }
         }
 
         
         
 
-        public void SetCapsule(CapsuleData capsuleData, Color? col = null)
+        public void SetCapsule(CapsuleData capsuleData, int? col = null)
         {
             var res = Resources.Load<GameObject>(capsuleData.Path());
             var q = Instantiate( res,(Transform) gameObject.transform);
@@ -97,7 +98,14 @@ namespace DefaultNamespace
             q.transform.position = new Vector3(v3.x, v3.y, -2f);
             q.transform.rotation = Quaternion.Euler(0f,0f,capsuleData.Degrees());
             q.transform.localScale = new Vector3(0.01f, 0.01f, 1f);
-            cs.Paint(col ??= Color.white);
+            if (col is null)
+            {
+                cs.Paint(Color.white,Color.gray);
+            }
+            else
+            {
+                cs.Paint(Constants.CapsuleColours[(int)col],Constants.CapsuleDarkColours[(int)col]);
+            }
             cs.ThisCapsuleData = capsuleData;
             _capsules.Add(cs);
         }

@@ -274,6 +274,7 @@ namespace DefaultNamespace
                 var delX = (initX-newMagnitude)/initX;
                 
                 capsuleScript.capsuleRenderer.size = new Vector2(newMagnitude,initY+delX*0.5f);
+                capsuleScript.innerCapsuleRenderer.size = new Vector2(newMagnitude,initY+delX*0.5f);
 
             }, exitAction: () =>
             {
