@@ -183,5 +183,10 @@ namespace DefaultNamespace
         {
             RightButtonAction();
         }
+
+        public void InitializationAnimation(float alpha)
+        {
+            
+        }
     }
 }

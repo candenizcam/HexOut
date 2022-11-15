@@ -85,7 +85,12 @@ namespace DefaultNamespace
             };
             UIDocument.rootVisualElement.Add(betweenLevels);
             
-            
+            betweenLevels.InitializationAnimation(
+                0f);
+            TweenHolder.NewTween(Constants.BetweenLevelsTime,duringAction: (alpha) =>
+            {
+                betweenLevels.InitializationAnimation(alpha);
+            });
         }
 
 
