@@ -13,7 +13,7 @@ namespace DefaultNamespace
         public Action RightButtonAction = () =>{ };
 
 
-        public BetweenLevels()
+        public BetweenLevels(string levelNoText="", string newSkinText="", string rightText="", float filler = 0f)
         {
             this.StretchToParentSize();
 
@@ -84,7 +84,7 @@ namespace DefaultNamespace
                         top = 347f
                     }
                 };
-            progressBar.Refill(.9f);
+            progressBar.Refill(filler);
 
 
             var textColor = new Color(112f/255f,112f/255f,112f/255f);
@@ -105,7 +105,7 @@ namespace DefaultNamespace
                 }
             };
             
-            var progressNo = new Label("142")
+            var progressNo = new Label(levelNoText)
             {
                 style =
                 {
@@ -121,7 +121,7 @@ namespace DefaultNamespace
                 }
             };
             
-            var newLookCounter = new Label("4 levels to new look")
+            var newLookCounter = new Label(newSkinText)
             {
                 style =
                 {
@@ -138,7 +138,7 @@ namespace DefaultNamespace
             };
             
             
-            var rightStuffText = new Label("+142 xp\n456/1000\nto next level")
+            var rightStuffText = new Label(rightText)
             {
                 style =
                 {
@@ -153,6 +153,7 @@ namespace DefaultNamespace
                     color = textColor
                 }
             };
+            
 
 
             progressBg.Add(leftButton);
@@ -164,6 +165,7 @@ namespace DefaultNamespace
             progressBg.Add(progressNo);
             progressBg.Add(newLookCounter);
             progressBg.Add(rightStuffText);
+            
             Add(progressBg);
         }
 
