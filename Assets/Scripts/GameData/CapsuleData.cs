@@ -166,8 +166,10 @@ namespace DefaultNamespace.GameData
 
         public bool WithinBounds(int maxRow, int maxCol, int minRow = 1, int minCol = 1)
         {
-            return !TwoIndexTiles().Any(x => x.row < minRow || x.row > maxRow || x.col < minCol || x.col > maxCol);
+            return !TwoIndexTiles().All(x => x.row+1 < minRow || x.row-1 > maxRow || x.col+1 < minCol || x.col-1 > maxCol);
         }
+        
+        
 
         public CapsuleData Collapse()
         {
