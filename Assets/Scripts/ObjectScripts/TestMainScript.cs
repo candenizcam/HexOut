@@ -44,7 +44,29 @@ namespace DefaultNamespace
             
 
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
+            ActivateBetweenLevels();
 
+        }
+
+
+        private void ActivateBetweenLevels()
+        {
+            var betweenLevels = new BetweenLevels();
+            betweenLevels.LeftButtonAction = () =>
+            {
+
+            };
+            betweenLevels.MiddleButtonAction = () =>
+            {
+
+            };
+            betweenLevels.RightButtonAction = () =>
+            {
+
+            };
+            
+            
+            UIDocument.rootVisualElement.Add(betweenLevels);
         }
 
 
