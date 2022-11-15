@@ -46,12 +46,6 @@ namespace DefaultNamespace
                 if(data.Count>= singleObstacleNumber+doubleObstacleNumber) break;
             }
 
-            string s = "";
-            foreach (var obstacleData in data)
-            {
-                s += $"{obstacleData.Row}, {obstacleData.Col}, {obstacleData.Direction}, {obstacleData.Length}\n";
-            }
-            Debug.Log(s);
             
 
             return data;

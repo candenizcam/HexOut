@@ -52,10 +52,11 @@ namespace DefaultNamespace
         private void ActivateBetweenLevels(SerialHexOutData sgd, LevelCompleteData lcd)
         {
             var oldLevel = sgd.playerLevel;
-            var oldXP = sgd.playerXp;
+            var oldXPForBar =(float) sgd.playerXp;
             var n = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, lcd.LevelXp);
             if (n.newLevel > oldLevel)
             {
+                oldXPForBar = 0f;
                 Debug.Log("level up");
             }
             sgd.playerXp = n.newXp;
@@ -66,7 +67,7 @@ namespace DefaultNamespace
             var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
             var thisXP = (float)sgd.playerXp;
             
-            var betweenLevels = new BetweenLevels(playerLevel,filler: thisXP/ levelXP);
+            var betweenLevels = new BetweenLevels(playerLevel,filler: thisXP/ levelXP,oldFiller:oldXPForBar/levelXP);
             
             
             betweenLevels.LeftButtonAction = () =>

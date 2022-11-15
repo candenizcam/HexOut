@@ -11,7 +11,7 @@ namespace DefaultNamespace
         private float _fill;
         private VisualElement _inBar;
         
-        public ProgressBar(string outPath, string inPath, float outWidth, float outHeight, float horizontalDiff, float verticalDiff, float fill = 0f)
+        public ProgressBar(string outPath, string inPath, float outWidth, float outHeight, float horizontalDiff, float verticalDiff,float fill = 0f)
         {
             var outBar = new VisualElement()
             {
@@ -35,8 +35,7 @@ namespace DefaultNamespace
                     height = outHeight - verticalDiff*2f,
                     position = Position.Absolute,
                     left = verticalDiff,
-                    top = horizontalDiff,
-                    unityBackgroundImageTintColor = Color.blue
+                    top = horizontalDiff
                 }
             };
             

@@ -256,7 +256,7 @@ MonoBehaviour:
   testCol: 5
   testObstacleSeed: 2010
   testCapsuleSeed: 2008
-  testCapsuleNumber: 4
+  testCapsuleNumber: 1
   testObstacleNumber: 6
   testDoubleObstacleNumber: 6
 --- !u!114 &587890531

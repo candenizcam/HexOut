@@ -1,5 +1,6 @@
 ﻿using System;
 using Classes;
+using Newtonsoft.Json.Linq;
 using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,32 +13,66 @@ namespace DefaultNamespace
         public Action MiddleButtonAction = () =>{ };
         public Action RightButtonAction = () =>{ };
 
+        private VisualElement _progressBg;
+        private VisualElement _leftButton;
+        private VisualElement _rightButton;
+        private VisualElement _midButton;
+        private VisualElement _gzText;
+        private VisualElement _leftBlock;
+        private ProgressBar _progressBar;
 
-        public BetweenLevels(string levelNoText="", string newSkinText="", string rightText="", float filler = 0f)
+        private float _oldFill;
+        private float _newFill;
+
+        private float _midButtonTop = 592f;
+        private float _gzTextTop = -175;
+        private float _sideButtonBottom = -180f;
+        private float _leftTextLeft = 60f;
+        
+
+
+        public BetweenLevels(string levelNoText="", string newSkinText="", string rightText="", float filler = 0f, float oldFiller =0f)
         {
             this.StretchToParentSize();
-
+            var textColor = new Color(112f/255f,112f/255f,112f/255f);
+            _oldFill = oldFiller;
+            _newFill = filler;
+            
+            
             style.justifyContent = Justify.Center;
             style.alignItems = Align.Center;
-            
-            var progressBg = new VisualElement();
-            progressBg.style.width = 1000f;
-            progressBg.style.height = 624f;
-            progressBg.style.backgroundImage = new StyleBackground(QuickAccess.LoadSprite("UI/BetweenLevels/LevelBarBack"));
 
-            var leftButton = new ButtonClickable(imagePath:"UI/BetweenLevels/Skins",Color.gray,LeftButtonFunction)
+            var stuffBar = new VisualElement();
+            stuffBar.StretchToParentWidth();
+            stuffBar.style.height = 624f;
+            stuffBar.style.justifyContent = Justify.Center;
+            stuffBar.style.alignItems = Align.Center;
+            stuffBar.style.backgroundColor = Color.green;
+            Add(stuffBar);
+            
+            _progressBg = new VisualElement
+            {
+                style =
+                {
+                    width = 1000f,
+                    height = 624f,
+                    backgroundImage = new StyleBackground(QuickAccess.LoadSprite("UI/BetweenLevels/ProgressBG"))
+                }
+            };
+
+            _leftButton = new ButtonClickable(imagePath:"UI/BetweenLevels/Skins",Color.gray,LeftButtonFunction)
             {
                 style =
                 {
                     width = 264f,
                     height = 164f,
                     position = Position.Absolute,
-                    bottom = -164f - 16f,
+                    bottom = _sideButtonBottom,
                     left = 0f
                 }
             };
             
-            var midButton = new ButtonClickable(imagePath:"UI/BetweenLevels/Next",Color.gray,MiddleButtonFunction)
+            _midButton = new ButtonClickable(imagePath:"UI/BetweenLevels/Next",Color.gray,MiddleButtonFunction)
             {
                 style =
                 {
@@ -49,45 +84,58 @@ namespace DefaultNamespace
                 }
             };
             
-            var rightButton = new ButtonClickable(imagePath:"UI/BetweenLevels/DoubleXP",Color.gray,RightButtonFunction)
+            _rightButton = new ButtonClickable(imagePath:"UI/BetweenLevels/DoubleXP",Color.gray,RightButtonFunction)
             {
                 style =
                 {
                     width = 264f,
                     height = 164f,
                     position = Position.Absolute,
-                    bottom = -164f - 16f,
+                    bottom = _sideButtonBottom,
                     right = 0f,
                 }
             };
 
-            var congratulationsText = new VisualElement()
+            _gzText = new Label("SUCCESS!")
             {
                 style =
                 {
                     width = 1000f,
                     height = 134,
-                    top = -175f,
-                    left = 0f,
+                    top = _gzTextTop,
+                    left = (Constants.UiWidth-1000f)*0.5f,
                     position = Position.Absolute,
-                    backgroundImage = new StyleBackground(QuickAccess.LoadSprite("UI/BetweenLevels/CONGRATULATIONS!"))
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 96f,
+                    unityTextAlign = TextAnchor.MiddleCenter,
+                    color = textColor
+                    
                 }
             };
 
 
-            var progressBar = new ProgressBar("UI/BetweenLevels/LevelBarBack","UI/BetweenLevels/LevelBarFront",400f,60f, 9f,7f)
+            _progressBar = new ProgressBar("UI/BetweenLevels/BarBG","UI/BetweenLevels/Bar",440f,60f, 9f,7f)
                 {
                     style =
                     {
                         position = Position.Absolute,
-                        left = 80f,
+                        left = 0f,
                         top = 347f
                     }
                 };
-            progressBar.Refill(filler);
+            _progressBar.Refill(_oldFill);
 
 
-            var textColor = new Color(112f/255f,112f/255f,112f/255f);
+            _leftBlock = new VisualElement()
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = _leftTextLeft,
+                    height = 624f,
+                    width = 440f
+                }
+            };
 
             var levelProgress = new Label("Level Progress")
             {
@@ -95,8 +143,6 @@ namespace DefaultNamespace
                 {
                     width = 440f,
                     height = 68f,
-                    position = Position.Absolute,
-                    left = 60f,
                     top = 146f,
                     unityFontDefinition = QuickAccess.LoadFont("fonts/DuzYazıFontu"),
                     fontSize = 48f,
@@ -112,7 +158,6 @@ namespace DefaultNamespace
                     width = 440f,
                     height = 140f,
                     position = Position.Absolute,
-                    left = 60f,
                     top = 213f,
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 96f,
@@ -128,7 +173,6 @@ namespace DefaultNamespace
                     width = 440f,
                     height = 68f,
                     position = Position.Absolute,
-                    left = 60f,
                     top = 434f,
                     unityFontDefinition = QuickAccess.LoadFont("fonts/DuzYazıFontu"),
                     fontSize = 32f,
@@ -156,17 +200,19 @@ namespace DefaultNamespace
             
 
 
-            progressBg.Add(leftButton);
-            progressBg.Add(midButton);
-            progressBg.Add(rightButton);
-            progressBg.Add(congratulationsText);
-            progressBg.Add(progressBar);
-            progressBg.Add(levelProgress);
-            progressBg.Add(progressNo);
-            progressBg.Add(newLookCounter);
-            progressBg.Add(rightStuffText);
+            _progressBg.Add(_leftButton);
+            _progressBg.Add(_midButton);
+            _progressBg.Add(_rightButton);
+            stuffBar.Add(_gzText);
+            _progressBg.Add(_leftBlock);
+            _leftBlock.Add(_progressBar);
+            _leftBlock.Add(levelProgress);
+            _leftBlock.Add(progressNo);
+            _leftBlock.Add(newLookCounter);
+            _progressBg.Add(rightStuffText);
             
-            Add(progressBg);
+            stuffBar.Add(_progressBg);
+            Debug.Log($"{_oldFill}, {_newFill}");
         }
 
         private void LeftButtonFunction()
@@ -186,7 +232,34 @@ namespace DefaultNamespace
 
         public void InitializationAnimation(float alpha)
         {
+            var phaseNo = 5f;
+            var alpha1 = Math.Clamp(alpha * phaseNo, 0f, 1f);
+            var alpha2 = Math.Clamp(alpha * phaseNo-1f, 0f, 1f);
+            var alpha3 = Math.Clamp(alpha * phaseNo-2f, 0f, 1f);
+            var alpha4 = Math.Clamp(alpha * phaseNo-3f, 0f, 1f);
+            var alpha5 = Math.Clamp(alpha * phaseNo-4f, 0f, 1f);
+
+            _gzText.style.opacity = alpha1;
+            _gzText.style.top = (1f-alpha1)*100f+_gzTextTop;
             
+            _progressBg.style.opacity = alpha2;
+            
+            
+            _progressBar.Refill(_newFill*alpha3 + _oldFill*(1f-alpha3));
+            _midButton.style.opacity = alpha3;
+            _midButton.style.top = (1f - alpha3) * 100f + _midButtonTop;
+
+            _leftButton.style.opacity = alpha4;
+            _rightButton.style.opacity = alpha4;
+
+            _leftButton.style.bottom = -(1f - alpha4) * 100f+_sideButtonBottom;
+            _rightButton.style.bottom = -(1f - alpha4) * 100f+_sideButtonBottom;
+
+            _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
+
+
+
+
         }
     }
 }
