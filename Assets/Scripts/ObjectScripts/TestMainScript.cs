@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Punity;
 using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -29,6 +30,11 @@ namespace DefaultNamespace
             
             MainCamera.backgroundColor = Color.white;
 
+            Serializer.Apply<SerialHexOutData>((shd) =>
+            {
+                Debug.Log($"xp: {shd.playerXp}");
+                
+            });
             
             //_activeLevel.StartAnimation();
             var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
@@ -49,8 +55,9 @@ namespace DefaultNamespace
          */
         private void ActivateLevel(LevelSeedData seed)
         {
-            _activeLevel = GameLevelScript.Instantiate();
             var d = LevelGenerator.GenerateSeededLevel(seed);
+            _activeLevel = GameLevelScript.Instantiate();
+            
             //var d = LevelGenerator.GenerateRawFrame(seed,2);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
@@ -67,6 +74,19 @@ namespace DefaultNamespace
                 _activeLevel.StartAnimation(1f);
                 _gameState = GameState.Game;
             }, delay:.4f);
+            _activeLevel.LevelDoneAction = (lcd) =>
+            {
+                Serializer.Apply<SerialHexOutData>( sgd =>
+                {
+                    sgd.playerXp += lcd.LevelXp;
+                    Debug.Log($"xp: {sgd.playerXp}");
+                });
+                
+                Destroy(_activeLevel.gameObject);
+                ActivateLevel(seed);
+
+            };
+
         }
 
 
@@ -77,13 +97,8 @@ namespace DefaultNamespace
                 var tp = Input.touches[0].phase;
                 if (tp == TouchPhase.Began)
                 {
-
                     var wp = MainCamera.ScreenToWorldPoint(Input.touches[0].position);
-                    
                     _activeLevel.TouchBegan(wp);
-                    
-                    
-                    
                 }else if (tp == TouchPhase.Ended)
                 {
                     var wp = MainCamera.ScreenToWorldPoint(Input.touches[0].position);
@@ -93,10 +108,6 @@ namespace DefaultNamespace
                 {
                     _activeLevel.DuringTouch();
                 }
-
-
-                
-
             }
         }
         
@@ -125,3 +136,8 @@ namespace DefaultNamespace
         
     }
 }
+
+
+/*
+Senden ayrıldıktan sonra hayatım çok değişti .Eski projelerimi açıp orada neler yapmışım diye boş boş baktım mesela .İçimi bir karanlık kapladı, dedim ki bu editörün renk temasını mı açsam .Ama sonra dedim ki buraya geldiğim gibi gideceğim .Çünkü hiç bir kod kalıcı değil bu hayatta .Ben de değilim .Mesela yeni commitler yaptım ,ama sen bunu bilmedin .Hep çektin arada aklımdan neler geçtiğinden bihabercesine .Biliyor musun, playlistimde bir sonraki kaç şarkı geçti .Yeni yudumlar azaldı kahve bardağımdan .Çevremde yabancılar gördüm ;ancak seni hep aradım .Şairin de dediği gibi .Bağır bağır bağırıyorum ,koşun kurşun eritmeğe çağırıyorum .
+*/

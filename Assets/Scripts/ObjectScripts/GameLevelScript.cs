@@ -11,6 +11,7 @@ namespace DefaultNamespace
     public partial class GameLevelScript: WorldObject
     {
         public Action<Tween, float> AddTweenAction;
+        public Action<LevelCompleteData> LevelDoneAction = (LevelCompleteData lcd) => {};
         
         private HexGridScript _grid;
         private List<CapsuleScript> _capsules = new();
@@ -22,6 +23,7 @@ namespace DefaultNamespace
         private Vector2 _startPos = new Vector2(-1f,-1f);
         private CapsuleScript _touchedGuy;
         private  ObstacleData[] _obstacles;
+        private LevelCompleteData _levelCompleteData = new LevelCompleteData(0);
 
         public Vector3 CapsulePosition(CapsuleData capsuleData)
         {
@@ -301,7 +303,6 @@ namespace DefaultNamespace
                     {
                         destroyList.Add(capsuleScript);
                     }
-                    
                 }
             }
             
@@ -309,7 +310,18 @@ namespace DefaultNamespace
             {
                 Destroy(capsuleScript.gameObject);
                 _capsules.Remove(capsuleScript);
+                _levelCompleteData.LevelXp += 1;
             }
+
+            if (!_capsules.Any())
+            {
+                LevelDoneFunction();   
+            }
+        }
+
+        private void LevelDoneFunction()
+        {
+            LevelDoneAction(_levelCompleteData);
         }
 
 
