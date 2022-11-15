@@ -44,7 +44,7 @@ namespace DefaultNamespace
             
 
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
-            ActivateBetweenLevels();
+            
 
         }
 
@@ -58,7 +58,9 @@ namespace DefaultNamespace
             };
             betweenLevels.MiddleButtonAction = () =>
             {
-
+                ActivateLevel(new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
+                    testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel));
+                UIDocument.rootVisualElement.Remove(betweenLevels);
             };
             betweenLevels.RightButtonAction = () =>
             {
@@ -105,7 +107,8 @@ namespace DefaultNamespace
                 });
                 
                 Destroy(_activeLevel.gameObject);
-                ActivateLevel(seed);
+                ActivateBetweenLevels();
+                
 
             };
 
@@ -158,8 +161,3 @@ namespace DefaultNamespace
         
     }
 }
-
-
-/*
-Senden ayrıldıktan sonra hayatım çok değişti .Eski projelerimi açıp orada neler yapmışım diye boş boş baktım mesela .İçimi bir karanlık kapladı, dedim ki bu editörün renk temasını mı açsam .Ama sonra dedim ki buraya geldiğim gibi gideceğim .Çünkü hiç bir kod kalıcı değil bu hayatta .Ben de değilim .Mesela yeni commitler yaptım ,ama sen bunu bilmedin .Hep çektin arada aklımdan neler geçtiğinden bihabercesine .Biliyor musun, playlistimde bir sonraki kaç şarkı geçti .Yeni yudumlar azaldı kahve bardağımdan .Çevremde yabancılar gördüm ;ancak seni hep aradım .Şairin de dediği gibi .Bağır bağır bağırıyorum ,koşun kurşun eritmeğe çağırıyorum .
-*/
