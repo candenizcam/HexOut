@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -37,12 +38,20 @@ namespace DefaultNamespace
             
             foreach (var obstacleData in DoubleFrameObstacles(row,col)
                          .OrderBy(x => procedural.NextDouble())
-                         .ToList()
-                         .Where(obstacleData => !data.Any(x => x.Collides(obstacleData))))
+                         .ToList())
             {
+                if(data.Any(x=> x.Collides(obstacleData))) continue;
+                
                 data.Add(obstacleData);
                 if(data.Count>= singleObstacleNumber+doubleObstacleNumber) break;
             }
+
+            string s = "";
+            foreach (var obstacleData in data)
+            {
+                s += $"{obstacleData.Row}, {obstacleData.Col}, {obstacleData.Direction}, {obstacleData.Length}\n";
+            }
+            Debug.Log(s);
             
 
             return data;

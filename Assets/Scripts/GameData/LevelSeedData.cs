@@ -19,8 +19,8 @@
             CapsuleSeed = capsuleSeed;
             ObstacleSeed = obstacleSeed;
             CapsuleNumber = capsuleNumber;
-            SingleObstacleNumber = doubleObstacleNumber;
-            DoubleObstacleNumber = singleObstacleNumber;
+            SingleObstacleNumber = singleObstacleNumber;
+            DoubleObstacleNumber = doubleObstacleNumber;
             LevelType = levelType;
             LevelDifficulty = levelDifficulty;
         }

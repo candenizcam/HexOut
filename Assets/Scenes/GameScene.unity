@@ -256,9 +256,9 @@ MonoBehaviour:
   testCol: 5
   testObstacleSeed: 2001
   testCapsuleSeed: 2003
-  testCapsuleNumber: 4
-  testObstacleNumber: 10
-  testDoubleObstacleNumber: 10
+  testCapsuleNumber: 5
+  testObstacleNumber: 15
+  testDoubleObstacleNumber: 15
 --- !u!114 &587890531
 MonoBehaviour:
   m_ObjectHideFlags: 0

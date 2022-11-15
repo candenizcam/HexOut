@@ -62,7 +62,7 @@ namespace DefaultNamespace.GameData
                 {
                     for (int j = 0; j < other.Length; j++)
                     {
-                        if (i + Direction == j + other.Direction)
+                        if ((i + Direction)%6 == (j + other.Direction)%6)
                         {
                             return true;
                         }
