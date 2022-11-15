@@ -38,7 +38,7 @@ namespace DefaultNamespace
             
             //_activeLevel.StartAnimation();
             var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
-                testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel);
+                testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
             
             ActivateLevel(editorSeed);
             
@@ -59,7 +59,7 @@ namespace DefaultNamespace
             betweenLevels.MiddleButtonAction = () =>
             {
                 ActivateLevel(new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
-                    testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel));
+                    testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1));
                 UIDocument.rootVisualElement.Remove(betweenLevels);
             };
             betweenLevels.RightButtonAction = () =>
@@ -83,6 +83,7 @@ namespace DefaultNamespace
             _activeLevel = GameLevelScript.Instantiate();
             
             //var d = LevelGenerator.GenerateRawFrame(seed,2);
+            _activeLevel.SetGameLevelInfo(1);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
             _activeLevel.AddTweenAction = (tween, delay) =>
@@ -102,8 +103,17 @@ namespace DefaultNamespace
             {
                 Serializer.Apply<SerialHexOutData>( sgd =>
                 {
-                    sgd.playerXp += lcd.LevelXp;
-                    Debug.Log($"xp: {sgd.playerXp}");
+                    
+
+                    var n = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, lcd.LevelXp);
+                    if (n.newLevel > sgd.playerLevel)
+                    {
+                        Debug.Log("level up");
+                    }
+                    sgd.playerXp = n.newXp;
+                    sgd.playerLevel = n.newLevel;
+
+                    Debug.Log($"xp: {sgd.playerXp}/{XPSystem.LevelXp(sgd.playerLevel)}");
                 });
                 
                 Destroy(_activeLevel.gameObject);
@@ -113,6 +123,10 @@ namespace DefaultNamespace
             };
 
         }
+        
+        
+        
+        
 
 
         private void HandleTouch()

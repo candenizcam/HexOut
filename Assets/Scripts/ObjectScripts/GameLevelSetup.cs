@@ -13,8 +13,15 @@ namespace DefaultNamespace
     public partial class GameLevelScript : WorldObject
     {
         public GameFieldFrame FieldFrame;
+
+        public int LevelDiff;
         //public float UiFieldHeight;
         //public float UiFieldWidth;
+        public void SetGameLevelInfo( int levelDiff)
+        {
+            LevelDiff = levelDiff;
+        }
+        
         public void SetGrid(Camera c, int row, int col, ObstacleData[] obstacles)
         {
             _row = row;

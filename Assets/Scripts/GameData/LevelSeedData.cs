@@ -10,8 +10,9 @@
         public int SingleObstacleNumber;
         public int DoubleObstacleNumber;
         public SeedType LevelType;
+        public int LevelDifficulty;
         
-        public LevelSeedData(int row, int col, int capsuleSeed, int obstacleSeed, int capsuleNumber, int singleObstacleNumber, int doubleObstacleNumber, SeedType levelType)
+        public LevelSeedData(int row, int col, int capsuleSeed, int obstacleSeed, int capsuleNumber, int singleObstacleNumber, int doubleObstacleNumber, SeedType levelType, int levelDifficulty)
         {
             Row = row;
             Col = col;
@@ -21,6 +22,7 @@
             SingleObstacleNumber = doubleObstacleNumber;
             DoubleObstacleNumber = singleObstacleNumber;
             LevelType = levelType;
+            LevelDifficulty = levelDifficulty;
         }
 
 

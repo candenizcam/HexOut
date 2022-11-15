@@ -310,7 +310,7 @@ namespace DefaultNamespace
             {
                 Destroy(capsuleScript.gameObject);
                 _capsules.Remove(capsuleScript);
-                _levelCompleteData.LevelXp += 1;
+                _levelCompleteData.LevelXp += XPSystem.CapsuleXp(LevelDiff);
             }
 
             if (!_capsules.Any())
