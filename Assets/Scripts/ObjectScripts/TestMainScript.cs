@@ -49,9 +49,26 @@ namespace DefaultNamespace
         }
 
 
-        private void ActivateBetweenLevels()
+        private void ActivateBetweenLevels(SerialHexOutData sgd, LevelCompleteData lcd)
         {
-            var betweenLevels = new BetweenLevels();
+            var oldLevel = sgd.playerLevel;
+            var oldXP = sgd.playerXp;
+            var n = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, lcd.LevelXp);
+            if (n.newLevel > oldLevel)
+            {
+                Debug.Log("level up");
+            }
+            sgd.playerXp = n.newXp;
+            sgd.playerLevel = n.newLevel;
+            
+            
+            var playerLevel = $"{sgd.playerLevel}";
+            var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
+            var thisXP = (float)sgd.playerXp;
+            
+            var betweenLevels = new BetweenLevels(playerLevel,filler: thisXP/ levelXP);
+            
+            
             betweenLevels.LeftButtonAction = () =>
             {
 
@@ -66,9 +83,9 @@ namespace DefaultNamespace
             {
 
             };
-            
-            
             UIDocument.rootVisualElement.Add(betweenLevels);
+            
+            
         }
 
 
@@ -103,22 +120,12 @@ namespace DefaultNamespace
             {
                 Serializer.Apply<SerialHexOutData>( sgd =>
                 {
-                    
-
-                    var n = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, lcd.LevelXp);
-                    if (n.newLevel > sgd.playerLevel)
-                    {
-                        Debug.Log("level up");
-                    }
-                    sgd.playerXp = n.newXp;
-                    sgd.playerLevel = n.newLevel;
-
-                    Debug.Log($"xp: {sgd.playerXp}/{XPSystem.LevelXp(sgd.playerLevel)}");
+                    ActivateBetweenLevels(sgd,lcd);
                 });
                 
-                Destroy(_activeLevel.gameObject);
-                ActivateBetweenLevels();
                 
+                UIDocument.rootVisualElement.Remove(_activeLevel.FieldFrame);
+                Destroy(_activeLevel.gameObject);
 
             };
 
