@@ -19,6 +19,7 @@ namespace DefaultNamespace
         private VisualElement _midButton;
         private VisualElement _gzText;
         private VisualElement _leftBlock;
+        private VisualElement _rightText;
         private ProgressBar _progressBar;
 
         private float _oldFill;
@@ -47,7 +48,6 @@ namespace DefaultNamespace
             stuffBar.style.height = 624f;
             stuffBar.style.justifyContent = Justify.Center;
             stuffBar.style.alignItems = Align.Center;
-            stuffBar.style.backgroundColor = Color.green;
             Add(stuffBar);
             
             _progressBg = new VisualElement
@@ -182,7 +182,7 @@ namespace DefaultNamespace
             };
             
             
-            var rightStuffText = new Label(rightText)
+            _rightText = new Label(rightText)
             {
                 style =
                 {
@@ -209,7 +209,7 @@ namespace DefaultNamespace
             _leftBlock.Add(levelProgress);
             _leftBlock.Add(progressNo);
             _leftBlock.Add(newLookCounter);
-            _progressBg.Add(rightStuffText);
+            _progressBg.Add(_rightText);
             
             stuffBar.Add(_progressBg);
             Debug.Log($"{_oldFill}, {_newFill}");
@@ -243,7 +243,7 @@ namespace DefaultNamespace
             _gzText.style.top = (1f-alpha1)*100f+_gzTextTop;
             
             _progressBg.style.opacity = alpha2;
-            
+
             
             _progressBar.Refill(_newFill*alpha3 + _oldFill*(1f-alpha3));
             _midButton.style.opacity = alpha3;
@@ -257,7 +257,7 @@ namespace DefaultNamespace
 
             _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
 
-
+            _rightText.style.opacity = alpha5;
 
 
         }

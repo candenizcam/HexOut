@@ -28,7 +28,7 @@ namespace DefaultNamespace
             UIDocument.rootVisualElement.style.paddingTop = Constants.UnsafeTopUi;
             Application.targetFrameRate = 60;
             
-            MainCamera.backgroundColor = Color.white;
+            MainCamera.backgroundColor = Constants.BackgroundColour;
 
             Serializer.Apply<SerialHexOutData>((shd) =>
             {
@@ -66,8 +66,10 @@ namespace DefaultNamespace
             var playerLevel = $"{sgd.playerLevel}";
             var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
             var thisXP = (float)sgd.playerXp;
+
+            var rightText = $"+{lcd.LevelXp}\n{levelXP-thisXP}/{levelXP}\nto next level";
             
-            var betweenLevels = new BetweenLevels(playerLevel,filler: thisXP/ levelXP,oldFiller:oldXPForBar/levelXP);
+            var betweenLevels = new BetweenLevels(playerLevel,filler: thisXP/ levelXP,oldFiller:oldXPForBar/levelXP,rightText:rightText);
             
             
             betweenLevels.LeftButtonAction = () =>

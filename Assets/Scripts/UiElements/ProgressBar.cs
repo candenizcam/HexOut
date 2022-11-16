@@ -34,8 +34,8 @@ namespace DefaultNamespace
                     width = _inWidth*_fill,
                     height = outHeight - verticalDiff*2f,
                     position = Position.Absolute,
-                    left = verticalDiff,
-                    top = horizontalDiff
+                    left = horizontalDiff,
+                    top = verticalDiff
                 }
             };
             
