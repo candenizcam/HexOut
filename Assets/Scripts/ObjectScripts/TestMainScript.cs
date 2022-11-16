@@ -49,8 +49,6 @@ namespace DefaultNamespace
                 testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
             
             ActivateLevel(editorSeed);
-            
-
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
             
 
@@ -89,6 +87,7 @@ namespace DefaultNamespace
             {
                 ActivateLevel(new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
                     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1));
+                UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
                 UIDocument.rootVisualElement.Remove(betweenLevels);
             };
             betweenLevels.RightButtonAction = () =>
