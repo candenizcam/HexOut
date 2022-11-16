@@ -18,6 +18,7 @@ namespace DefaultNamespace
         public int testCapsuleNumber;
         public int testObstacleNumber;
         public int testDoubleObstacleNumber;
+        public bool resetSaves;
         private GameState _gameState;
         
         
@@ -30,11 +31,18 @@ namespace DefaultNamespace
             
             MainCamera.backgroundColor = Constants.BackgroundColour;
 
-            Serializer.Apply<SerialHexOutData>((shd) =>
+            
+
+            if (Application.isEditor && resetSaves)
             {
-                Debug.Log($"xp: {shd.playerXp}");
-                
-            });
+                Serializer.Apply<SerialHexOutData>((sgd) =>
+                {
+                    sgd.playerLevel = 0;
+                    sgd.playerXp = 0;
+
+                });
+            }
+            
             
             //_activeLevel.StartAnimation();
             var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
