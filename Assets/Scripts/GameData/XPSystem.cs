@@ -47,12 +47,18 @@ namespace DefaultNamespace.GameData
             return draws;
         }
 
+        public static bool NewSkinInLevel(int levelNo)
+        {
+            return levelNo % 10 == 0;
+        }
 
-        public static (int newLevel, int newXp) AddXP(int oldLevel, int oldXp, int deltaXp)
+        public static (int newLevel, int newXp, int newSkin) AddXP(int oldLevel, int oldXp, int deltaXp, int newSkin=0)
         {
             var newXp = oldXp + deltaXp;
             var levelXp = LevelXp(oldLevel);
-            return newXp > levelXp ? AddXP(oldLevel + 1, 0, newXp - levelXp) : (oldLevel, newXp);
+            return newXp > levelXp ? AddXP(oldLevel + 1, 0, newXp - levelXp, NewSkinInLevel(oldLevel+1) ? newSkin+1:newSkin) : (oldLevel, newXp, 0);
+            
+            
         }
         
     }

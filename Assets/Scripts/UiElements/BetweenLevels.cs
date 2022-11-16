@@ -18,12 +18,16 @@ namespace DefaultNamespace
         private VisualElement _rightButton;
         private VisualElement _midButton;
         private VisualElement _gzText;
+        private VisualElement _levelUpText;
         private VisualElement _leftBlock;
         private VisualElement _rightText;
+        private Label _levelNoTextLabel;
         private ProgressBar _progressBar;
 
         private float _oldFill;
         private float _newFill;
+        private int _levels;
+        private int _levelNo;
 
         private float _midButtonTop = 592f;
         private float _gzTextTop = -175;
@@ -32,12 +36,13 @@ namespace DefaultNamespace
         
 
 
-        public BetweenLevels(string levelNoText="", string newSkinText="", string rightText="", float filler = 0f, float oldFiller =0f)
+        public BetweenLevels(int levelNoText=0, string newSkinText="", string rightText="", float filler = 0f, float oldFiller =0f, int levels=0, bool newSkin=false)
         {
             this.StretchToParentSize();
             var textColor = new Color(112f/255f,112f/255f,112f/255f);
             _oldFill = oldFiller;
             _newFill = filler;
+            _levels = levels;
             
             
             style.justifyContent = Justify.Center;
@@ -112,6 +117,24 @@ namespace DefaultNamespace
                     
                 }
             };
+            
+            _levelUpText = new Label(newSkin? "New look unlocked!" :"Level Up!")
+            {
+                style =
+                {
+                    width = 1000f,
+                    height = 134,
+                    top = _gzTextTop,
+                    left = (Constants.UiWidth-1000f)*0.5f,
+                    position = Position.Absolute,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 96f + (newSkin ? 12f :48f),
+                    unityTextAlign = TextAnchor.MiddleCenter,
+                    color = textColor
+                    
+                }
+            };
+            _levelUpText.style.opacity = 0f;
 
 
             _progressBar = new ProgressBar("UI/BetweenLevels/BarBG","UI/BetweenLevels/Bar",440f,60f, 9f,7f)
@@ -150,8 +173,9 @@ namespace DefaultNamespace
                     color = textColor
                 }
             };
-            
-            var progressNo = new Label(levelNoText)
+
+            _levelNo = levelNoText;
+            _levelNoTextLabel = new Label($"{levelNoText}")
             {
                 style =
                 {
@@ -204,10 +228,11 @@ namespace DefaultNamespace
             _progressBg.Add(_midButton);
             _progressBg.Add(_rightButton);
             stuffBar.Add(_gzText);
+            stuffBar.Add(_levelUpText);
             _progressBg.Add(_leftBlock);
             _leftBlock.Add(_progressBar);
             _leftBlock.Add(levelProgress);
-            _leftBlock.Add(progressNo);
+            _leftBlock.Add(_levelNoTextLabel);
             _leftBlock.Add(newLookCounter);
             _progressBg.Add(_rightText);
             
@@ -239,27 +264,65 @@ namespace DefaultNamespace
             var alpha4 = Math.Clamp(alpha * phaseNo-3f, 0f, 1f);
             var alpha5 = Math.Clamp(alpha * phaseNo-4f, 0f, 1f);
 
+            
             _gzText.style.opacity = alpha1;
             _gzText.style.top = (1f-alpha1)*100f+_gzTextTop;
             
             _progressBg.style.opacity = alpha2;
 
             
-            _progressBar.Refill(_newFill*alpha3 + _oldFill*(1f-alpha3));
+
+            var a3 = Math.Clamp(alpha3*0.25f, 0f, _newFill - _oldFill);
+            _progressBar.Refill(_oldFill + a3);
             _midButton.style.opacity = alpha3;
-            _midButton.style.top = (1f - alpha3) * 100f + _midButtonTop;
+            _midButton.style.top = -(1f - alpha3) * 100f + _midButtonTop;
 
             _leftButton.style.opacity = alpha4;
             _rightButton.style.opacity = alpha4;
-
-            _leftButton.style.bottom = -(1f - alpha4) * 100f+_sideButtonBottom;
-            _rightButton.style.bottom = -(1f - alpha4) * 100f+_sideButtonBottom;
+            _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
 
             _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
 
             _rightText.style.opacity = alpha5;
-
-
         }
+
+        public void LevelUpAnimation(float alpha)
+        {
+            var phaseNo = 5f;
+            var alpha1 = Math.Clamp(alpha * phaseNo, 0f, 1f);
+            var alpha2 = Math.Clamp(alpha * phaseNo-1f, 0f, 1f);
+            var alpha3 = Math.Clamp(alpha * phaseNo-2f, 0f, 1f);
+            var alpha4 = Math.Clamp(alpha * phaseNo-3f, 0f, 1f);
+            var alpha5 = Math.Clamp(alpha * phaseNo-4f, 0f, 1f);
+            
+            _gzText.style.opacity = alpha1;
+            _gzText.style.top = (1f-alpha1)*100f+_gzTextTop;
+            
+            _progressBg.style.opacity = alpha2;
+
+
+            var a3 = Math.Clamp(alpha * phaseNo - 2f, 0f,_levels + _newFill - _oldFill);
+            _progressBar.Refill((_oldFill + a3)%1f);
+
+            _levelNoTextLabel.text = $"{(int) (_oldFill + a3)+_levelNo}"; 
+
+            _levelUpText.style.opacity = alpha3;
+            _levelUpText.style.top = (1f-alpha3)*100f+_gzTextTop;
+            _gzText.style.top = _gzTextTop - alpha3 * 120f;
+            
+            _midButton.style.opacity = alpha4;
+            _midButton.style.top = -(1f - alpha4) * 100f + _midButtonTop;
+            _leftButton.style.opacity = alpha4;
+            _rightButton.style.opacity = alpha4;
+            _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            
+            _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
+
+            _rightText.style.opacity = alpha5;
+        }
+
+        
     }
 }

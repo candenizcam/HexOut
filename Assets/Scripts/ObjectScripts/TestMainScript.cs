@@ -54,22 +54,23 @@ namespace DefaultNamespace
             var oldLevel = sgd.playerLevel;
             var oldXPForBar =(float) sgd.playerXp;
             var n = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, lcd.LevelXp);
-            if (n.newLevel > oldLevel)
-            {
-                oldXPForBar = 0f;
-                Debug.Log("level up");
-            }
+            
+            var levelUp = n.newLevel > oldLevel; 
+            
             sgd.playerXp = n.newXp;
             sgd.playerLevel = n.newLevel;
             
             
-            var playerLevel = $"{sgd.playerLevel}";
             var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
             var thisXP = (float)sgd.playerXp;
 
             var rightText = $"+{lcd.LevelXp}\n{levelXP-thisXP}/{levelXP}\nto next level";
             
-            var betweenLevels = new BetweenLevels(playerLevel,filler: thisXP/ levelXP,oldFiller:oldXPForBar/levelXP,rightText:rightText);
+            var betweenLevels = new BetweenLevels(oldLevel,
+                filler: thisXP/ levelXP,
+                oldFiller:oldXPForBar/levelXP,
+                rightText:rightText,
+                levels:n.newLevel-oldLevel,newSkin:n.newSkin>0);
             
             
             betweenLevels.LeftButtonAction = () =>
@@ -87,13 +88,25 @@ namespace DefaultNamespace
 
             };
             UIDocument.rootVisualElement.Add(betweenLevels);
-            
-            betweenLevels.InitializationAnimation(
-                0f);
-            TweenHolder.NewTween(Constants.BetweenLevelsTime,duringAction: (alpha) =>
+
+            if (levelUp)
             {
-                betweenLevels.InitializationAnimation(alpha);
-            });
+                betweenLevels.LevelUpAnimation(0f);
+                TweenHolder.NewTween(Constants.BetweenLevelsTime,duringAction: (alpha) =>
+                {
+                    betweenLevels.LevelUpAnimation(alpha);
+                });
+            }
+            else
+            {
+                betweenLevels.InitializationAnimation(0f);
+                TweenHolder.NewTween(Constants.BetweenLevelsTime,duringAction: (alpha) =>
+                {
+                    betweenLevels.InitializationAnimation(alpha);
+                });
+                
+            }
+            
         }
 
 
