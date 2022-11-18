@@ -20,6 +20,7 @@ namespace DefaultNamespace
         public int testObstacleNumber;
         public int testDoubleObstacleNumber;
         public bool resetSaves;
+        public int levelIndex;
         
         private GameState _gameState;
         
@@ -47,10 +48,11 @@ namespace DefaultNamespace
 
             //TestLevels();
             
-            var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
-                testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
+            //var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
+           //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
+           ;
             
-            ActivateLevel(editorSeed2);
+            ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
 
         }

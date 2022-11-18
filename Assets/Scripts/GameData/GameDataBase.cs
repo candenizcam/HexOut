@@ -7,8 +7,6 @@ namespace DefaultNamespace.GameData
         public static List<LevelSeedData> LevelSeedDatas = new()
         {
             new LevelSeedData("another test level",9,5,2001,2003,4,10,10,LevelSeedData.SeedType.FrameLevel,1),
-            
-            
             new LevelSeedData("30100_3_1",9,5,1,30100,3,10,5,LevelSeedData.SeedType.FrameLevel,1),
 new LevelSeedData("30100_3_2",9,5,2,30100,3,10,5,LevelSeedData.SeedType.FrameLevel,0),
 new LevelSeedData("30100_3_3",9,5,3,30100,3,10,5,LevelSeedData.SeedType.FrameLevel,1),
@@ -369,9 +367,7 @@ new LevelSeedData("40205_5_45",9,5,45,40205,5,10,10,LevelSeedData.SeedType.Frame
 new LevelSeedData("40205_5_61",9,5,61,40205,5,10,10,LevelSeedData.SeedType.FrameLevel,1),
 new LevelSeedData("40205_5_63",9,5,63,40205,5,10,10,LevelSeedData.SeedType.FrameLevel,1),
 new LevelSeedData("40205_5_77",9,5,77,40205,5,10,10,LevelSeedData.SeedType.FrameLevel,0),
-            
-            
-            new LevelSeedData("30100_3_3",11,7,3,30100,3,14,7,LevelSeedData.SeedType.FrameLevel,0),
+new LevelSeedData("30100_3_3",11,7,3,30100,3,14,7,LevelSeedData.SeedType.FrameLevel,0),
 new LevelSeedData("30100_3_5",11,7,5,30100,3,14,7,LevelSeedData.SeedType.FrameLevel,0),
 new LevelSeedData("30100_3_15",11,7,15,30100,3,14,7,LevelSeedData.SeedType.FrameLevel,1),
 new LevelSeedData("30100_3_17",11,7,17,30100,3,14,7,LevelSeedData.SeedType.FrameLevel,0),
