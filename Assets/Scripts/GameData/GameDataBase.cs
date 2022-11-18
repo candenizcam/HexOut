@@ -6,7 +6,6 @@ namespace DefaultNamespace.GameData
     {
         public static List<LevelSeedData> LevelSeedDatas = new()
         {
-            new LevelSeedData("another test level",9,5,2001,2003,4,10,10,LevelSeedData.SeedType.FrameLevel,1),
             new LevelSeedData("30100_3_1",9,5,1,30100,3,10,5,LevelSeedData.SeedType.FrameLevel,1),
 new LevelSeedData("30100_3_2",9,5,2,30100,3,10,5,LevelSeedData.SeedType.FrameLevel,0),
 new LevelSeedData("30100_3_3",9,5,3,30100,3,10,5,LevelSeedData.SeedType.FrameLevel,1),

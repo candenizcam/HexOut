@@ -183,8 +183,8 @@ namespace DefaultNamespace
             };
             betweenLevels.MiddleButtonAction = () =>
             {
-                ActivateLevel(new LevelSeedData("testLevel",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
-                    testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1));
+                levelIndex += 1;
+                ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
                 UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
                 UIDocument.rootVisualElement.Remove(betweenLevels);
             };
