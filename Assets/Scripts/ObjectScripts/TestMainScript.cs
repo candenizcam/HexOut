@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
 using Punity;
@@ -19,6 +20,7 @@ namespace DefaultNamespace
         public int testObstacleNumber;
         public int testDoubleObstacleNumber;
         public bool resetSaves;
+        
         private GameState _gameState;
         
         
@@ -42,17 +44,111 @@ namespace DefaultNamespace
 
                 });
             }
+
+            //TestLevels();
             
-            
-            //_activeLevel.StartAnimation();
-            var editorSeed = new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
+            var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
                 testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
             
-            ActivateLevel(editorSeed);
+            ActivateLevel(editorSeed2);
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
-            
 
         }
+
+
+        void TestLevels()
+        {
+            //var obstacleSeed = testObstacleSeed;
+            
+
+            var v1 = 0f;
+            var v2 = 0f;
+            
+            var s = "";
+            for (int totalObs = 2; totalObs < 5; totalObs++)
+            {
+                var totalObstacles = totalObs * testCol;
+                for (int doubleObs = 1; doubleObs <= totalObs-2; doubleObs++)
+                {
+                    
+                    var doubleObstacles = doubleObs * testCol;
+                    var singleObstacles = totalObstacles-doubleObstacles;
+
+                    for (int os = 0; os < 6; os++)
+                    {
+                        //0.23
+                        var t1 = Time.realtimeSinceStartup;
+                        var obstacleSeed = totalObs * 10000 + doubleObs * 100 + os;
+                        var editorSeed = new LevelSeedData("testLevel",testRow, testCol, 0, obstacleSeed, 0,
+                            singleObstacles,doubleObstacles,LevelSeedData.SeedType.FrameLevel,1);
+                        
+                        
+                        var obstacleOnly = LevelGenerator.GenerateSeededLevel(editorSeed); //0.00123
+                        
+                        for (int cn = 0; cn < 9; cn++)
+                        {
+                            var capsuleNo = 2 * cn + 3;
+                
+                            var n = 0;
+                            for (int i = 0; i < 100; i++)
+                            {
+                                //0.002
+                                var d = LevelGenerator.GenerateFrameLevelWithNewObstacles(obstacleOnly, i, capsuleNo); //0.001098
+                                
+                                
+                                if (d.CapsuleDatas.Count()<capsuleNo)
+                                {
+                                    continue;
+                                }
+                                
+                                var b = LevelTester.TestLevel(d); //0.003644377
+                                
+                                
+                                if (b>=0)
+                                {
+                                    n += 1;
+                                    s+=editorSeed.RecordMe(name:$"\"{obstacleSeed}_{capsuleNo}_{i}\"",capsuleSeed: i,capsuleNumber:capsuleNo,difficulty:b);
+                                }
+                                
+
+                                if (n > 5)
+                                {
+                                    break;
+                                }
+                            }
+                
+                            
+
+                            if (n == 0)
+                            {
+                                Debug.Log($"too many capsules {cn}");
+                                break; //too many capsules
+                            }
+            
+            
+                        }
+                        
+                        var t2 = Time.realtimeSinceStartup;
+                        v1 += t2 - t1;
+                        v2 += 1f;
+
+
+                    }
+                    
+                    
+                    
+                }
+                
+                
+            }
+            Debug.Log(s);
+            Debug.Log($"mean is: {v1/v2}");
+            
+            
+
+            
+        }
+        
 
 
         private void ActivateBetweenLevels(SerialHexOutData sgd, LevelCompleteData lcd)
@@ -85,7 +181,7 @@ namespace DefaultNamespace
             };
             betweenLevels.MiddleButtonAction = () =>
             {
-                ActivateLevel(new LevelSeedData(testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
+                ActivateLevel(new LevelSeedData("testLevel",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
                     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1));
                 UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
                 UIDocument.rootVisualElement.Remove(betweenLevels);
@@ -125,6 +221,7 @@ namespace DefaultNamespace
         private void ActivateLevel(LevelSeedData seed)
         {
             var d = LevelGenerator.GenerateSeededLevel(seed);
+            d.Name = seed.Name;
             _activeLevel = GameLevelScript.Instantiate();
             
             //var d = LevelGenerator.GenerateRawFrame(seed,2);

@@ -30,10 +30,27 @@ namespace DefaultNamespace
             //var allObstacles = new List<ObstacleData>();
             var obstacles = ObstacleGenerator.GenerateMixedObstacles(row, col,obstacleNumber, doubleObstacleNumber,obstacleProcedural);
 
-            var capsules = GenerateCapsuleData(row, col, capsuleNumber,obstacles, capsuleProcedural);
+            List<CapsuleData> capsules;
+            if (capsuleNumber > 0)
+            {
+                capsules = GenerateCapsuleDataOther(row, col, capsuleNumber,obstacles, capsuleProcedural);
+                
+            }
+            else
+            {
+                capsules = new List<CapsuleData>();
+            }
             
             
-            return new LevelData($"level {capsuleProcedural}-{obstacleProcedural}", row, col, capsules.ToArray(),obstacles.ToArray());
+            
+            return new LevelData($"level {obstacleSeed}-{capsuleSeed}", row, col, capsules.ToArray(),obstacles.ToArray());
+        }
+
+        public static LevelData GenerateFrameLevelWithNewObstacles(LevelData ld, int capsuleSeed, int capsuleNo)
+        {
+            var capsuleProcedural = new System.Random(capsuleSeed);
+            var capsules = GenerateCapsuleDataOther(ld.Row, ld.Col, capsuleNo,ld.ObstacleDatas.ToList(), capsuleProcedural);
+            return new LevelData(ld.Name+$"{capsuleSeed}", ld.Row, ld.Col, capsules.ToArray(),ld.ObstacleDatas);
         }
 
         public static LevelData GenerateRawFrame(LevelSeedData lsd, int l)
@@ -56,6 +73,9 @@ namespace DefaultNamespace
             
             for(int i=0;i<1000;i++)
             {
+                //var r = procedural.Next(2, row - 2);
+                //var c = procedural.Next(2, col - 2);
+                //var a = procedural.Next(0, 6);
                 var r = rList.OrderBy(a => procedural.Next()).First();
                 var c = cList.OrderBy(a => procedural.Next()).First();
                 var l = lList.OrderBy(a => procedural.Next()).First();
@@ -79,6 +99,7 @@ namespace DefaultNamespace
                     capsules.Add(d);
                     if (capsules.Count >= capsuleNumber)
                     {
+                        Debug.Log($"{i}");
                         break;
                     }
                 }
@@ -87,7 +108,86 @@ namespace DefaultNamespace
             return capsules;
         }
         
+        private static List<CapsuleData> GenerateCapsuleDataOther(int row, int col, int capsuleNumber,
+            List<ObstacleData> obstacles, Random procedural)
+        {
+            var capsules = new List<CapsuleData>();
 
+            var allCapsules = new List<CapsuleData>();
+            for (var r = 2; r <= row - 2; r++)
+            {
+                for (var c = 2; c <= col - 2; c++)
+                {
+                    for (var a = 0; a < 6; a++)
+                    {
+                        if((r==2 && (a is 0 or 5)) || (r==row-2 && (a is 2 or 3)) || (c==2 && a<3) ||(c==col-2 && a>=3)) continue;
+                        
+                        var cd = new CapsuleData(r, c, 2, a, false);
+                        if (!obstacles.Any(x => cd.ObstaclesBy(x)))
+                        {
+                            allCapsules.Add(cd);
+                        }
+                    }
+                }
+            }
+
+            var reordered = allCapsules.OrderBy(x=>procedural.Next()).ToList();
+
+            
+            for (var i = 0; i < reordered.Count(); i++)
+            {
+                if (capsules.Any(x => x.CollidesWith(reordered[i]))) continue;
+                capsules.Add(reordered[i]);
+                if (capsules.Count() >= capsuleNumber)
+                {
+                    break;
+                }
+
+            }
+            return capsules;
+            
+            /*
+            var rList = Enumerable.Range(2, row-2).ToList();
+            var cList = Enumerable.Range(2, col-2).ToList();
+            var aList = Enumerable.Range(0, 6).ToList();
+            var lList = Enumerable.Repeat(2, capsuleNumber).ToList(); // this will make sure procedural generator works with multiple length types,
+            
+            for(int i=0;i<1000;i++)
+            {
+                //var r = procedural.Next(2, row - 2);
+                //var c = procedural.Next(2, col - 2);
+                //var a = procedural.Next(0, 6);
+                var r = rList.OrderBy(a => procedural.Next()).First();
+                var c = cList.OrderBy(a => procedural.Next()).First();
+                var l = lList.OrderBy(a => procedural.Next()).First();
+                var a = aList.OrderBy(a => procedural.Next()).First();
+                var d = new CapsuleData(r,c,l,a,false);
+
+
+                if (d.TwoIndexTiles().Any(t => t.row < 2 || t.row > row-1 || t.col < 2 || t.col > col-1))
+                {
+                    continue;
+                }
+
+                if (obstacles.Any(x => d.ObstaclesBy(x)))
+                {
+                    continue;
+                }
+                
+
+                if (!capsules.Any(x => x.CollidesWith(d)))
+                {
+                    capsules.Add(d);
+                    if (capsules.Count >= capsuleNumber)
+                    {
+                        Debug.Log($"{i}");
+                        break;
+                    }
+                }
+            }
+            */
+           
+        }
         
 
 
