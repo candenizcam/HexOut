@@ -12,7 +12,8 @@ namespace DefaultNamespace
     {
         public Action<Tween, float> AddTweenAction;
         public Action<LevelCompleteData> LevelDoneAction = (LevelCompleteData lcd) => {};
-        
+        public Action<int,int> CapsuleRemovedAction;
+
         private HexGridScript _grid;
         private List<CapsuleScript> _capsules = new();
         private float _smallScale = 1f;
@@ -189,42 +190,6 @@ namespace DefaultNamespace
                     ret = 2;
                 }
                 
-                /*
-                
-                if (obstacled.Count() > 1)
-                {
-                    var s = "";
-                    foreach (var obstacleData in obstacled)
-                    {
-                        
-                        s += obstacleData.InfoText()+"\n";
-                    }
-                    Debug.Log(s);
-
-                    Debug.LogError("there is a problem, two obstacles are touched");
-                }
-                var clashing = obstacled.First();
-                var ret = 0;
-                if (newData.FirstRow == clashing.Row && newData.FirstCol == clashing.Col && clashing.Length==2)
-                {
-                    var newAngle = (newData.Angle + (newData.Angle == clashing.Direction ? 4:2))%6;
-                    var newerData = new CapsuleData(newData.FirstRow, newData.FirstCol, newData.Length, newAngle,true); 
-                    capsuleScript.NewTarget(newerData,CapsulePosition(newerData));
-                }
-                else
-                {
-                    if (oldData.Collapsed)
-                    {
-                        SetTweenForCollision(capsuleScript,newData.DataFromFirst(1),2,true);
-                        
-                    }
-                    else
-                    {
-                        SetTweenForCollision(capsuleScript,newData,2,false);
-                    }
-                    ret = 2;
-                }
-                */
 
                 var thatTile = _grid.GetTile(clashing.Row, clashing.Col);
                 var sr = clashing.Length==1 ? thatTile.obstacles[clashing.Direction]:thatTile.doubleObstacles[clashing.Direction];
@@ -347,7 +312,10 @@ namespace DefaultNamespace
             {
                 Destroy(capsuleScript.gameObject);
                 _capsules.Remove(capsuleScript);
-                _levelCompleteData.LevelXp += XPSystem.CapsuleXp(LevelDiff);
+                var x = XPSystem.CapsuleXp(LevelDiff);
+                CapsuleRemovedAction(_levelCompleteData.LevelXp,x);
+                _levelCompleteData.LevelXp += x;
+                
             }
 
             if (!_capsules.Any())

@@ -10,6 +10,8 @@ namespace DefaultNamespace
     {
         public Action HomeButtonAction = () => { };
         private ProgressBar _progressBar;
+        private Label _bigText;
+        private Label _smallText;
         
         public GameFieldFrame(float left, float top, float width, float height)
         {
@@ -144,6 +146,39 @@ namespace DefaultNamespace
                     backgroundImage = QuickAccess.LoadSpriteBg("UI/BetweenLevels/LevelIndicator")
                 }
             };
+
+            _smallText = new Label()
+            {
+                style=
+                {
+                    position = Position.Absolute,
+                    top = 24,
+                    unityTextAlign = TextAnchor.UpperCenter,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 28f,
+                    color = Constants.UiTextColour()
+                },
+                text = "level"
+            };
+            _smallText.StretchToParentWidth();
+            
+            _bigText = new Label()
+            {
+                style=
+                {
+                    position = Position.Absolute,
+                    top = 50,
+                    unityTextAlign = TextAnchor.UpperCenter,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 72f,
+                    color = Constants.UiTextColour()
+                },
+                text = "1293"
+            };
+            _bigText.StretchToParentWidth();
+            indicator.Add(_bigText);
+            indicator.Add(_smallText);
+            
             hudFrame.Add(indicator);
         }
 
@@ -155,6 +190,23 @@ namespace DefaultNamespace
         private void HomeButtonFunction()
         {
             HomeButtonAction();
+        }
+
+        public void SetIndicatorText(string bigText="", string smallText="level", bool levelUp=false)
+        {
+            if (levelUp)
+            {
+                _smallText.text = smallText;
+                _bigText.text = "UP!";
+            }
+            else
+            {
+                _bigText.text = bigText;
+                _smallText.text = smallText;
+            }
+            
+            
+
         }
         
     }

@@ -15,7 +15,7 @@ namespace DefaultNamespace
             if (lsd.LevelType == LevelSeedData.SeedType.FrameLevel)
             {
                 return GenerateFrameLevel(lsd.CapsuleSeed, lsd.ObstacleSeed, lsd.Row, lsd.Col, lsd.CapsuleNumber,
-                    lsd.SingleObstacleNumber,lsd.DoubleObstacleNumber);
+                    lsd.SingleObstacleNumber,lsd.DoubleObstacleNumber, lsd.LevelDifficulty);
             }
             else
             {
@@ -23,7 +23,8 @@ namespace DefaultNamespace
             }
         }
         
-        public static LevelData GenerateFrameLevel(int capsuleSeed, int obstacleSeed, int row, int col, int capsuleNumber, int obstacleNumber, int doubleObstacleNumber)
+        public static LevelData GenerateFrameLevel(int capsuleSeed, int obstacleSeed, int row, int col, 
+            int capsuleNumber, int obstacleNumber, int doubleObstacleNumber, int diff)
         {
             var capsuleProcedural = new System.Random(capsuleSeed);
             var obstacleProcedural  = new System.Random(obstacleSeed);
@@ -43,7 +44,7 @@ namespace DefaultNamespace
             
             
             
-            return new LevelData($"level {obstacleSeed}-{capsuleSeed}", row, col, capsules.ToArray(),obstacles.ToArray());
+            return new LevelData($"level {obstacleSeed}-{capsuleSeed}", row, col, capsules.ToArray(),obstacles.ToArray(),diff);
         }
 
         public static (LevelData ld,float t1, float t2) GenerateFrameLevelWithNewObstacles(LevelData ld, int capsuleSeed, int capsuleNo)

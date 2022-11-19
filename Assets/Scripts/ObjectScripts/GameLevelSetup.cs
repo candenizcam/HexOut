@@ -14,12 +14,14 @@ namespace DefaultNamespace
     {
         public GameFieldFrame FieldFrame;
 
-        public int LevelDiff;
+        public int LevelDiff => ThisLevelData.Difficulty;
+
+        public LevelData ThisLevelData;
         //public float UiFieldHeight;
         //public float UiFieldWidth;
-        public void SetGameLevelInfo( int levelDiff)
+        public void SetGameLevelInfo( LevelData ld)
         {
-            LevelDiff = levelDiff;
+            ThisLevelData = ld;
         }
         
         public void SetGrid(Camera c, int row, int col, ObstacleData[] obstacles)

@@ -54,9 +54,9 @@ namespace DefaultNamespace
            //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
            ;
             
-            //ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
-            //UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
-            Proceduraler();
+            ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
+            
+            //Proceduraler();
 
         }
 
@@ -275,7 +275,6 @@ namespace DefaultNamespace
             {
                 levelIndex += 1;
                 ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
-                UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
                 UIDocument.rootVisualElement.Remove(betweenLevels);
             };
             betweenLevels.RightButtonAction = () =>
@@ -317,7 +316,7 @@ namespace DefaultNamespace
             _activeLevel = GameLevelScript.Instantiate();
             
             //var d = LevelGenerator.GenerateRawFrame(seed,2);
-            _activeLevel.SetGameLevelInfo(1);
+            _activeLevel.SetGameLevelInfo(d);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
             _activeLevel.SetCapsules(d.CapsuleDatas);
             _activeLevel.AddTweenAction = (tween, delay) =>
@@ -345,6 +344,63 @@ namespace DefaultNamespace
                 Destroy(_activeLevel.gameObject);
 
             };
+            _activeLevel.CapsuleRemovedAction = (oldXP, newXP) =>
+            {
+                Serializer.Apply<SerialHexOutData>( sgd =>
+                {
+                    var oldN = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, oldXP);
+                    var newN = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, newXP+oldXP);
+                    
+                    var oldLevel = oldN.newLevel;
+                    var oldXPForBar =(float) oldN.newXp;
+                    
+                    var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
+                    var levelUp = newN.newLevel > sgd.playerLevel; // if it ever increases in level, change here
+                    var levelUpWasTheCase = oldLevel > sgd.playerLevel; // if it ever increases in level, change here
+                    if (levelUpWasTheCase)
+                    {
+                        _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{newN.newLevel}",levelUp:true);
+                    }
+                    else
+                    {
+                        TweenHolder.NewTween(0.15f,duringAction: (alpha) =>
+                        {
+                            if (levelUp)
+                            {
+                                _activeLevel.FieldFrame.SetBar(oldXPForBar*(1f-alpha)/levelXP + alpha );
+                            
+                            }
+                            else
+                            {
+                                _activeLevel.FieldFrame.SetBar((oldXPForBar*(1f-alpha) + (float)alpha*newN.newXp)/levelXP );
+                            }
+                        
+                        },exitAction: () =>
+                        {
+                            _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{newN.newLevel}",levelUp:levelUp);
+                        });
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                });
+
+            };
+            UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
+            Serializer.Apply<SerialHexOutData>(sgd =>
+                {
+                    
+                    var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
+                    _activeLevel.FieldFrame.SetBar(sgd.playerXp/levelXP);
+                    
+                    _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{sgd.playerLevel}");
+
+                }
+            );
+            
 
         }
         

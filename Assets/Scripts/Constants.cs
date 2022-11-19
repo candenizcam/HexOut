@@ -54,6 +54,7 @@ namespace DefaultNamespace
             new Color(0.137f, 0f, 0.71f),
             new Color(0.145f, 0f, 0.427f),
         };
+
         /**
          * Red: light: 0.996f, 0.004f, 0.29f dark: 0.808f, 0f, 0.271f
             Orange: light: 1, 0.427, 0.141 dark: 0.949, 0.29, 0
@@ -63,7 +64,11 @@ Blue: light: 0, 0.718, 1 dark: 0.008, 0.58, 0.757
 Navy: light: 0.29, 0, 1 dark: 0.137, 0, 0.71
 Purple: light: 0.243, 0, 0.627 dark: 0.145, 0, 0.427
          */
-        
+
+        public static Color UiTextColour()
+        {
+            return new Color(70f/255f,70f/255f,70f/255f);
+        }
         
 
         public static readonly Color BackgroundColour = new Color(217f / 255f, 221f / 255f, 232f / 255f);

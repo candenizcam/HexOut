@@ -252,8 +252,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90edeb3673b40aca688240e9c6c6092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testRow: 9
-  testCol: 5
+  testRow: 15
+  testCol: 9
   testObstacleSeed: 40205
   testCapsuleSeed: 22
   testCapsuleNumber: 13
