@@ -1,4 +1,6 @@
-﻿using Punity.ui;
+﻿using System;
+using Classes;
+using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,10 +8,12 @@ namespace DefaultNamespace
 {
     public class GameFieldFrame : VisualElement
     {
+        public Action HomeButtonAction = () => { };
+
         public GameFieldFrame(float left, float top, float width, float height)
         {
             this.StretchToParentSize();
-            var s = QuickAccess.LoadSprite("UI/SmallSquare");
+            var s = QuickAccess.LoadSprite("UI/LevelBack");
             var frameWidth = width + Constants.FrameSolid * 2f;
             var frameHeight = height + Constants.FrameSolid * 2f;
             var frameLeft = left - Constants.FrameSolid;
@@ -85,6 +89,52 @@ namespace DefaultNamespace
             Add(bottomPart);
             Add(rightPart);
             Add(leftPart);
+
+
+            var homeButton = new ButtonClickable("UI/BetweenLevels/HomeButton",Color.gray,HomeButtonFunction)
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 100f,
+                    bottom = 100f,
+                    width = 140f,
+                    height = 140f,
+                    backgroundImage = QuickAccess.LoadSpriteBg("UI/BetweenLevels/HomeButton")
+                }
+            };
+            
+            Add(homeButton);
+
+            var progressBar = new ProgressBar("UI/BetweenLevels/LevelProgressBarBG",
+                "UI/BetweenLevels/LevelProgressBar", 900f, 100f, 14f, 10f);
+            progressBar.style.position = Position.Absolute;
+            progressBar.style.top = 164f;
+            progressBar.style.left = 228f;
+            
+            
+            Add(progressBar);
+
+
+            var indicator = new VisualElement
+            {
+                style =
+                {
+                    width = 220f,
+                    height = 190f,
+                    position = Position.Absolute,
+                    top = 132f,
+                    left = 85f,
+                    backgroundImage = QuickAccess.LoadSpriteBg("UI/BetweenLevels/LevelIndicator")
+                }
+            };
+            Add(indicator);
+        }
+
+
+        private void HomeButtonFunction()
+        {
+            HomeButtonAction();
         }
         
     }
