@@ -10,6 +10,89 @@ namespace DefaultNamespace
     public class LevelGenerator
     {
 
+
+        public static void ProceduralBatch(int procRow, int procCol)
+        {
+            var v1 = 0f;
+            var v2 = 0f;
+            var s = "";
+            var r = new Random();
+
+            for (int totalObs = 2; totalObs < 5; totalObs++)
+            {
+                var totalObstacles = totalObs * procCol;
+                for (int doubleObs = 1; doubleObs <= totalObs - 2; doubleObs++)
+                {
+
+                    var doubleObstacles = doubleObs * procCol;
+                    var singleObstacles = totalObstacles - doubleObstacles;
+                    for (int os = 0; os < 6; os++)
+                    {
+                        var obstacleSeed = totalObs * 1000000 + doubleObs * 10000 + r.Next(0,9999);
+                        var editorSeed = new LevelSeedData("testLevel", procRow, procCol, 0, obstacleSeed, 0,
+                            singleObstacles, doubleObstacles, LevelSeedData.SeedType.FrameLevel, 1);
+                        var obstacleOnly = LevelGenerator.GenerateSeededLevel(editorSeed); //0.00123
+
+                        var possible = ((procRow - 2) * (procCol - 2)) / 2;
+
+                        var pCount = 0;
+                        for (int p = 0; p < possible / 2; p++)
+                        {
+                            var capsuleNo = possible - 2 * p;
+                            if(capsuleNo< ((procRow - 2) * (procCol - 2)) / 5) break;
+
+                            var n = 0;
+                            for (int i2 = 0; i2 < 100; i2++)
+                            {
+                                var seed = r.Next();
+                                //0.001
+                                var t1 = Time.realtimeSinceStartup;
+                                var d = LevelGenerator.GenerateFrameLevelWithNewObstacles(obstacleOnly, seed,
+                                    capsuleNo); //0.000362
+                                if (d.ld.CapsuleDatas.Count() < capsuleNo)
+                                {
+                                    continue;
+                                }
+                                
+                                
+                                
+                                var b = LevelTester.TestLevel(d.ld); //0.00065
+                                var t2 = Time.realtimeSinceStartup;
+                                v1 += t2-t1;
+                                v2 += 1f;
+                                if (b >= 0)
+                                {
+                                    n += 1;
+                                    s += editorSeed.RecordMe(name: $"\"{obstacleSeed}_{capsuleNo}_{seed}\"",
+                                        capsuleSeed: seed, capsuleNumber: capsuleNo, difficulty: b);
+                                }
+
+
+                                if (n > 2)
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (n > 0)
+                            {
+                                pCount += 1;
+                            }
+                        }
+
+                        if (pCount > 3)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            
+            Debug.Log(s);
+            Debug.Log($"mean is: {v1/v2}");
+        }
+        
         public static LevelData GenerateSeededLevel(LevelSeedData lsd)
         {
             if (lsd.LevelType == LevelSeedData.SeedType.FrameLevel)

@@ -56,190 +56,13 @@ namespace DefaultNamespace
             
             ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
             
-            //Proceduraler();
+            
+            //LevelGenerator.ProceduralBatch(testRow, testCol);
 
         }
 
 
 
-        void Proceduraler()
-        {
-            var v1 = 0f;
-            var v2 = 0f;
-            var s = "";
-            var r = new Random();
-
-            for (int totalObs = 2; totalObs < 5; totalObs++)
-            {
-                var totalObstacles = totalObs * testCol;
-                for (int doubleObs = 1; doubleObs <= totalObs - 2; doubleObs++)
-                {
-
-                    var doubleObstacles = doubleObs * testCol;
-                    var singleObstacles = totalObstacles - doubleObstacles;
-                    for (int os = 0; os < 6; os++)
-                    {
-                        var obstacleSeed = totalObs * 1000000 + doubleObs * 10000 + r.Next(0,9999);
-                        var editorSeed = new LevelSeedData("testLevel", testRow, testCol, 0, obstacleSeed, 0,
-                            singleObstacles, doubleObstacles, LevelSeedData.SeedType.FrameLevel, 1);
-                        var obstacleOnly = LevelGenerator.GenerateSeededLevel(editorSeed); //0.00123
-
-                        var possible = ((testRow - 2) * (testCol - 2)) / 2;
-
-                        var pCount = 0;
-                        for (int p = 0; p < possible / 2; p++)
-                        {
-                            var capsuleNo = possible - 2 * p;
-                            if(capsuleNo< ((testRow - 2) * (testCol - 2)) / 5) break;
-
-                            var n = 0;
-                            for (int i2 = 0; i2 < 100; i2++)
-                            {
-                                var seed = r.Next();
-                                //0.001
-                                var t1 = Time.realtimeSinceStartup;
-                                var d = LevelGenerator.GenerateFrameLevelWithNewObstacles(obstacleOnly, seed,
-                                    capsuleNo); //0.000362
-                                if (d.ld.CapsuleDatas.Count() < capsuleNo)
-                                {
-                                    continue;
-                                }
-                                
-                                
-                                
-                                var b = LevelTester.TestLevel(d.ld); //0.00065
-                                var t2 = Time.realtimeSinceStartup;
-                                v1 += t2-t1;
-                                v2 += 1f;
-                                if (b >= 0)
-                                {
-                                    n += 1;
-                                    s += editorSeed.RecordMe(name: $"\"{obstacleSeed}_{capsuleNo}_{seed}\"",
-                                        capsuleSeed: seed, capsuleNumber: capsuleNo, difficulty: b);
-                                }
-
-
-                                if (n > 2)
-                                {
-                                    break;
-                                }
-                            }
-
-                            if (n > 0)
-                            {
-                                pCount += 1;
-                            }
-                        }
-
-                        if (pCount > 3)
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            
-            Debug.Log(s);
-            Debug.Log($"mean is: {v1/v2}");
-
-
-
-
-        }
-
-        void TestLevels()
-        {
-            //var obstacleSeed = testObstacleSeed;
-            
-
-            var v1 = 0f;
-            var v2 = 0f;
-            
-            var s = "";
-            for (int totalObs = 2; totalObs < 5; totalObs++)
-            {
-                var totalObstacles = totalObs * testCol;
-                for (int doubleObs = 1; doubleObs <= totalObs-2; doubleObs++)
-                {
-                    
-                    var doubleObstacles = doubleObs * testCol;
-                    var singleObstacles = totalObstacles-doubleObstacles;
-
-                    for (int os = 0; os < 6; os++)
-                    {
-                        //0.23
-                        var t1 = Time.realtimeSinceStartup;
-                        var obstacleSeed = totalObs * 10000 + doubleObs * 100 + os;
-                        var editorSeed = new LevelSeedData("testLevel",testRow, testCol, 0, obstacleSeed, 0,
-                            singleObstacles,doubleObstacles,LevelSeedData.SeedType.FrameLevel,1);
-                        
-                        
-                        var obstacleOnly = LevelGenerator.GenerateSeededLevel(editorSeed); //0.00123
-                        
-                        for (int cn = 9; cn >= 0; cn--)
-                        {
-                            var capsuleNo = 2 * cn + 3;
-                
-                            var n = 0;
-                            for (int i = 0; i < 100; i++)
-                            {
-                                //0.002
-                                var d = LevelGenerator.GenerateFrameLevelWithNewObstacles(obstacleOnly, i, capsuleNo); //0.001098
-                                
-                                
-                                if (d.ld.CapsuleDatas.Count()<capsuleNo)
-                                {
-                                    continue;
-                                }
-                                
-                                var b = LevelTester.TestLevel(d.ld); //0.003644377
-                                
-                                
-                                if (b>=0)
-                                {
-                                    n += 1;
-                                    s+=editorSeed.RecordMe(name:$"\"{obstacleSeed}_{capsuleNo}_{i}\"",capsuleSeed: i,capsuleNumber:capsuleNo,difficulty:b);
-                                }
-                                
-
-                                if (n > 2)
-                                {
-                                    break;
-                                }
-                            }
-                
-                            
-
-                            if (n == 0)
-                            {
-                                Debug.Log($"too many capsules {cn}");
-                                break; //too many capsules
-                            }
-            
-            
-                        }
-                        
-                        var t2 = Time.realtimeSinceStartup;
-                        v1 += t2 - t1;
-                        v2 += 1f;
-
-
-                    }
-                    
-                    
-                    
-                }
-                
-                
-            }
-            Debug.Log(s);
-            Debug.Log($"mean is: {v1/v2}");
-            
-            
-
-            
-        }
         
 
 
@@ -380,24 +203,15 @@ namespace DefaultNamespace
                             _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{newN.newLevel}",levelUp:levelUp);
                         });
                     }
-                    
-                    
-                    
-                    
-                    
-                    
                 });
 
             };
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
             Serializer.Apply<SerialHexOutData>(sgd =>
                 {
-                    
                     var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
                     _activeLevel.FieldFrame.SetBar(sgd.playerXp/levelXP);
-                    
                     _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{sgd.playerLevel}");
-
                 }
             );
             

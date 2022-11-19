@@ -18,12 +18,8 @@ namespace DefaultNamespace.GameData
         public static int LevelXp(int playerLevel)
         {
             var draws = DiffDrawFromLevelNo(playerLevel).Select(x=> GameXP(x,expetedCapsule)).ToList();
-
             var drawMean = draws.Sum() / (float) draws.Count;
-
             return (int)(drawMean * Math.Clamp(playerLevel/5f,1f,expectedInt));
-
-
         }
 
         public static int CapsuleXp(int levelDiff)

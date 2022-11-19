@@ -16,7 +16,7 @@ namespace DefaultNamespace
 
         //public static readonly Vector2 Frame = new Vector2(946,2048);
         //public static readonly Vector2 FrameInner = new Vector2(150,510);
-        public static readonly float FrameSolid = 50f;
+        public static readonly float FrameSolid = 112f;
         public static readonly float FrameSlice = 100f;
 
         public static float GameFieldSide => FrameSolid;

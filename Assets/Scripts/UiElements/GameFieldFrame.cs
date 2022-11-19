@@ -23,7 +23,7 @@ namespace DefaultNamespace
             var frameWidth = width + Constants.FrameSolid * 2f;
             var frameHeight = height + Constants.FrameSolid * 2f;
             var frameLeft = left - Constants.FrameSolid;
-            var frameTop = top - 50f;
+            var frameTop = top - Constants.FrameSolid;
             
             
             var frame = new VisualElement
