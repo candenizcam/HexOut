@@ -33,7 +33,7 @@ namespace DefaultNamespace
             List<CapsuleData> capsules;
             if (capsuleNumber > 0)
             {
-                capsules = GenerateCapsuleDataOther(row, col, capsuleNumber,obstacles, capsuleProcedural);
+                capsules = GenerateCapsuleDataOther(row, col, capsuleNumber,obstacles, capsuleProcedural).capsules;
                 
             }
             else
@@ -46,11 +46,11 @@ namespace DefaultNamespace
             return new LevelData($"level {obstacleSeed}-{capsuleSeed}", row, col, capsules.ToArray(),obstacles.ToArray());
         }
 
-        public static LevelData GenerateFrameLevelWithNewObstacles(LevelData ld, int capsuleSeed, int capsuleNo)
+        public static (LevelData ld,float t1, float t2) GenerateFrameLevelWithNewObstacles(LevelData ld, int capsuleSeed, int capsuleNo)
         {
             var capsuleProcedural = new System.Random(capsuleSeed);
             var capsules = GenerateCapsuleDataOther(ld.Row, ld.Col, capsuleNo,ld.ObstacleDatas.ToList(), capsuleProcedural);
-            return new LevelData(ld.Name+$"{capsuleSeed}", ld.Row, ld.Col, capsules.ToArray(),ld.ObstacleDatas);
+            return (new LevelData(ld.Name+$"{capsuleSeed}", ld.Row, ld.Col, capsules.capsules.ToArray(),ld.ObstacleDatas),capsules.t1,capsules.t2);
         }
 
         public static LevelData GenerateRawFrame(LevelSeedData lsd, int l)
@@ -108,12 +108,14 @@ namespace DefaultNamespace
             return capsules;
         }
         
-        private static List<CapsuleData> GenerateCapsuleDataOther(int row, int col, int capsuleNumber,
+        private static (List<CapsuleData> capsules, float t1, float t2) GenerateCapsuleDataOther(int row, int col, int capsuleNumber,
             List<ObstacleData> obstacles, Random procedural)
         {
             var capsules = new List<CapsuleData>();
 
             var allCapsules = new List<CapsuleData>();
+            var t1 = Time.realtimeSinceStartup;
+            
             for (var r = 2; r <= row - 2; r++)
             {
                 for (var c = 2; c <= col - 2; c++)
@@ -123,13 +125,20 @@ namespace DefaultNamespace
                         if((r==2 && (a is 0 or 5)) || (r==row-2 && (a is 2 or 3)) || (c==2 && a<3) ||(c==col-2 && a>=3)) continue;
                         
                         var cd = new CapsuleData(r, c, 2, a, false);
-                        if (!obstacles.Any(x => cd.ObstaclesBy(x)))
-                        {
-                            allCapsules.Add(cd);
-                        }
+                        allCapsules.Add(cd);
                     }
                 }
             }
+
+            var t2 = Time.realtimeSinceStartup;
+
+            
+            
+            //allCapsules = allCapsules.Where(x => !obstacles.Any(x.ObstaclesBy)).ToList();
+            allCapsules = allCapsules.Where(x => !obstacles.Any(x.ObstaclesBy)).ToList();
+            
+            
+            var t3 = Time.realtimeSinceStartup;
 
             var reordered = allCapsules.OrderBy(x=>procedural.Next()).ToList();
 
@@ -144,7 +153,13 @@ namespace DefaultNamespace
                 }
 
             }
-            return capsules;
+
+            
+            if (!capsules.Any())
+            {
+                Debug.LogError($"nothing came from {row},{col},{procedural}");
+            }
+            return (capsules,t2-t1,t3-t2);
             
             /*
             var rList = Enumerable.Range(2, row-2).ToList();

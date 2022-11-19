@@ -8,6 +8,7 @@ namespace DefaultNamespace.GameData
         public int Col;
         public int Direction;
         public int Length;
+        private List<(int r, int c)> _oppositions;
         
         public ObstacleData(int row, int col, int direction, int len=1)
         {
@@ -15,6 +16,7 @@ namespace DefaultNamespace.GameData
             Col = col;
             Direction = direction%6;
             Length = len;
+            _oppositions = GenerateOppositions();
         }
         
         public (int OtherRow, int OtherCol) Opposition(int d)
@@ -38,10 +40,9 @@ namespace DefaultNamespace.GameData
                     return (Row-1, Col- (1+(Row)%2 )/2);
             }
         }
-        
-        public List<(int OtherRow, int OtherCol)> Oppositions()
+
+        private List<(int OtherRow, int OtherCol)> GenerateOppositions()
         {
-            
             var l = 1;
             var output = new List<(int OtherRow, int OtherCol)>();
             for (int i = 0; i < Length; i++)
@@ -50,6 +51,11 @@ namespace DefaultNamespace.GameData
             }
 
             return output;
+        }
+        
+        public List<(int OtherRow, int OtherCol)> Oppositions()
+        {            
+            return _oppositions;
         }
         
         

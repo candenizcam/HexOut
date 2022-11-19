@@ -12,6 +12,8 @@ namespace DefaultNamespace.GameData
         public int Length;
         public int Angle;
         public bool Collapsed;
+        private List<(int r, int c)> _allPoints;
+        
         
         /** r is first row
          * c is first col
@@ -25,6 +27,8 @@ namespace DefaultNamespace.GameData
             Length = length;
             Angle = angle%6;
             Collapsed = collapsed;
+
+            _allPoints = TwoIndexTiles();
         }
 
         public bool SameData(CapsuleData other)
@@ -123,16 +127,24 @@ namespace DefaultNamespace.GameData
 
         public List<(int row, int col)> TwoIndexTiles()
         {
-            var n = new List<(int row, int col)>();
-
-            n.Add((FirstRow,FirstCol));
-            if (Collapsed) return n;
-            for (int l=1;l<Length;l++)
+            if (_allPoints is null)
             {
-                var p = PointFromFirst(l);
-                n.Add(p);
+                var n = new List<(int row, int col)>();
+
+                n.Add((FirstRow,FirstCol));
+                if (Collapsed) return n;
+                for (int l=1;l<Length;l++)
+                {
+                    var p = PointFromFirst(l);
+                    n.Add(p);
+                }
+                return n;
             }
-            return n;
+            else
+            {
+                return _allPoints;
+            }
+            
         }
 
 
@@ -155,11 +167,10 @@ namespace DefaultNamespace.GameData
         {
             var theseTiles = TwoIndexTiles();
             var first = theseTiles.Any(x => x.row == obstacle.Row && x.col == obstacle.Col);
+            if(!first) return false;
             var obsOpsList = obstacle.Oppositions();
-            
-            
             var second = obsOpsList.Any(obsOps => theseTiles.Any(x => x.row == obsOps.OtherRow && x.col == obsOps.OtherCol));
-            return first && second;
+            return second;
 
         }
 

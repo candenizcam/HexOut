@@ -9,7 +9,8 @@ namespace DefaultNamespace
     {
         public static int TestLevel(LevelData ld)
         {
-            return RecursiveTest(ld.CapsuleDatas, ld.ObstacleDatas, ld.Row, ld.Col,0);
+            return RecursiveTest(ld.CapsuleDatas, ld.ObstacleDatas, ld.Row, ld.Col,0,0);
+            
 
         }
 
@@ -21,10 +22,10 @@ namespace DefaultNamespace
             {
                 var thisGuy = capsules[i];
                 var reverseGuy = thisGuy.Revert();
-                var fw = GoForth(thisGuy, emptyList, obstacleDatas, row, col);
-                var bw = GoForth(reverseGuy, emptyList, obstacleDatas, row, col);
+                var fw = GoForth(thisGuy, emptyList, obstacleDatas, row, col,0);
+                var bw = GoForth(reverseGuy, emptyList, obstacleDatas, row, col,0);
 
-                if (fw == 2 && bw ==2)
+                if (fw.res == 2 && bw.res ==2)
                 {
                     return false;
                 }   
@@ -34,14 +35,15 @@ namespace DefaultNamespace
 
         }
 
-        private static int RecursiveTest(CapsuleData[] capsules, ObstacleData[] obstacleDatas, int row, int col, int turns )
+
+
+        private static int RecursiveTest(CapsuleData[] capsules, ObstacleData[] obstacleDatas, int row, int col, int turns, int diff )
         {
             
             if (turns > 100)
             {
                 return -1;
             }
-            var removes = new List<CapsuleData>();
             var otherPossible = capsules.ToList();
 
             var changeCount = 0;
@@ -51,17 +53,27 @@ namespace DefaultNamespace
                 var reverseGuy = thisGuy.Revert();
                 var others = otherPossible.Where(x => thisGuy!= x).ToList();
 
-                var fw = GoForth(thisGuy, others, obstacleDatas, row, col);
-                var bw = GoForth(reverseGuy, others, obstacleDatas, row, col);
-
-                if (fw == 0 || bw == 0)
+                var fw = GoForth(thisGuy, others, obstacleDatas, row, col,0);
+                if (fw.res == 0)
                 {
                     changeCount += 1;
                     otherPossible.Remove(thisGuy);
-                }else if (fw == 2 && bw ==2)
+                    continue;
+                }
+                var bw = GoForth(reverseGuy, others, obstacleDatas, row, col,0);
+
+                if (fw.res == 0 || bw.res == 0)
+                {
+                    changeCount += 1;
+                    otherPossible.Remove(thisGuy);
+                }else if (fw.res == 2 && bw.res ==2)
                 {
                     return -2;
-                }   
+                }else if ((fw.res == 2 && bw.refStep == 1) || (bw.refStep == 1 && fw.refStep == 1) ||
+                          (fw.refStep == 1 && bw.res == 2))
+                {
+                    return -4;
+                }
             }
 
             if (changeCount==0)
@@ -72,11 +84,11 @@ namespace DefaultNamespace
             capsules = otherPossible.ToArray();//capsules.Where(x => !removes.Any(y=> y==x)).ToArray();
             if (capsules.Any())
             {
-                return RecursiveTest(capsules, obstacleDatas, row, col,turns+1);
+                return RecursiveTest(capsules, obstacleDatas, row, col,turns+1,changeCount*(turns+1));
             }
             else
             {
-                return turns;
+                return diff;
             }
             
         }
@@ -85,11 +97,11 @@ namespace DefaultNamespace
         
 
 
-        private static int GoForth(CapsuleData l, List<CapsuleData> otherCapsules, ObstacleData[] obstacles, int row, int col)
+        private static (int res, CapsuleData finalData, int refStep) GoForth(CapsuleData l, List<CapsuleData> otherCapsules, ObstacleData[] obstacles, int row, int col,int step, int refStep=-1)
         {
-            if (!l.WithinBounds(row, col)) return 0;
+            if (!l.WithinBounds(row, col)) return (0,l,refStep);
 
-            if (otherCapsules.Any(x => x.CollidesWith(l))) return 1;
+            if (otherCapsules.Any(x => x.CollidesWith(l))) return (1,l,refStep);
 
             var a = obstacles.Where(x => l.ObstaclesBy(x));
             if (a.Any())
@@ -110,11 +122,11 @@ namespace DefaultNamespace
                 {
                     var newAngle = (l.Angle + (l.Angle == thatGuy.Direction ? 4:2))%6;
                     var newerData = new CapsuleData(l.FirstRow, l.FirstCol, l.Length, newAngle,false);
-                    return GoForth(newerData, otherCapsules, obstacles, row, col);
+                    return GoForth(newerData, otherCapsules, obstacles, row, col,step+1, refStep==-1?step+1:refStep);
                 }
                 else
                 {
-                    return 2;
+                    return (2,l,refStep);
                 }
 
                 
@@ -122,7 +134,7 @@ namespace DefaultNamespace
             }
 
             var newl = l.DataFromFirst(1);
-            return GoForth(newl, otherCapsules, obstacles, row, col);
+            return GoForth(newl, otherCapsules, obstacles, row, col,step+1);
         }
     }
 }
