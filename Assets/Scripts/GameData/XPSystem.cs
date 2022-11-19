@@ -9,7 +9,7 @@ namespace DefaultNamespace.GameData
         public static int BaseXp = 10;
         public static int expectedInt = 5;
         public static int expetedCapsule = 5; // buna bi bakalım sonra
-        public static int NewSkinUnlockLevels = 10;
+        public static int NewSkinUnlockLevels = 20;
 
         public static int GameXP(int difficulty, int capsule, int offset = 0)
         {
@@ -18,9 +18,10 @@ namespace DefaultNamespace.GameData
 
         public static int LevelXp(int playerLevel)
         {
-            var draws = DiffDrawFromLevelNo(playerLevel).Select(x=> GameXP(x,expetedCapsule)).ToList();
-            var drawMean = draws.Sum() / (float) draws.Count;
-            return (int)(drawMean * Math.Clamp(playerLevel/5f,1f,expectedInt));
+            return 25 * playerLevel*BaseXp;
+            //var draws = DiffDrawFromLevelNo(playerLevel).Select(x=> GameXP(x,expetedCapsule)).ToList();
+            //var drawMean = draws.Sum() / (float) draws.Count;
+            //return (int)(drawMean * Math.Clamp(playerLevel/5f,1f,expectedInt));
         }
 
         public static int CapsuleXp(int levelDiff)
@@ -44,10 +45,19 @@ namespace DefaultNamespace.GameData
             return draws;
         }
 
-        public static void DrawGameLevelFromNo(int levelNo)
+        public static (LevelSeedData data, int index) DrawGameLevelFromNo(int levelNo)
         {
-            
-            
+            var p=GameDataBase.LevelSeedDatas.Where(x => x.LevelDifficulty < levelNo / 2 + 5).ToList();
+
+            if (!p.Any())
+            {
+                var d = GameDataBase.LevelSeedDatas.Min(x => x.LevelDifficulty);
+                p = GameDataBase.LevelSeedDatas.Where(x => x.LevelDifficulty == d).ToList();
+            }
+
+            var r = new Random();
+            var ind = r.Next(0, p.Count());
+            return (p[ind],ind);
         }
 
         public static bool NewSkinInLevel(int levelNo)
@@ -59,7 +69,7 @@ namespace DefaultNamespace.GameData
         {
             var newXp = oldXp + deltaXp;
             var levelXp = LevelXp(oldLevel);
-            return newXp > levelXp ? AddXP(oldLevel + 1, 0, newXp - levelXp, NewSkinInLevel(oldLevel+1) ? newSkin+1:newSkin) : (oldLevel, newXp, 0);
+            return newXp >= levelXp ? AddXP(oldLevel + 1, 0, newXp - levelXp, NewSkinInLevel(oldLevel+1) ? newSkin+1:newSkin) : (oldLevel, newXp, 0);
             
             
         }

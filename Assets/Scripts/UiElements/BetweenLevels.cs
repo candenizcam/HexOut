@@ -272,7 +272,7 @@ namespace DefaultNamespace
 
             
 
-            var a3 = Math.Clamp(alpha3*0.25f, 0f, _newFill - _oldFill);
+            var a3 = Math.Clamp(alpha * phaseNo - 2f, 0f, _newFill - _oldFill);
             _progressBar.Refill(_oldFill + a3);
             _midButton.style.opacity = alpha3;
             _midButton.style.top = -(1f - alpha3) * 100f + _midButtonTop;

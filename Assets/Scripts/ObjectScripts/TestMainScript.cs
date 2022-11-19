@@ -26,6 +26,7 @@ namespace DefaultNamespace
         public int testDoubleObstacleNumber;
         public bool resetSaves;
         public int levelIndex;
+        public string levelId;
         
         private GameState _gameState;
         
@@ -45,7 +46,7 @@ namespace DefaultNamespace
             {
                 Serializer.Apply<SerialHexOutData>((sgd) =>
                 {
-                    sgd.playerLevel = 0;
+                    sgd.playerLevel = 1;
                     sgd.playerXp = 0;
 
                 });
@@ -56,18 +57,21 @@ namespace DefaultNamespace
             //var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
            //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
            ;
+           Serializer.Apply<SerialHexOutData>(sgd =>
+           {
+               Debug.Log($"sgd: {sgd.playerLevel}");
+               var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel);
+               ActivateLevel(f.data);
+               levelIndex = f.index;
+               levelId = f.data.Name;
+           });
+           
+           
+            //ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
+
+
+
             
-            ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
-
-
-
-            var s = "";
-            //LevelGenerator.ProceduralBatch(5, 9);
-            GameDataBase.LevelSeedDatas
-                .OrderBy(x => x.LevelDifficulty * x.CapsuleNumber)
-                .Select(x => x.RecordMe(name: $"\"{x.Name}\"")).ToList().ForEach(x => { s += x;});
-                
-            Debug.Log(s);
 
             
             //var v2 = GameDataBase.LevelSeedDatas.Where(x => x.Col == 7 && x.Row == 13);
@@ -77,6 +81,17 @@ namespace DefaultNamespace
 
             //Debug.Log($"v: {v}");
 
+        }
+
+        private void SortGameData()
+        {
+            var s = "";
+            //LevelGenerator.ProceduralBatch(5, 9);
+            GameDataBase.LevelSeedDatas
+                .OrderBy(x => x.LevelDifficulty * x.CapsuleNumber)
+                .Select(x => x.RecordMe(name: $"\"{x.Name}\"")).ToList().ForEach(x => { s += x;});
+                
+            Debug.Log(s);
         }
 
         private void NewProcedral()
@@ -125,6 +140,8 @@ namespace DefaultNamespace
 
             var rightText = $"+{lcd.LevelXp}\n{levelXP-thisXP}/{levelXP}\nto next level";
             
+            Debug.Log($"old level {oldLevel}, oldxp {oldXPForBar}, new level{sgd.playerLevel}, new xp {sgd.playerXp}");
+            
             var betweenLevels = new BetweenLevels(oldLevel,
                 filler: thisXP/ levelXP,
                 oldFiller:oldXPForBar/levelXP,
@@ -138,8 +155,13 @@ namespace DefaultNamespace
             };
             betweenLevels.MiddleButtonAction = () =>
             {
-                levelIndex += 1;
-                ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
+                Serializer.Apply<SerialHexOutData>(sgd =>
+                {
+                    var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel);
+                    ActivateLevel(f.data);
+                    levelIndex = f.index;
+                    levelId = f.data.Name;
+                });
                 UIDocument.rootVisualElement.Remove(betweenLevels);
             };
             betweenLevels.RightButtonAction = () =>
