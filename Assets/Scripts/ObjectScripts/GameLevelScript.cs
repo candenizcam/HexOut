@@ -164,8 +164,43 @@ namespace DefaultNamespace
 
             if (obstacled.Any())
             {
+                var reflectors = obstacled.Where(x => newData.FirstRow == x.Row && newData.FirstCol == x.Col && x.Length == 2);
+                ObstacleData clashing;
+                var ret = 0;
+                if (reflectors.Any())
+                {
+                    clashing = reflectors.First();
+                    var newAngle = (newData.Angle + (newData.Angle == clashing.Direction ? 4:2))%6;
+                    var newerData = new CapsuleData(newData.FirstRow, newData.FirstCol, newData.Length, newAngle,true); 
+                    capsuleScript.NewTarget(newerData,CapsulePosition(newerData));
+                }
+                else
+                {
+                    clashing = obstacled.First();
+                    if (oldData.Collapsed)
+                    {
+                        SetTweenForCollision(capsuleScript,newData.DataFromFirst(1),2,true);
+                        
+                    }
+                    else
+                    {
+                        SetTweenForCollision(capsuleScript,newData,2,false);
+                    }
+                    ret = 2;
+                }
+                
+                /*
+                
                 if (obstacled.Count() > 1)
                 {
+                    var s = "";
+                    foreach (var obstacleData in obstacled)
+                    {
+                        
+                        s += obstacleData.InfoText()+"\n";
+                    }
+                    Debug.Log(s);
+
                     Debug.LogError("there is a problem, two obstacles are touched");
                 }
                 var clashing = obstacled.First();
@@ -189,6 +224,7 @@ namespace DefaultNamespace
                     }
                     ret = 2;
                 }
+                */
 
                 var thatTile = _grid.GetTile(clashing.Row, clashing.Col);
                 var sr = clashing.Length==1 ? thatTile.obstacles[clashing.Direction]:thatTile.doubleObstacles[clashing.Direction];

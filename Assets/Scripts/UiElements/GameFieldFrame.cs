@@ -9,10 +9,14 @@ namespace DefaultNamespace
     public class GameFieldFrame : VisualElement
     {
         public Action HomeButtonAction = () => { };
-
+        private ProgressBar _progressBar;
+        
         public GameFieldFrame(float left, float top, float width, float height)
         {
             this.StretchToParentSize();
+            style.flexDirection = FlexDirection.Column;
+            style.justifyContent = Justify.Center;
+            style.alignItems = Align.Center;
             var s = QuickAccess.LoadSprite("UI/LevelBack");
             var frameWidth = width + Constants.FrameSolid * 2f;
             var frameHeight = height + Constants.FrameSolid * 2f;
@@ -91,6 +95,13 @@ namespace DefaultNamespace
             Add(leftPart);
 
 
+            var hudFrame = new VisualElement();
+            hudFrame.style.width = 1170f;
+            hudFrame.style.height = 2532;
+            Add(hudFrame);
+            
+
+
             var homeButton = new ButtonClickable("UI/BetweenLevels/HomeButton",Color.gray,HomeButtonFunction)
             {
                 style =
@@ -104,16 +115,21 @@ namespace DefaultNamespace
                 }
             };
             
-            Add(homeButton);
+            hudFrame.Add(homeButton);
 
-            var progressBar = new ProgressBar("UI/BetweenLevels/LevelProgressBarBG",
-                "UI/BetweenLevels/LevelProgressBar", 900f, 100f, 14f, 10f);
-            progressBar.style.position = Position.Absolute;
-            progressBar.style.top = 164f;
-            progressBar.style.left = 228f;
-            
-            
-            Add(progressBar);
+            _progressBar = new ProgressBar("UI/BetweenLevels/LevelProgressBarBG",
+                "UI/BetweenLevels/LevelProgressBar", 900f, 100f, 14f, 10f)
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    top = 164f,
+                    left = 206f
+                }
+            };
+
+
+            hudFrame.Add(_progressBar);
 
 
             var indicator = new VisualElement
@@ -124,13 +140,17 @@ namespace DefaultNamespace
                     height = 190f,
                     position = Position.Absolute,
                     top = 132f,
-                    left = 85f,
+                    left = 63f,
                     backgroundImage = QuickAccess.LoadSpriteBg("UI/BetweenLevels/LevelIndicator")
                 }
             };
-            Add(indicator);
+            hudFrame.Add(indicator);
         }
 
+        public void SetBar(float f)
+        {
+            _progressBar.Refill(f);
+        }
 
         private void HomeButtonFunction()
         {

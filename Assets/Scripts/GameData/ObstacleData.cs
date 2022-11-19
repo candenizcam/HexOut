@@ -80,6 +80,11 @@ namespace DefaultNamespace.GameData
 
         }
 
+        public string InfoText()
+        {
+            return $"r: {Row},c: {Col},l: {Length},a: {Direction}";
+        }
+
         
         
         
