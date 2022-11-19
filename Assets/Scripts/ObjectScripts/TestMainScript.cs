@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
@@ -13,6 +14,8 @@ namespace DefaultNamespace
 {
     public class TestMainScript : MainScript
     {
+
+        
         private GameLevelScript _activeLevel;
         public int testRow;
         public int testCol;
@@ -55,10 +58,49 @@ namespace DefaultNamespace
            ;
             
             ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
-            
-            
-            //LevelGenerator.ProceduralBatch(testRow, testCol);
 
+
+
+            var s = "";
+            //LevelGenerator.ProceduralBatch(5, 9);
+            GameDataBase.LevelSeedDatas
+                .OrderBy(x => x.LevelDifficulty * x.CapsuleNumber)
+                .Select(x => x.RecordMe(name: $"\"{x.Name}\"")).ToList().ForEach(x => { s += x;});
+                
+            Debug.Log(s);
+
+            
+            //var v2 = GameDataBase.LevelSeedDatas.Where(x => x.Col == 7 && x.Row == 13);
+            
+            //var v = v2.Sum(x => x.LevelDifficulty * x.CapsuleNumber)/v2.Count();
+
+
+            //Debug.Log($"v: {v}");
+
+        }
+
+        private void NewProcedral()
+        {
+            var obsArray = new (int Sin, int Doub)[]{(1,1),(1,2),(2,1),(2,2),(2,3),(3,2) };
+            var r = 15;
+            var c = 9;
+            var seperates = 5;
+            var res = "";
+            var prods = "";
+            for (int j = 0; j < obsArray.Length; j++)
+            {
+                for (int i = 0; i < seperates; i++)
+                {
+                    var q = LevelGenerator.TotalRandom(20,r,c,obsArray[j].Sin*c,obsArray[j].Doub*c,j*seperates+i+1);
+                    res += q.res+"\n";
+                    prods += q.produced;
+                }
+                
+            }
+            
+            
+            Debug.Log(prods);
+            Debug.Log(res);
         }
 
 

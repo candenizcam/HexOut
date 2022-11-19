@@ -10,6 +10,43 @@ namespace DefaultNamespace
     public class LevelGenerator
     {
 
+        public static (string produced, string res) TotalRandom(int amount, int procRow, int procCol,int singleObstacle, int doubleObstacle, int seed)
+        {
+            var r = new Random(seed);
+
+            var res = "failed to produce";
+            var minCap = (procRow - 2) * (procCol - 2) / 4;
+            var maxCap = (procRow - 2) * (procCol - 2) / 2;
+            var n = 0;
+            var s = "";
+            for (int i = 0; i < amount * 20; i++)
+            {
+                var capNo = r.Next(minCap, maxCap);
+                var obsSeed = r.Next();
+                var capSeed = r.Next();
+                var generatedSeed = new LevelSeedData($"\"{procRow}_{procCol}_{seed}_{i}\"", procRow, procCol, capSeed,
+                    obsSeed, capNo, singleObstacle, doubleObstacle, LevelSeedData.SeedType.FrameLevel,0);
+                var generatedLevel = LevelGenerator.GenerateSeededLevel(generatedSeed);
+                
+                var testResult = LevelTester.TestLevel(generatedLevel);
+                if (testResult >= 0)
+                {
+                    n += 1;
+                    s += generatedSeed.RecordMe(difficulty: testResult);
+                }
+
+                if (n >= amount)
+                {
+                    res = $"Sucessfully generated {amount} levels in {i} attempts";
+                    
+                    break;
+                }
+
+            }
+            return (s,res);
+
+
+        }
 
         public static void ProceduralBatch(int procRow, int procCol)
         {

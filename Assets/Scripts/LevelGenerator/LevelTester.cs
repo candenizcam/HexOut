@@ -88,7 +88,7 @@ namespace DefaultNamespace
             }
             else
             {
-                return diff;
+                return diff+changeCount*(turns+1);
             }
             
         }

@@ -9,6 +9,7 @@ namespace DefaultNamespace.GameData
         public static int BaseXp = 10;
         public static int expectedInt = 5;
         public static int expetedCapsule = 5; // buna bi bakalım sonra
+        public static int NewSkinUnlockLevels = 10;
 
         public static int GameXP(int difficulty, int capsule, int offset = 0)
         {
@@ -43,9 +44,15 @@ namespace DefaultNamespace.GameData
             return draws;
         }
 
+        public static void DrawGameLevelFromNo(int levelNo)
+        {
+            
+            
+        }
+
         public static bool NewSkinInLevel(int levelNo)
         {
-            return levelNo % 10 == 0;
+            return levelNo % NewSkinUnlockLevels == 0;
         }
 
         public static (int newLevel, int newXp, int newSkin) AddXP(int oldLevel, int oldXp, int deltaXp, int newSkin=0)
