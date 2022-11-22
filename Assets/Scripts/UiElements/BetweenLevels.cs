@@ -1,5 +1,6 @@
 ﻿using System;
 using Classes;
+using DefaultNamespace.GameData;
 using Newtonsoft.Json.Linq;
 using Punity.ui;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace DefaultNamespace
         public BetweenLevels(int levelNoText=0, string newSkinText="", string rightText="", float filler = 0f, float oldFiller =0f, int levels=0, bool newSkin=false)
         {
             this.StretchToParentSize();
-            var textColor = new Color(112f/255f,112f/255f,112f/255f);
+            var textColor = GameDataBase.TextColour();
             _oldFill = oldFiller;
             _newFill = filler;
             _levels = levels;
@@ -55,17 +56,20 @@ namespace DefaultNamespace
             stuffBar.style.alignItems = Align.Center;
             Add(stuffBar);
             
+            
             _progressBg = new VisualElement
             {
                 style =
                 {
                     width = 1000f,
                     height = 624f,
-                    backgroundImage = new StyleBackground(QuickAccess.LoadSprite("UI/BetweenLevels/ProgressBG"))
+                    backgroundImage = new StyleBackground(QuickAccess.LoadSprite(GameDataBase.ProgressBGPath()))
                 }
             };
+            
+            
 
-            _leftButton = new ButtonClickable(imagePath:"UI/BetweenLevels/Skins",Color.gray,LeftButtonFunction)
+            _leftButton = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,LeftButtonFunction)
             {
                 style =
                 {
@@ -77,7 +81,9 @@ namespace DefaultNamespace
                 }
             };
             
-            _midButton = new ButtonClickable(imagePath:"UI/BetweenLevels/Next",Color.gray,MiddleButtonFunction)
+            
+            
+            _midButton = new ButtonClickable(imagePath:GameDataBase.NextPath(),Color.gray,MiddleButtonFunction)
             {
                 style =
                 {
@@ -89,7 +95,9 @@ namespace DefaultNamespace
                 }
             };
             
-            _rightButton = new ButtonClickable(imagePath:"UI/BetweenLevels/DoubleXP",Color.gray,RightButtonFunction)
+            
+            
+            _rightButton = new ButtonClickable(imagePath:GameDataBase.DoubleXPPath(),Color.gray,RightButtonFunction)
             {
                 style =
                 {
@@ -136,8 +144,9 @@ namespace DefaultNamespace
             };
             _levelUpText.style.opacity = 0f;
 
+            
 
-            _progressBar = new ProgressBar("UI/BetweenLevels/BarBG","UI/BetweenLevels/Bar",440f,60f, 9f,7f)
+            _progressBar = new ProgressBar(GameDataBase.BarBGPath(),GameDataBase.BarPath(),440f,60f, 9f,7f)
                 {
                     style =
                     {
