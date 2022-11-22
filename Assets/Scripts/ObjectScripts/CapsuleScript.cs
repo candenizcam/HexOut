@@ -98,6 +98,25 @@ namespace DefaultNamespace
             return l.Distinct().ToList();
         }
 
+        public CapsuleData[] DataForCollision()
+        {
+            if (_targetData is not null)
+            {
+                return new CapsuleData[]
+                {
+                    ThisCapsuleData, _targetData
+                };
+            }
+            else
+            {
+                return new CapsuleData[]
+                {
+                    ThisCapsuleData,
+                };
+            }
+            
+        }
+
 
         
         
