@@ -32,7 +32,8 @@ namespace DefaultNamespace
         public const float SprayMovementPerTile = .2f;
         public const float BetweenLevelsTime = 2.5f;
 
-        public static readonly Color ObstacleColour = new Color(62f/255f, 0f/255f, 160f/255f);
+        
+        
         
 
         public static Color UiTextColour()

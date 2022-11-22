@@ -81,18 +81,21 @@ namespace DefaultNamespace
         public void SetCapsules(CapsuleData[] capsuleDataList)
         {
             var r = new System.Random();
-            
+            SkinType st = SkinType.Simple;
             Serializer.Apply<SerialHexOutData>(sgd =>
             {
-                var colourLists =  GameDataBase.CapsuleColours(sgd.activeSkin);
-                var insideList = colourLists.inside;
-                var outsideList = colourLists.outside;
-                foreach (var capsuleData in capsuleDataList)
-                {
-                    var colorIndex = r.Next(0, insideList.Length);
-                    SetCapsule(capsuleData,insideList[colorIndex],outsideList[colorIndex]);
-                }
+                st = sgd.activeSkin;
             });
+            
+            
+            var colourLists =  GameDataBase.CapsuleColours(st);
+            var insideList = colourLists.inside;
+            var outsideList = colourLists.outside;
+            foreach (var capsuleData in capsuleDataList)
+            {
+                var colorIndex = r.Next(0, insideList.Length);
+                SetCapsule(capsuleData,insideList[colorIndex],outsideList[colorIndex]);
+            }
             
             
             

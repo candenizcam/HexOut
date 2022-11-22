@@ -96,5 +96,16 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+
+        public static Color ObstacleColour(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple =>  new Color(62f/255f, 0f/255f, 160f/255f),
+                SkinType.PungoDark =>  new Color(62f/255f, 0f/255f, 160f/255f),
+                SkinType.Retro =>  new Color(62f/255f, 0f/255f, 160f/255f),
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Punity;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -21,13 +23,21 @@ namespace DefaultNamespace
 
         public void ActivateObstacles((int direction, int length)[] actives)
         {
+            SkinType st  =SkinType.Simple;
+            Serializer.Apply<SerialHexOutData>(sgd =>
+            {
+                st = sgd.activeSkin;
+            });
             _activeObstacles = actives;
+            
+
+            var o = GameDataBase.ObstacleColour(st);
             for (int i = 0; i < 6; i++)
             {
                 obstacles[i].enabled = actives.Any(x => x.direction == i && x.length==1);
-                obstacles[i].color = Constants.ObstacleColour;
+                obstacles[i].color = o;
                 doubleObstacles[i].enabled = actives.Any(x =>x.direction == i && x.length==2);
-                doubleObstacles[i].color = Constants.ObstacleColour;
+                doubleObstacles[i].color = o;
             }
             
         }
