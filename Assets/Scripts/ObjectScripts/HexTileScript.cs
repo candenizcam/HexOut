@@ -23,11 +23,8 @@ namespace DefaultNamespace
 
         public void ActivateObstacles((int direction, int length)[] actives)
         {
-            SkinType st  =SkinType.Simple;
-            Serializer.Apply<SerialHexOutData>(sgd =>
-            {
-                st = sgd.activeSkin;
-            });
+            SkinType st = GameDataBase.GetSkinType();
+            
             _activeObstacles = actives;
             
 

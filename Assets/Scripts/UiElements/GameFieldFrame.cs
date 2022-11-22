@@ -1,5 +1,6 @@
 ﻿using System;
 using Classes;
+using DefaultNamespace.GameData;
 using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,25 +13,35 @@ namespace DefaultNamespace
         private ProgressBar _progressBar;
         private Label _bigText;
         private Label _smallText;
+        private float _top;
+        private float _width;
+       
+        
         
         public GameFieldFrame(float left, float top, float width, float height)
         {
+            _top = top;
+            _width = width;
             this.StretchToParentSize();
             style.flexDirection = FlexDirection.Column;
             style.justifyContent = Justify.Center;
             style.alignItems = Align.Center;
-            var s = QuickAccess.LoadSprite("UI/LevelBack");
             var frameWidth = width + Constants.FrameSolid * 2f;
             var frameHeight = height + Constants.FrameSolid * 2f;
             var frameLeft = left - Constants.FrameSolid;
             var frameTop = top - Constants.FrameSolid;
             
             
+            
+                
+            
+            
+            
             var frame = new VisualElement
             {
                 style =
                 {
-                    backgroundImage = new StyleBackground(s),
+                    backgroundImage = QuickAccess.LoadSpriteBg(GameDataBase.LevelBackPath(GameDataBase.GetSkinType())),
                     width = frameWidth,
                     height = frameHeight,
                     position = Position.Absolute,
@@ -208,6 +219,29 @@ namespace DefaultNamespace
             
 
         }
-        
+
+        public (VisualElement ve, float top) TextPopup(string text)
+        {
+            var top = _top - 100f;
+            
+            
+            
+            var n = new Label(text)
+            {
+                style=
+                {
+                    position = Position.Absolute,
+                    top = top,
+                    unityTextAlign = TextAnchor.UpperCenter,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 72f,
+                    color = Constants.UiTextColour()
+                },
+            };
+            n.StretchToParentWidth();
+            Add(n);
+            return (n,top);
+        }
+
     }
 }

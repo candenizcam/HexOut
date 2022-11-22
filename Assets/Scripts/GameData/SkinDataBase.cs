@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Punity;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,12 +8,33 @@ namespace DefaultNamespace.GameData
 {
     public static partial class GameDataBase
     {
+        private static SkinType? _activeSkin = null;
+
+        public static void SetSkinType(SkinType st)
+        {
+            _activeSkin = st;
+            Serializer.Apply<SerialHexOutData>(sgd =>
+            {
+                sgd.activeSkin = st;
+            });
+            
+        }
+
+        public static SkinType GetSkinType()
+        {
+            if (_activeSkin is not null) return (SkinType)_activeSkin;
+
+            var sgd = Serializer.Load<SerialHexOutData>();
+            _activeSkin = sgd.activeSkin;
+            return (SkinType)_activeSkin;
+        }
         
         
         // bu fonksyonu kopyala
-        public static string SkinName(SkinType st)
+        public static string SkinName(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "Light",
                 SkinType.PungoDark => "Dark Pungo",
@@ -24,9 +46,11 @@ namespace DefaultNamespace.GameData
         
         //Bi de Hex.png'ler var ama prefablardan değişecek izel yapmadı
         
-        public static string LevelBackPath(SkinType st)
+        public static string LevelBackPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            
+            return st2 switch
             {
                 SkinType.Simple => "UI/LevelBack",
                 SkinType.PungoDark => "UI/LevelBack_PungoDark",
@@ -37,9 +61,10 @@ namespace DefaultNamespace.GameData
         }
         
         //Game
-        public static string HomeButtonPath(SkinType st)
+        public static string HomeButtonPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/Game/HomeButton",
                 SkinType.PungoDark => "UI/Game/HomeButton_PungoDark",
@@ -49,9 +74,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string LevelIndicatorPath(SkinType st)
+        public static string LevelIndicatorPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/Game/LevelIndicator",
                 SkinType.PungoDark => "UI/Game/LevelIndicator_PungoDark",
@@ -61,9 +87,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string LevelProgressBarPath(SkinType st)
+        public static string LevelProgressBarPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/Game/LevelProgressBar",
                 SkinType.PungoDark => "UI/Game/LevelProgressBar_PungoDark",
@@ -73,9 +100,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string LevelProgressBarBGPath(SkinType st)
+        public static string LevelProgressBarBGPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/Game/LevelProgressBarBG",
                 SkinType.PungoDark => "UI/Game/LevelProgressBarBG_PungoDark",
@@ -86,9 +114,10 @@ namespace DefaultNamespace.GameData
         }
         
         //BetweenLevels
-        public static string BarPath(SkinType st)
+        public static string BarPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/BetweenLevels/Bar",
                 SkinType.PungoDark => "UI/BetweenLevels/Bar_PungoDark",
@@ -98,9 +127,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string BarBGPath(SkinType st)
+        public static string BarBGPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/BetweenLevels/BarBG",
                 SkinType.PungoDark => "UI/BetweenLevels/BarBG_PungoDark",
@@ -110,9 +140,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string DoubleXPPath(SkinType st)
+        public static string DoubleXPPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/BetweenLevels/DoubleXP",
                 SkinType.PungoDark => "UI/BetweenLevels/DoubleXP_PungoDark",
@@ -122,9 +153,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string NextPath(SkinType st)
+        public static string NextPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/BetweenLevels/Next",
                 SkinType.PungoDark => "UI/BetweenLevels/Next_PungoDark",
@@ -134,9 +166,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string ProgressBGPath(SkinType st)
+        public static string ProgressBGPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/BetweenLevels/ProgressBG",
                 SkinType.PungoDark => "UI/BetweenLevels/ProgressBG_PungoDark",
@@ -146,9 +179,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string SkinsPath(SkinType st)
+        public static string SkinsPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/BetweenLevels/Skins",
                 SkinType.PungoDark => "UI/BetweenLevels/Skins_PungoDark",
@@ -221,9 +255,10 @@ namespace DefaultNamespace.GameData
          * if this game ever reaches a point where we change visuals, good for u chum
          * also put where this is called into an if, and write paths to the alternatives there, dont alter this
          */
-        public static (Color[] inside, Color[] outside) CapsuleColours(SkinType st)
+        public static (Color[] inside, Color[] outside) CapsuleColours(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple =>  (
                     inside: new Color[]
@@ -295,9 +330,10 @@ namespace DefaultNamespace.GameData
             };
         }
 
-        public static Color ObstacleColour(SkinType st)
+        public static Color ObstacleColour(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple =>  new Color(62f/255f, 0f/255f, 160f/255f),
                 SkinType.PungoDark =>  new Color(196f/255f, 177f/255f, 209f/255f),
@@ -307,9 +343,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static Color TextColour(SkinType st)
+        public static Color TextColour(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple =>  new Color(127f/255f, 88f/255f, 189f/255f),
                 SkinType.PungoDark =>  new Color(78f/255f, 49f/255f, 119f/255f),
@@ -319,9 +356,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static Color BackgroundColour(SkinType st)
+        public static Color BackgroundColour(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple =>  new Color(236f/255f, 238f/255f, 243f/255f),
                 SkinType.PungoDark =>  new Color(50f/255f, 24f/255f, 69f/255f),
