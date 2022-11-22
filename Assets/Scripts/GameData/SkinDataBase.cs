@@ -240,9 +240,33 @@ namespace DefaultNamespace.GameData
             return st switch
             {
                 SkinType.Simple =>  new Color(62f/255f, 0f/255f, 160f/255f),
-                SkinType.PungoDark =>  new Color(62f/255f, 0f/255f, 160f/255f),
-                SkinType.Monochrome =>  new Color(62f/255f, 0f/255f, 160f/255f),
-                SkinType.Desert => new Color(62f/255f, 0f/255f, 160f/255f)
+                SkinType.PungoDark =>  new Color(196f/255f, 177f/255f, 209f/255f),
+                SkinType.Monochrome =>  new Color(37f/255f, 35f/255f, 54f/255f),
+                SkinType.Desert => new Color(37f/255f, 35f/255f, 54f/255f),
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
+        public static Color TextColour(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple =>  new Color(127f/255f, 88f/255f, 189f/255f),
+                SkinType.PungoDark =>  new Color(78f/255f, 49f/255f, 119f/255f),
+                SkinType.Monochrome =>  new Color(29f/255f, 45f/255f, 37f/255f),
+                SkinType.Desert => new Color(37f/255f, 35f/255f, 54f/255f),
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
+        public static Color BackgroundColour(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple =>  new Color(236f/255f, 238f/255f, 243f/255f),
+                SkinType.PungoDark =>  new Color(50f/255f, 24f/255f, 69f/255f),
+                SkinType.Monochrome =>  new Color(213f/255f, 247f/255f, 234f/255f),
+                SkinType.Desert => new Color(209f/255f, 190f/255f, 174f/255f),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
