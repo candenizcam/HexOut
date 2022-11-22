@@ -183,12 +183,12 @@ namespace DefaultNamespace
                     clashing = obstacled.First();
                     if (oldData.Collapsed)
                     {
-                        SetTweenForCollision(capsuleScript,newData.DataFromFirst(1),2,true);
+                        SetForObstacleCollision(capsuleScript,newData.DataFromFirst(1),true);
                         
                     }
                     else
                     {
-                        SetTweenForCollision(capsuleScript,newData,2,false);
+                        SetForObstacleCollision(capsuleScript,newData,false);
                     }
                     ret = 2;
                 }
@@ -214,25 +214,19 @@ namespace DefaultNamespace
                 
                 return ret;
             }
-
-            
-            
             var otherGuys = otherData.Where(x => x.DataForCollision().Any(y=>y.CollidesWith(newData)));
 
             if (otherGuys.Any())
             {
                 if (oldData.Collapsed)
                 {
-                    SetTweenForCollision(capsuleScript, newData.DataFromFirst(1), 2, true,otherCapsule:otherGuys.First());
+                    SetForCapsuleCollision(capsuleScript, newData.DataFromFirst(1), true,
+                        otherCapsule: otherGuys.First());
                 }
                 else
                 {
-                    SetTweenForCollision(capsuleScript,newData,1,false,otherCapsule:otherGuys.First());
+                    SetForCapsuleCollision(capsuleScript, newData, false, otherCapsule: otherGuys.First());
                 }
-
-                
-                
-                
                 return 3;
             }
             
@@ -240,72 +234,66 @@ namespace DefaultNamespace
             return 0;
         }
 
-
-        private void SetTweenForCollision(CapsuleScript capsuleScript, CapsuleData newData, int endType, bool andMove, CapsuleScript otherCapsule=null)
+        private void SetForCapsuleCollision(CapsuleScript capsuleScript, CapsuleData newData,  bool andMove, CapsuleScript otherCapsule)
         {
-            Debug.Log($"end type: {endType}");
             var thisPoint = _grid.TwoCoordsToWorld(capsuleScript.ThisCapsuleData.FirstRow,
                         capsuleScript.ThisCapsuleData.FirstCol, _smallScale);
             var otherPoint = _grid.TwoCoordsToWorld(newData.FirstRow, newData.FirstCol, _smallScale);
-            
             capsuleScript.StopMovement();
             var targetPoint = capsuleScript.transform.position;
-            
             var delta = ( otherPoint - thisPoint).ToVector3(z:targetPoint.z); // single tile length
-            
             var oneTileDiff = delta.Magnitude2D();
-            
-            var initX = capsuleScript.capsuleRenderer.size.x;
-            
             var initY = capsuleScript.capsuleRenderer.size.y;
+            var target = _grid.TwoCoordsToWorld(newData.LastPoint(), _smallScale);
+            var v2 = (Vector2)otherCapsule.capsuleRenderer.gameObject.transform.position - target;
+            var v1 = v2.x * capsuleScript.UnitVector.x + v2.y * capsuleScript.UnitVector.y;
+            
+            float md2;
+            if (Math.Abs(v1) > .9f) // head to head
+            {
+                md2 = oneTileDiff- initY*0.15f;
+            }else if (v1 < 0) // from inside
+            {
+                md2 = oneTileDiff- initY*0.5f;
+            }
+            else // from outside
+            {
+                md2 = oneTileDiff- initY*0.25f;
+            }
+            var travelTime =  CollisionTween(md2, capsuleScript, oneTileDiff, delta, initY, andMove);
+            var ud = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
+            NewTween(travelTime*0.25f,duringAction: alpha =>
+            {
+                otherCapsule.gameObject.transform.position += ud*(float)Math.Sin(alpha * 3.141 * 2f);
+            },delay:travelTime*0.5f);
+        }
 
+        private void SetForObstacleCollision(CapsuleScript capsuleScript, CapsuleData newData, bool andMove)
+        {
+            var thisPoint = _grid.TwoCoordsToWorld(capsuleScript.ThisCapsuleData.FirstRow,
+                        capsuleScript.ThisCapsuleData.FirstCol, _smallScale);
+            var otherPoint = _grid.TwoCoordsToWorld(newData.FirstRow, newData.FirstCol, _smallScale);
+            capsuleScript.StopMovement();
+            var targetPoint = capsuleScript.transform.position;
+            var delta = ( otherPoint - thisPoint).ToVector3(z:targetPoint.z); // single tile length
+            var oneTileDiff = delta.Magnitude2D();
+            var initY = capsuleScript.capsuleRenderer.size.y;
+            var md = oneTileDiff / 2f;
+            CollisionTween(md, capsuleScript, oneTileDiff, delta, initY, andMove);
+        }
+
+        private float CollisionTween(float md, CapsuleScript capsuleScript, float oneTileDiff, Vector3 delta, float initY, bool andMove)
+        {
+            var targetPoint = capsuleScript.transform.position;
+            var initX = capsuleScript.capsuleRenderer.size.x;
             var side = initX / oneTileDiff * 0.5f * delta;
             var x1_0 = targetPoint + side;
             var x3_0 = targetPoint - side;
-
-            if (otherCapsule is not null)
-            {
-                var target = _grid.TwoCoordsToWorld(newData.LastPoint(), _smallScale);
-                var v2 = (Vector2)otherCapsule.capsuleRenderer.gameObject.transform.position - target;
-                
-                
-                var v1 = v2.x * capsuleScript.UnitVector.x +
-                         v2.y * capsuleScript.UnitVector.y;
-                if (Math.Abs(v1) > .9f)
-                {
-                    oneTileDiff = 3;
-                }else if (v1 < 0)
-                {
-                    oneTileDiff = 2;
-                }
-                else
-                {
-                    oneTileDiff = 4;
-                }
-            }
-
-
-            
-
-            float md2 = endType switch
-            {
-                1 => oneTileDiff - initY / 2f, // end of the wall and then some
-                2 => oneTileDiff / 2f, // end of the wall
-                3 =>  oneTileDiff - initY,
-                4=>  oneTileDiff - initY/1.5f,
-                _ => oneTileDiff - initY / 2f
-            };
-            
-            var md = endType == 2 ? oneTileDiff / 2f : oneTileDiff-initY/2f;
-            
-
-            var maxDistance = md2; //whole distance to travel
+            var maxDistance = md; //whole distance to travel
             var travelSpeed = oneTileDiff / Constants.SprayMovementPerTile;
             var travelTime = maxDistance * 2f / travelSpeed;
             var cutoffTime = 0.25f*oneTileDiff / travelSpeed/travelTime;
             var relta = (maxDistance * 2f)/oneTileDiff*delta;
-            
-            
             NewTween(travelTime, duringAction: (alpha) =>
             {
                 var x3 = alpha < .5f ? x3_0 + alpha * relta : x3_0 + (1f - alpha) * relta;
@@ -315,12 +303,9 @@ namespace DefaultNamespace
 
                 var x2 = x1 * 0.5f + x3 * 0.5f;
                 capsuleScript.transform.position = x2;
-                
 
-                
                 var newMagnitude = (x3-x1).Magnitude2D();
                 var delX = (initX-newMagnitude)/initX;
-                
                 capsuleScript.capsuleRenderer.size = new Vector2(newMagnitude,initY+delX*0.5f);
                 capsuleScript.innerCapsuleRenderer.size = new Vector2(newMagnitude,initY+delX*0.5f);
 
@@ -332,17 +317,7 @@ namespace DefaultNamespace
                     capsuleScript.MovementState = 2;
                 }
             } ,callDuringWithStartFunction:true);
-
-            if (otherCapsule is not null)
-            {
-                var ud = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
-            
-                NewTween(travelTime*0.25f,duringAction: alpha =>
-                {
-                    otherCapsule.gameObject.transform.position += ud*(float)Math.Sin(alpha * 3.141 * 2f);
-                },delay:travelTime*0.5f);
-            }
-            
+            return travelTime;
         }
         
         
