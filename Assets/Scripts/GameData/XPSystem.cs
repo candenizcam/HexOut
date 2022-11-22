@@ -48,13 +48,21 @@ namespace DefaultNamespace.GameData
         public static (LevelSeedData data, int index) DrawGameLevelFromNo(int levelNo, List<string> playedLevels)
         {
             var p=GameDataBase.LevelSeedDatas
-                .Where(x => x.LevelDifficulty < levelNo / 2 + 5 && playedLevels.All(y => y != x.Name))
+                .Where(x => x.LevelDifficulty < levelNo / 2 + 5)
                 .ToList();
 
             if (!p.Any())
             {
                 var d = GameDataBase.LevelSeedDatas.Min(x => x.LevelDifficulty);
                 p = GameDataBase.LevelSeedDatas.Where(x => x.LevelDifficulty == d).ToList();
+            }
+
+
+            var onlyNew = p.Where(x=>playedLevels.All(y => y != x.Name)).ToList();
+
+            if (onlyNew.Any())
+            {
+                p = onlyNew;
             }
 
             var r = new Random();
