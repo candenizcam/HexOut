@@ -233,7 +233,7 @@ namespace DefaultNamespace.GameData
             {
                 SkinType.Simple =>  new Color(62f/255f, 0f/255f, 160f/255f),
                 SkinType.PungoDark =>  new Color(196f/255f, 177f/255f, 209f/255f),
-                SkinType.Monochrome =>  new Color(37f/255f, 35f/255f, 54f/255f),
+                SkinType.Monochrome =>  new Color(29f/255f, 45f/255f, 37f/255f),
                 SkinType.Desert => new Color(37f/255f, 35f/255f, 54f/255f),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
