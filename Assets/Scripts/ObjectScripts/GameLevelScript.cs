@@ -208,7 +208,7 @@ namespace DefaultNamespace
 
             
             
-            var otherGuys = otherData.Where(x => x.ThisCapsuleData.CollidesWith(newData));
+            var otherGuys = otherData.Where(x => x.DataForCollision().Any(y=>y.CollidesWith(newData)));
 
             if (otherGuys.Any())
             {
