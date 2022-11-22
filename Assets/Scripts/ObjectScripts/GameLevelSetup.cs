@@ -81,11 +81,7 @@ namespace DefaultNamespace
         public void SetCapsules(CapsuleData[] capsuleDataList)
         {
             var r = new System.Random();
-            SkinType st = SkinType.Simple;
-            Serializer.Apply<SerialHexOutData>(sgd =>
-            {
-                st = sgd.activeSkin;
-            });
+            SkinType st = GameDataBase.GetSkinType();
             
             
             var colourLists =  GameDataBase.CapsuleColours(st);

@@ -28,6 +28,7 @@ namespace DefaultNamespace
         public int levelIndex;
         public string levelId;
         public int levelDiff;
+        public SkinType skinType;
         
         private GameState _gameState;
         
@@ -46,6 +47,7 @@ namespace DefaultNamespace
             if (Application.isEditor && resetSaves)
             {
                 Serializer.Reset<SerialHexOutData>();
+                
             }
 
             //TestLevels();
@@ -56,6 +58,12 @@ namespace DefaultNamespace
            
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
+               if (Application.isEditor)
+               {
+                   
+                   GameDataBase.SetSkinType(skinType);
+               }
+               
                
                var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                ActivateLevel(f.data);
@@ -97,7 +105,7 @@ namespace DefaultNamespace
             Debug.Log(s);
         }
 
-        private void NewProcedral()
+        private void NewProcedural()
         {
             var obsArray = new (int Sin, int Doub)[]{(1,1),(1,2),(2,1),(2,2),(2,3),(3,2) };
             var r = 15;
@@ -277,6 +285,17 @@ namespace DefaultNamespace
                     }
                 });
 
+                var n = _activeLevel.FieldFrame.TextPopup("boing");
+                n.ve.style.opacity = 0f;
+                TweenHolder.NewTween(.6f,duringAction: (alpha) =>
+                {
+                    var a = Math.Clamp(alpha * 3f, 0f, 1f);
+                    n.ve.style.opacity = a;
+                    n.ve.style.top = n.top - a * 50f;
+                },exitAction: () =>
+                {
+                    _activeLevel.FieldFrame.Remove(n.ve);
+                });
             };
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
             Serializer.Apply<SerialHexOutData>(sgd =>

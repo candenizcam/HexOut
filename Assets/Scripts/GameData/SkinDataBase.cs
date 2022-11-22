@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Punity;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,6 +8,26 @@ namespace DefaultNamespace.GameData
 {
     public static partial class GameDataBase
     {
+        private static SkinType? _activeSkin = null;
+
+        public static void SetSkinType(SkinType st)
+        {
+            _activeSkin = st;
+            Serializer.Apply<SerialHexOutData>(sgd =>
+            {
+                sgd.activeSkin = st;
+            });
+            
+        }
+
+        public static SkinType GetSkinType()
+        {
+            if (_activeSkin is not null) return (SkinType)_activeSkin;
+
+            var sgd = Serializer.Load<SerialHexOutData>();
+            _activeSkin = sgd.activeSkin;
+            return (SkinType)_activeSkin;
+        }
         
         
         // bu fonksyonu kopyala

@@ -12,9 +12,15 @@ namespace DefaultNamespace
         private ProgressBar _progressBar;
         private Label _bigText;
         private Label _smallText;
+        private float _top;
+        private float _width;
+       
+        
         
         public GameFieldFrame(float left, float top, float width, float height)
         {
+            _top = top;
+            _width = width;
             this.StretchToParentSize();
             style.flexDirection = FlexDirection.Column;
             style.justifyContent = Justify.Center;
@@ -208,6 +214,26 @@ namespace DefaultNamespace
             
 
         }
-        
+
+        public (VisualElement ve, float top) TextPopup(string text)
+        {
+            var top = _top - 100f;
+            var n = new Label(text)
+            {
+                style=
+                {
+                    position = Position.Absolute,
+                    top = top,
+                    unityTextAlign = TextAnchor.UpperCenter,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 72f,
+                    color = Constants.UiTextColour()
+                },
+            };
+            n.StretchToParentWidth();
+            Add(n);
+            return (n,top);
+        }
+
     }
 }

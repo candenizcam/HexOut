@@ -264,7 +264,15 @@ namespace DefaultNamespace
             var ud = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
             NewTween(travelTime*0.25f,duringAction: alpha =>
             {
-                otherCapsule.gameObject.transform.position += ud*(float)Math.Sin(alpha * 3.141 * 2f);
+                try
+                {
+                    otherCapsule.gameObject.transform.position += ud*(float)Math.Sin(alpha * 3.141 * 2f);
+                }
+                catch (MissingReferenceException e)
+                {
+                    
+                }
+                
             },delay:travelTime*0.5f);
         }
 
