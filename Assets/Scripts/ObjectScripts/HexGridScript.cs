@@ -25,6 +25,7 @@ namespace DefaultNamespace
 
 
 
+        public Vector2 TwoCoordsToWorld((int r, int c) a, float smallScale) => TwoCoordsToWorld(a.r, a.c, smallScale);
 
         /** Starts from top left, returns world coordinates
          * 

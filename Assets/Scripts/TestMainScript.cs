@@ -56,7 +56,7 @@ namespace DefaultNamespace
            
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
-               Debug.Log($"sgd: {sgd.playerLevel}");
+               
                var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                ActivateLevel(f.data);
                levelIndex = f.index;
@@ -68,7 +68,7 @@ namespace DefaultNamespace
 
            
 
-           //problematic: "11_7_6_18"
+           //problematic: "9_5_3_17"
 
            //ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
 
