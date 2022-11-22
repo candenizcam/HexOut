@@ -57,7 +57,7 @@ namespace DefaultNamespace
                     position = Position.Absolute,
                     top = 0f,
                     height = frameTop+10f,
-                    backgroundColor = new StyleColor(Constants.BackgroundColour)
+                    backgroundColor = new StyleColor(GameDataBase.BackgroundColour())
                 }
             };
             topPart.StretchToParentWidth();
@@ -69,7 +69,7 @@ namespace DefaultNamespace
                     position = Position.Absolute,
                     bottom = 0f,
                     height = Constants.UiHeight -frameTop - frameHeight +10f,
-                    backgroundColor = new StyleColor(Constants.BackgroundColour)
+                    backgroundColor = new StyleColor(GameDataBase.BackgroundColour())
                 }
             };
             bottomPart.StretchToParentWidth();
@@ -83,7 +83,7 @@ namespace DefaultNamespace
                     height = frameHeight,
                     width = frameLeft+10f,
                     top = frameTop,
-                    backgroundColor = new StyleColor(Constants.BackgroundColour)
+                    backgroundColor = new StyleColor(GameDataBase.BackgroundColour())
                 }
             };
             
@@ -96,7 +96,7 @@ namespace DefaultNamespace
                     height = frameHeight,
                     top = frameTop,
                     width = frameLeft+10f,
-                    backgroundColor = new StyleColor(Constants.BackgroundColour)
+                    backgroundColor = new StyleColor(GameDataBase.BackgroundColour())
                 }
             };
             

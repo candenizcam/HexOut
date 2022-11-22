@@ -34,13 +34,6 @@ namespace DefaultNamespace
 
         
         
-        
-
-        public static Color UiTextColour()
-        {
-            return new Color(70f/255f,70f/255f,70f/255f);
-        }
-        
 
         public static readonly Color BackgroundColour = new Color(217f / 255f, 221f / 255f, 232f / 255f);
     }

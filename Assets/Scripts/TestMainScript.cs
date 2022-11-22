@@ -40,7 +40,7 @@ namespace DefaultNamespace
             UIDocument.rootVisualElement.style.paddingTop = Constants.UnsafeTopUi;
             Application.targetFrameRate = 60;
             
-            MainCamera.backgroundColor = Constants.BackgroundColour;
+            
 
             
 
@@ -73,6 +73,7 @@ namespace DefaultNamespace
            });
            
 
+           MainCamera.backgroundColor = GameDataBase.BackgroundColour();
 
            
 
