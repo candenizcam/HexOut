@@ -27,6 +27,7 @@ namespace DefaultNamespace
         public bool resetSaves;
         public int levelIndex;
         public string levelId;
+        public int levelDiff;
         
         private GameState _gameState;
         
@@ -52,6 +53,7 @@ namespace DefaultNamespace
             //var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
            //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
            ;
+           
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
                Debug.Log($"sgd: {sgd.playerLevel}");
@@ -59,22 +61,28 @@ namespace DefaultNamespace
                ActivateLevel(f.data);
                levelIndex = f.index;
                levelId = f.data.Name;
+               levelDiff = f.data.LevelDifficulty;
            });
            
+
+
            
-            //ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
+
+           //problematic: "11_7_6_18"
+
+           //ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
 
 
 
-            
-
-            
-            //var v2 = GameDataBase.LevelSeedDatas.Where(x => x.Col == 7 && x.Row == 13);
-            
-            //var v = v2.Sum(x => x.LevelDifficulty * x.CapsuleNumber)/v2.Count();
 
 
-            //Debug.Log($"v: {v}");
+
+           //var v2 = GameDataBase.LevelSeedDatas.Where(x => x.Col == 7 && x.Row == 13);
+
+           //var v = v2.Sum(x => x.LevelDifficulty * x.CapsuleNumber)/v2.Count();
+
+
+           //Debug.Log($"v: {v}");
 
         }
 
@@ -84,7 +92,7 @@ namespace DefaultNamespace
             //LevelGenerator.ProceduralBatch(5, 9);
             GameDataBase.LevelSeedDatas
                 .OrderBy(x => x.LevelDifficulty * x.CapsuleNumber)
-                .Select(x => x.RecordMe(name: $"\"{x.Name}\"")).ToList().ForEach(x => { s += x;});
+                .Select(x => x.RecordMe()).ToList().ForEach(x => { s += x;});
                 
             Debug.Log(s);
         }
@@ -159,6 +167,7 @@ namespace DefaultNamespace
                     ActivateLevel(f.data);
                     levelIndex = f.index;
                     levelId = f.data.Name;
+                    levelDiff = f.data.LevelDifficulty;
                 });
                 UIDocument.rootVisualElement.Remove(betweenLevels);
             };

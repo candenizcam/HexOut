@@ -84,7 +84,7 @@ namespace DefaultNamespace
             capsules = otherPossible.ToArray();//capsules.Where(x => !removes.Any(y=> y==x)).ToArray();
             if (capsules.Any())
             {
-                return RecursiveTest(capsules, obstacleDatas, row, col,turns+1,changeCount*(turns+1));
+                return RecursiveTest(capsules, obstacleDatas, row, col,turns+1,diff+changeCount*(turns+1));
             }
             else
             {
