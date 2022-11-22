@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
 using Newtonsoft.Json.Linq;
 using Punity;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace DefaultNamespace
 {
@@ -221,12 +223,16 @@ namespace DefaultNamespace
             {
                 if (oldData.Collapsed)
                 {
-                    SetTweenForCollision(capsuleScript, newData.DataFromFirst(1), 2, true);
+                    SetTweenForCollision(capsuleScript, newData.DataFromFirst(1), 2, true,otherCapsule:otherGuys.First());
                 }
                 else
                 {
-                    SetTweenForCollision(capsuleScript,newData,1,false);
+                    SetTweenForCollision(capsuleScript,newData,1,false,otherCapsule:otherGuys.First());
                 }
+
+                
+                
+                
                 return 3;
             }
             
@@ -235,8 +241,9 @@ namespace DefaultNamespace
         }
 
 
-        private void SetTweenForCollision(CapsuleScript capsuleScript, CapsuleData newData, int endType, bool andMove)
+        private void SetTweenForCollision(CapsuleScript capsuleScript, CapsuleData newData, int endType, bool andMove, CapsuleScript otherCapsule=null)
         {
+            Debug.Log($"end type: {endType}");
             var thisPoint = _grid.TwoCoordsToWorld(capsuleScript.ThisCapsuleData.FirstRow,
                         capsuleScript.ThisCapsuleData.FirstCol, _smallScale);
             var otherPoint = _grid.TwoCoordsToWorld(newData.FirstRow, newData.FirstCol, _smallScale);
@@ -256,10 +263,43 @@ namespace DefaultNamespace
             var x1_0 = targetPoint + side;
             var x3_0 = targetPoint - side;
 
+            if (otherCapsule is not null)
+            {
+                var target = _grid.TwoCoordsToWorld(newData.LastPoint(), _smallScale);
+                var v2 = (Vector2)otherCapsule.capsuleRenderer.gameObject.transform.position - target;
+                
+                
+                var v1 = v2.x * capsuleScript.UnitVector.x +
+                         v2.y * capsuleScript.UnitVector.y;
+                if (Math.Abs(v1) > .9f)
+                {
+                    oneTileDiff = 3;
+                }else if (v1 < 0)
+                {
+                    oneTileDiff = 2;
+                }
+                else
+                {
+                    oneTileDiff = 4;
+                }
+            }
+
+
+            
+
+            float md2 = endType switch
+            {
+                1 => oneTileDiff - initY / 2f, // end of the wall and then some
+                2 => oneTileDiff / 2f, // end of the wall
+                3 =>  oneTileDiff - initY,
+                4=>  oneTileDiff - initY/1.5f,
+                _ => oneTileDiff - initY / 2f
+            };
+            
             var md = endType == 2 ? oneTileDiff / 2f : oneTileDiff-initY/2f;
             
 
-            var maxDistance = md; //whole distance to travel
+            var maxDistance = md2; //whole distance to travel
             var travelSpeed = oneTileDiff / Constants.SprayMovementPerTile;
             var travelTime = maxDistance * 2f / travelSpeed;
             var cutoffTime = 0.25f*oneTileDiff / travelSpeed/travelTime;
@@ -292,6 +332,17 @@ namespace DefaultNamespace
                     capsuleScript.MovementState = 2;
                 }
             } ,callDuringWithStartFunction:true);
+
+            if (otherCapsule is not null)
+            {
+                var ud = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
+            
+                NewTween(travelTime*0.25f,duringAction: alpha =>
+                {
+                    otherCapsule.gameObject.transform.position += ud*(float)Math.Sin(alpha * 3.141 * 2f);
+                },delay:travelTime*0.5f);
+            }
+            
         }
         
         

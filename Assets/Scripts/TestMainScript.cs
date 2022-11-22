@@ -53,22 +53,26 @@ namespace DefaultNamespace
             //var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
            //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
            ;
-           
+           /*
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
-               Debug.Log($"sgd: {sgd.playerLevel}");
+               
                var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                ActivateLevel(f.data);
                levelIndex = f.index;
                levelId = f.data.Name;
                levelDiff = f.data.LevelDifficulty;
            });
-           
+           */
 
 
-           
+           var f = GameDataBase.LevelSeedDatas.First(x => x.Name == "9_5_3_17");
+           ActivateLevel(f);
+           levelIndex = 5;
+           levelId = f.Name;
+           levelDiff = f.LevelDifficulty;
 
-           //problematic: "11_7_6_18"
+           //problematic: "9_5_3_17"
 
            //ActivateLevel(GameDataBase.LevelSeedDatas[levelIndex]);
 
