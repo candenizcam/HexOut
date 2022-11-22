@@ -45,9 +45,11 @@ namespace DefaultNamespace.GameData
             return draws;
         }
 
-        public static (LevelSeedData data, int index) DrawGameLevelFromNo(int levelNo)
+        public static (LevelSeedData data, int index) DrawGameLevelFromNo(int levelNo, List<string> playedLevels)
         {
-            var p=GameDataBase.LevelSeedDatas.Where(x => x.LevelDifficulty < levelNo / 2 + 5).ToList();
+            var p=GameDataBase.LevelSeedDatas
+                .Where(x => x.LevelDifficulty < levelNo / 2 + 5 && playedLevels.All(y => y != x.Name))
+                .ToList();
 
             if (!p.Any())
             {

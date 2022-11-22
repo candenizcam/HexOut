@@ -44,12 +44,7 @@ namespace DefaultNamespace
 
             if (Application.isEditor && resetSaves)
             {
-                Serializer.Apply<SerialHexOutData>((sgd) =>
-                {
-                    sgd.playerLevel = 1;
-                    sgd.playerXp = 0;
-
-                });
+                Serializer.Reset<SerialHexOutData>();
             }
 
             //TestLevels();
@@ -60,7 +55,7 @@ namespace DefaultNamespace
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
                Debug.Log($"sgd: {sgd.playerLevel}");
-               var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel);
+               var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                ActivateLevel(f.data);
                levelIndex = f.index;
                levelId = f.data.Name;
@@ -132,7 +127,10 @@ namespace DefaultNamespace
             var levelUp = n.newLevel > oldLevel; 
             
             sgd.playerXp = n.newXp;
+            
             sgd.playerLevel = n.newLevel;
+            Debug.Log($"{lcd.LevelId}");
+            sgd.playedLevels.Add(lcd.LevelId);
             
             
             var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
@@ -157,7 +155,7 @@ namespace DefaultNamespace
             {
                 Serializer.Apply<SerialHexOutData>(sgd =>
                 {
-                    var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel);
+                    var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                     ActivateLevel(f.data);
                     levelIndex = f.index;
                     levelId = f.data.Name;
@@ -235,15 +233,16 @@ namespace DefaultNamespace
             {
                 Serializer.Apply<SerialHexOutData>( sgd =>
                 {
-                    var oldN = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, oldXP);
-                    var newN = XPSystem.AddXP(sgd.playerLevel, sgd.playerXp, newXP+oldXP);
+                    var playerLevel = sgd.playerLevel;
+                    var oldN = XPSystem.AddXP(playerLevel, sgd.playerXp, oldXP);
+                    var newN = XPSystem.AddXP(playerLevel, sgd.playerXp, newXP+oldXP);
                     
                     var oldLevel = oldN.newLevel;
                     var oldXPForBar =(float) oldN.newXp;
                     
-                    var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
-                    var levelUp = newN.newLevel > sgd.playerLevel; // if it ever increases in level, change here
-                    var levelUpWasTheCase = oldLevel > sgd.playerLevel; // if it ever increases in level, change here
+                    var levelXP = (float)XPSystem.LevelXp(playerLevel);
+                    var levelUp = newN.newLevel > playerLevel; // if it ever increases in level, change here
+                    var levelUpWasTheCase = oldLevel > playerLevel; // if it ever increases in level, change here
                     if (levelUpWasTheCase)
                     {
                         _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{newN.newLevel}",levelUp:true);

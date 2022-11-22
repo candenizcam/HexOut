@@ -22,6 +22,7 @@ namespace DefaultNamespace
         public void SetGameLevelInfo( LevelData ld)
         {
             ThisLevelData = ld;
+            _levelCompleteData.LevelId = ld.Name;
         }
         
         public void SetGrid(Camera c, int row, int col, ObstacleData[] obstacles)

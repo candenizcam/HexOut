@@ -3,9 +3,11 @@
     public class LevelCompleteData
     {
         public int LevelXp;
-        public LevelCompleteData(int levelXp)
+        public string LevelId;
+        public LevelCompleteData(int levelXp, string levelId)
         {
             LevelXp = levelXp;
+            LevelId = levelId;
         }
     }
 }

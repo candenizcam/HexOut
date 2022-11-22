@@ -24,7 +24,7 @@ namespace DefaultNamespace
         private Vector2 _startPos = new Vector2(-1f,-1f);
         private CapsuleScript _touchedGuy;
         private  ObstacleData[] _obstacles;
-        private LevelCompleteData _levelCompleteData = new LevelCompleteData(0);
+        private LevelCompleteData _levelCompleteData = new LevelCompleteData(0,"");
 
         public Vector3 CapsulePosition(CapsuleData capsuleData)
         {
