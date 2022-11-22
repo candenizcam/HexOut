@@ -1,5 +1,6 @@
 ﻿using System;
 using Classes;
+using DefaultNamespace.GameData;
 using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -25,18 +26,22 @@ namespace DefaultNamespace
             style.flexDirection = FlexDirection.Column;
             style.justifyContent = Justify.Center;
             style.alignItems = Align.Center;
-            var s = QuickAccess.LoadSprite("UI/LevelBack");
             var frameWidth = width + Constants.FrameSolid * 2f;
             var frameHeight = height + Constants.FrameSolid * 2f;
             var frameLeft = left - Constants.FrameSolid;
             var frameTop = top - Constants.FrameSolid;
             
             
+            
+                
+            
+            
+            
             var frame = new VisualElement
             {
                 style =
                 {
-                    backgroundImage = new StyleBackground(s),
+                    backgroundImage = QuickAccess.LoadSpriteBg(GameDataBase.LevelBackPath(GameDataBase.GetSkinType())),
                     width = frameWidth,
                     height = frameHeight,
                     position = Position.Absolute,
@@ -218,6 +223,9 @@ namespace DefaultNamespace
         public (VisualElement ve, float top) TextPopup(string text)
         {
             var top = _top - 100f;
+            
+            
+            
             var n = new Label(text)
             {
                 style=
