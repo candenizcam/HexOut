@@ -44,6 +44,20 @@ namespace DefaultNamespace.GameData
             };
         }
         
+        public static string HexTilePath(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "gamefield/Hex",
+                SkinType.PungoDark => "gamefield/Hex_PungoDark",
+                SkinType.Monochrome => "gamefield/Hex_Monochrome",
+                SkinType.Desert => "gamefield/Hex_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
+        
         //Bi de Hex.png'ler var ama prefablardan değişecek izel yapmadı
         
         public static string LevelBackPath(SkinType? st=null)

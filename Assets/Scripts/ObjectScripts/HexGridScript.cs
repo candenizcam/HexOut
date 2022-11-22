@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Punity.ui;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -86,6 +87,7 @@ namespace DefaultNamespace
                     var valX = (j-(_col-1)*.5f) * diffX;
 
                     var q = Instantiate(res,this.gameObject.transform);
+                    
                     q.transform.position = new Vector3(-offset+valX, valY, 0f);
                     var hts = q.GetComponent<HexTileScript>();
                     hts.R = _row - (i );
@@ -94,6 +96,7 @@ namespace DefaultNamespace
                         .Where(x => hts.R == x.Row && hts.C == x.Col)
                         .Select(x=> (x.Direction,x.Length))
                         .ToArray());
+                    hts.hexRenderer.sprite = QuickAccess.LoadSprite(GameDataBase.HexTilePath());
 
                     
                     _tileScripts.Add(hts);
