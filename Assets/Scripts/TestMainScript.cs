@@ -53,7 +53,7 @@ namespace DefaultNamespace
             //var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
            //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
            ;
-           /*
+           
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
                
@@ -63,14 +63,10 @@ namespace DefaultNamespace
                levelId = f.data.Name;
                levelDiff = f.data.LevelDifficulty;
            });
-           */
+           
 
 
-           var f = GameDataBase.LevelSeedDatas.First(x => x.Name == "9_5_3_17");
-           ActivateLevel(f);
-           levelIndex = 5;
-           levelId = f.Name;
-           levelDiff = f.LevelDifficulty;
+           
 
            //problematic: "9_5_3_17"
 
