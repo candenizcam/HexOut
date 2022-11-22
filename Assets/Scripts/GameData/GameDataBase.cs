@@ -2,7 +2,7 @@
 
 namespace DefaultNamespace.GameData
 {
-    public static class GameDataBase
+    public  static partial class GameDataBase
     {
         public static List<LevelSeedData> LevelSeedDatas = new()
         {

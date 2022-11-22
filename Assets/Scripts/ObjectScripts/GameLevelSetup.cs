@@ -3,6 +3,7 @@ using System.Linq;
 using DefaultNamespace;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Punity;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -80,18 +81,28 @@ namespace DefaultNamespace
         public void SetCapsules(CapsuleData[] capsuleDataList)
         {
             var r = new System.Random();
-            foreach (var capsuleData in capsuleDataList)
+            
+            Serializer.Apply<SerialHexOutData>(sgd =>
             {
-                var colorIndex = r.Next(0, Constants.CapsuleColours.Length);
-                
-                SetCapsule(capsuleData,colorIndex);
-            }
+                var colourLists =  GameDataBase.CapsuleColours(sgd.activeSkin);
+                var insideList = colourLists.inside;
+                var outsideList = colourLists.outside;
+                foreach (var capsuleData in capsuleDataList)
+                {
+                    var colorIndex = r.Next(0, insideList.Length);
+                    SetCapsule(capsuleData,insideList[colorIndex],outsideList[colorIndex]);
+                }
+            });
+            
+            
+            
+            
         }
 
         
         
 
-        public void SetCapsule(CapsuleData capsuleData, int? col = null)
+        public void SetCapsule(CapsuleData capsuleData, Color c1, Color c2)
         {
             var res = Resources.Load<GameObject>(capsuleData.Path());
             var q = Instantiate( res,(Transform) gameObject.transform);
@@ -101,14 +112,7 @@ namespace DefaultNamespace
             q.transform.position = new Vector3(v3.x, v3.y, -2f);
             q.transform.rotation = Quaternion.Euler(0f,0f,capsuleData.Degrees());
             q.transform.localScale = new Vector3(0.01f, 0.01f, 1f);
-            if (col is null)
-            {
-                cs.Paint(Color.white,Color.gray);
-            }
-            else
-            {
-                cs.Paint(Constants.CapsuleColours[(int)col],Constants.CapsuleDarkColours[(int)col]);
-            }
+            cs.Paint(c1,c2);
             cs.ThisCapsuleData = capsuleData;
             _capsules.Add(cs);
         }
