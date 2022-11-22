@@ -9,7 +9,7 @@ namespace DefaultNamespace.GameData
     {
         
         
-        
+        // bu fonksyonu kopyala
         public static string SkinName(SkinType st)
         {
             return st switch
@@ -20,6 +20,18 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+        
+        public static string HomeButtonPath(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple => "UI/Game/HomeButton",
+                SkinType.PungoDark => "UI/Game/HomeButton",
+                SkinType.Retro => "UI/Game/HomeButton",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
 
 
         /** Only works up to the limits of capsule colours
