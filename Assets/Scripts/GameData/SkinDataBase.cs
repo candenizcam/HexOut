@@ -16,7 +16,7 @@ namespace DefaultNamespace.GameData
             {
                 SkinType.Simple => "Light",
                 SkinType.PungoDark => "Dark Pungo",
-                SkinType.Retro => "Retro",
+                SkinType.Monochrome => "Monochrome",
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
@@ -27,7 +27,7 @@ namespace DefaultNamespace.GameData
             {
                 SkinType.Simple => "UI/Game/HomeButton",
                 SkinType.PungoDark => "UI/Game/HomeButton",
-                SkinType.Retro => "UI/Game/HomeButton",
+                SkinType.Monochrome => "UI/Game/HomeButton",
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
@@ -84,7 +84,7 @@ namespace DefaultNamespace.GameData
                         new Color(0.137f, 0f, 0.71f),
                         new Color(0.145f, 0f, 0.427f),
                     }),
-                SkinType.Retro => (
+                SkinType.Monochrome => (
                     inside: new Color[]
                     {
                         new Color(0.996f, 0.004f, 0.29f),
@@ -115,7 +115,7 @@ namespace DefaultNamespace.GameData
             {
                 SkinType.Simple =>  new Color(62f/255f, 0f/255f, 160f/255f),
                 SkinType.PungoDark =>  new Color(62f/255f, 0f/255f, 160f/255f),
-                SkinType.Retro =>  new Color(62f/255f, 0f/255f, 160f/255f),
+                SkinType.Monochrome =>  new Color(62f/255f, 0f/255f, 160f/255f),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
