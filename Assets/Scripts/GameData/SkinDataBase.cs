@@ -205,23 +205,36 @@ namespace DefaultNamespace.GameData
                 SkinType.Monochrome => (
                     inside: new Color[]
                     {
-                        new Color(0.996f, 0.004f, 0.29f),
-                        new Color(1f, 0.427f, 0.141f ),
-                        new Color(1f, 0.953f, 0.071f),
-                        new Color(0.039f, 0.91f, 0.412f),
-                        new Color(0f, 0.718f, 1f),
-                        new Color(0.29f, 0f, 1f),
-                        new Color(0.243f, 0f, 0.627f ),
+                        new Color(140f/255f, 192f/255f, 173f/255f),
+                        new Color(85f/255f, 119f/255f, 105f/255f),
+                        new Color(57f/255f, 82f/255f, 71f/255f),
+                        new Color(46f/255f, 67f/255f, 57f/255f),
                     },
                     outside: new Color[]
                     {
-                        new Color(0.808f, 0f, 0.271f),
-                        new Color(0.949f, 0.29f, 0f),
-                        new Color(0.878f, 0.722f, 0.071f),
-                        new Color(0.039f, 0.757f, 0.329f),
-                        new Color(0.008f, 0.58f, 0.757f),
-                        new Color(0.137f, 0f, 0.71f),
-                        new Color(0.145f, 0f, 0.427f),
+                        new Color(46f/255f, 67f/255f, 57f/255f),
+                        new Color(40f/255f, 60f/255f, 51f/255f),
+                        new Color(35f/255f, 52f/255f, 44f/255f),
+                        new Color(29f/255f, 45f/255f, 37f/255f),
+                    }),
+                SkinType.Desert => (
+                    inside: new Color[]
+                    {
+                        new Color(217f/255f, 164f/255f, 145f/255f),
+                        new Color(189f/255f, 75f/255f, 70f/255f),
+                        new Color(114f/255f, 168f/255f, 153f/255f),
+                        new Color(107f/255f, 155f/255f, 179f/255f),
+                        new Color(87f/255f, 120f/255f, 161f/255f),
+                        new Color(85f/255f, 85f/255f, 130f/255f),
+                    },
+                    outside: new Color[]
+                    {
+                        new Color(186f/255f, 105f/255f, 75f/255f),
+                        new Color(130f/255f, 23f/255f, 16f/255f),
+                        new Color(98f/255f, 148f/255f, 127f/255f),
+                        new Color(65f/255f, 119f/255f, 135f/255f),
+                        new Color(43f/255f, 76f/255f, 108f/255f),
+                        new Color(45f/255f, 45f/255f, 68f/255f),
                     }),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
