@@ -41,7 +41,7 @@ namespace DefaultNamespace
             {
                 style =
                 {
-                    backgroundImage = QuickAccess.LoadSpriteBg(GameDataBase.LevelBackPath(GameDataBase.GetSkinType())),
+                    backgroundImage = QuickAccess.LoadSpriteBg(GameDataBase.LevelBackPath()),
                     width = frameWidth,
                     height = frameHeight,
                     position = Position.Absolute,
@@ -115,7 +115,7 @@ namespace DefaultNamespace
             
 
 
-            var homeButton = new ButtonClickable("UI/Game/HomeButton",Color.gray,HomeButtonFunction)
+            var homeButton = new ButtonClickable(GameDataBase.HomeButtonPath(),Color.gray,HomeButtonFunction)
             {
                 style =
                 {
@@ -124,14 +124,14 @@ namespace DefaultNamespace
                     bottom = 100f,
                     width = 140f,
                     height = 140f,
-                    backgroundImage = QuickAccess.LoadSpriteBg("UI/Game/HomeButton")
+                    //backgroundImage = QuickAccess.LoadSpriteBg("UI/Game/HomeButton")
                 }
             };
             
             hudFrame.Add(homeButton);
 
-            _progressBar = new ProgressBar("UI/Game/LevelProgressBarBG",
-                "UI/Game/LevelProgressBar", 900f, 100f, 14f, 10f)
+            _progressBar = new ProgressBar(GameDataBase.LevelProgressBarBGPath(),
+                GameDataBase.LevelProgressBarPath(), 900f, 100f, 14f, 10f)
             {
                 style =
                 {
@@ -154,7 +154,7 @@ namespace DefaultNamespace
                     position = Position.Absolute,
                     top = 132f,
                     left = 63f,
-                    backgroundImage = QuickAccess.LoadSpriteBg("UI/Game/LevelIndicator")
+                    backgroundImage = QuickAccess.LoadSpriteBg(GameDataBase.LevelIndicatorPath())
                 }
             };
 
@@ -167,7 +167,7 @@ namespace DefaultNamespace
                     unityTextAlign = TextAnchor.UpperCenter,
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 28f,
-                    color = Constants.UiTextColour()
+                    color = GameDataBase.TextColour()
                 },
                 text = "level"
             };
@@ -182,7 +182,7 @@ namespace DefaultNamespace
                     unityTextAlign = TextAnchor.UpperCenter,
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 72f,
-                    color = Constants.UiTextColour()
+                    color = GameDataBase.TextColour()
                 },
                 text = "1293"
             };
@@ -235,7 +235,7 @@ namespace DefaultNamespace
                     unityTextAlign = TextAnchor.UpperCenter,
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 72f,
-                    color = Constants.UiTextColour()
+                    color = GameDataBase.TextColour()
                 },
             };
             n.StretchToParentWidth();
