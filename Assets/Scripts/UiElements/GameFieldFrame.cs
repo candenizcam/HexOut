@@ -104,7 +104,7 @@ namespace DefaultNamespace
             
 
 
-            var homeButton = new ButtonClickable("UI/BetweenLevels/HomeButton",Color.gray,HomeButtonFunction)
+            var homeButton = new ButtonClickable("UI/Game/HomeButton",Color.gray,HomeButtonFunction)
             {
                 style =
                 {
@@ -113,14 +113,14 @@ namespace DefaultNamespace
                     bottom = 100f,
                     width = 140f,
                     height = 140f,
-                    backgroundImage = QuickAccess.LoadSpriteBg("UI/BetweenLevels/HomeButton")
+                    backgroundImage = QuickAccess.LoadSpriteBg("UI/Game/HomeButton")
                 }
             };
             
             hudFrame.Add(homeButton);
 
-            _progressBar = new ProgressBar("UI/BetweenLevels/LevelProgressBarBG",
-                "UI/BetweenLevels/LevelProgressBar", 900f, 100f, 14f, 10f)
+            _progressBar = new ProgressBar("UI/Game/LevelProgressBarBG",
+                "UI/Game/LevelProgressBar", 900f, 100f, 14f, 10f)
             {
                 style =
                 {
@@ -143,7 +143,7 @@ namespace DefaultNamespace
                     position = Position.Absolute,
                     top = 132f,
                     left = 63f,
-                    backgroundImage = QuickAccess.LoadSpriteBg("UI/BetweenLevels/LevelIndicator")
+                    backgroundImage = QuickAccess.LoadSpriteBg("UI/Game/LevelIndicator")
                 }
             };
 
