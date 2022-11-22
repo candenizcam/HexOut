@@ -100,7 +100,7 @@ namespace DefaultNamespace
                                 if (b >= 0)
                                 {
                                     n += 1;
-                                    s += editorSeed.RecordMe(name: $"\"{obstacleSeed}_{capsuleNo}_{seed}\"",
+                                    s += editorSeed.RecordMe(name: $"{obstacleSeed}_{capsuleNo}_{seed}",
                                         capsuleSeed: seed, capsuleNumber: capsuleNo, difficulty: b);
                                 }
 

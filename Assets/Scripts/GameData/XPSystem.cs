@@ -30,25 +30,10 @@ namespace DefaultNamespace.GameData
         }
         
 
-        public static List<int> DiffDrawFromLevelNo(int levelNo)
-        {
-            var draws = new List<int>();
-            draws.Add(1);
-
-            draws.AddRange(Enumerable.Repeat(1, Math.Min(10, levelNo)));
-            if (levelNo < 10) return draws;
-            
-            draws.AddRange(Enumerable.Repeat(1, Math.Min(10, levelNo/5)));
-            if (levelNo < 50) return draws;
-            
-            draws.AddRange(Enumerable.Repeat(1, Math.Min(10, levelNo/25)));
-            return draws;
-        }
-
         public static (LevelSeedData data, int index) DrawGameLevelFromNo(int levelNo, List<string> playedLevels)
         {
             var p=GameDataBase.LevelSeedDatas
-                .Where(x => x.LevelDifficulty < levelNo / 2 + 5)
+                .Where(x => x.LevelDifficulty < levelNo  + 5)
                 .ToList();
 
             if (!p.Any())

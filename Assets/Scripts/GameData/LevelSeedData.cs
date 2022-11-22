@@ -31,7 +31,7 @@ namespace DefaultNamespace.GameData
 
         public string RecordMe(string name=null,int? capsuleNumber=null, int? capsuleSeed=null, int? difficulty =null)
         {
-            return $"new LevelSeedData({name??=Name},{Row},{Col},{capsuleSeed??=CapsuleSeed},{ObstacleSeed},{capsuleNumber??=CapsuleNumber},{SingleObstacleNumber},{DoubleObstacleNumber},LevelSeedData.SeedType.FrameLevel,{difficulty??=LevelDifficulty}),\n";
+            return $"new LevelSeedData(\"{name??=Name}\",{Row},{Col},{capsuleSeed??=CapsuleSeed},{ObstacleSeed},{capsuleNumber??=CapsuleNumber},{SingleObstacleNumber},{DoubleObstacleNumber},LevelSeedData.SeedType.FrameLevel,{difficulty??=LevelDifficulty}),\n";
         }
 
 
