@@ -193,7 +193,62 @@ namespace DefaultNamespace.GameData
         }
         
         //Skin Selection
+        public static string ArrowLeftPath(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple => "UI/SkinSelection/ArrowLeft",
+                SkinType.PungoDark => "UI/SkinSelection/ArrowLeft_PungoDark",
+                SkinType.Monochrome => "UI/SkinSelection/ArrowLeft_Monochrome",
+                SkinType.Desert => "UI/SkinSelection/ArrowLeft_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        public static string ArrowRightPath(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple => "UI/SkinSelection/ArrowRight",
+                SkinType.PungoDark => "UI/SkinSelection/ArrowRight_PungoDark",
+                SkinType.Monochrome => "UI/SkinSelection/ArrowRight_Monochrome",
+                SkinType.Desert => "UI/SkinSelection/ArrowRight_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
         
+        public static string IndicatorOnPath(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple => "UI/SkinSelection/IndicatorOn",
+                SkinType.PungoDark => "UI/SkinSelection/IndicatorOn_PungoDark",
+                SkinType.Monochrome => "UI/SkinSelection/IndicatorOn_Monochrome",
+                SkinType.Desert => "UI/SkinSelection/IndicatorOn_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        public static string IndicatorOffPath(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple => "UI/SkinSelection/IndicatorOff",
+                SkinType.PungoDark => "UI/SkinSelection/IndicatorOff_PungoDark",
+                SkinType.Monochrome => "UI/SkinSelection/IndicatorOff_Monochrome",
+                SkinType.Desert => "UI/SkinSelection/IndicatorOff_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        public static string ExitPath(SkinType st)
+        {
+            return st switch
+            {
+                SkinType.Simple => "UI/SkinSelection/Exit",
+                SkinType.PungoDark => "UI/SkinSelection/Exit_PungoDark",
+                SkinType.Monochrome => "UI/SkinSelection/Exit_Monochrome",
+                SkinType.Desert => "UI/SkinSelection/Exit_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
 
 
         /** Only works up to the limits of capsule colours
