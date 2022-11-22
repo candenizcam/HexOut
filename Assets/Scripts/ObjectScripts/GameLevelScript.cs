@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.GameData;
 using DefaultNamespace.Punity;
+using Newtonsoft.Json.Linq;
 using Punity;
 using UnityEngine;
 
@@ -194,6 +195,11 @@ namespace DefaultNamespace
                 var thatTile = _grid.GetTile(clashing.Row, clashing.Col);
                 var sr = clashing.Length==1 ? thatTile.obstacles[clashing.Direction]:thatTile.doubleObstacles[clashing.Direction];
                 var initCol = sr.color;
+                var initPos = sr.gameObject.transform.position;
+
+                
+                var u = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
+                
                 NewTween(.3f,duringAction: (alpha) =>
                 {
                     var a = Math.Clamp(alpha * (1f - alpha)*8f,0f,1f);
@@ -201,6 +207,7 @@ namespace DefaultNamespace
                         Math.Clamp(initCol.r + a * .4f,0f,1f),
                         Math.Clamp(initCol.g + a * .4f,0f,1f),
                         Math.Clamp(initCol.b + a * .4f,0f,1f));
+                    sr.gameObject.transform.position = initPos + u*(float)Math.Sin(alpha * 3.141 * 2f);
                 });
                 
                 return ret;
