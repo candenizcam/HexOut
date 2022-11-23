@@ -190,6 +190,7 @@ namespace DefaultNamespace
                 }else if (!activeSkins.Contains(thisSkin))
                 {
                     // locked
+                    pickButton.ChangeImage(GameDataBase.SkinSelectorOffFacePath(thisSkin));
                     pickButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.05f,0.1f,0.05f));
                     pickButton.Disable(true);
                 }
