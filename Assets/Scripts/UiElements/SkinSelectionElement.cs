@@ -160,7 +160,7 @@ namespace DefaultNamespace
                 
 
 
-                var pickButton = new ButtonClickable(GameDataBase.HexTilePath(thisSkin),Color.gray, () =>
+                var pickButton = new ButtonClickable(GameDataBase.SkinSelectorFacePath(thisSkin),Color.gray, () =>
                     {
                         SkinButtonFunction(thisSkin);
                         

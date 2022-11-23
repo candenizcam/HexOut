@@ -268,6 +268,20 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+        
+        // bura gerçeğiyle değişicek
+        public static string SkinSelectorFacePath(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "gamefield/Hex",
+                SkinType.PungoDark => "gamefield/Hex_PungoDark",
+                SkinType.Monochrome => "gamefield/Hex_Monochrome",
+                SkinType.Desert => "gamefield/Hex_Desert",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
 
 
         /** Only works up to the limits of capsule colours
