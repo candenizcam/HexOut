@@ -252,18 +252,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90edeb3673b40aca688240e9c6c6092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testRow: 15
-  testCol: 9
+  testRow: 7
+  testCol: 5
   testObstacleSeed: 40205
-  testCapsuleSeed: 22
-  testCapsuleNumber: 13
-  testObstacleNumber: 14
-  testDoubleObstacleNumber: 14
+  testCapsuleSeed: 5
+  testCapsuleNumber: 3
+  testObstacleNumber: 8
+  testDoubleObstacleNumber: 8
   resetSaves: 1
   levelIndex: 6
   levelId: 
   levelDiff: 0
-  skinType: 3
+  skinType: 0
 --- !u!114 &587890531
 MonoBehaviour:
   m_ObjectHideFlags: 0

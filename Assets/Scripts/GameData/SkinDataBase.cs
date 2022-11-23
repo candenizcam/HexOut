@@ -207,9 +207,10 @@ namespace DefaultNamespace.GameData
         }
         
         //Skin Selection
-        public static string ArrowLeftPath(SkinType st)
+        public static string ArrowLeftPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/SkinSelection/ArrowLeft",
                 SkinType.PungoDark => "UI/SkinSelection/ArrowLeft_PungoDark",
@@ -218,9 +219,10 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
-        public static string ArrowRightPath(SkinType st)
+        public static string ArrowRightPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/SkinSelection/ArrowRight",
                 SkinType.PungoDark => "UI/SkinSelection/ArrowRight_PungoDark",
@@ -230,9 +232,10 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string IndicatorOnPath(SkinType st)
+        public static string IndicatorOnPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/SkinSelection/IndicatorOn",
                 SkinType.PungoDark => "UI/SkinSelection/IndicatorOn_PungoDark",
@@ -241,9 +244,10 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
-        public static string IndicatorOffPath(SkinType st)
+        public static string IndicatorOffPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/SkinSelection/IndicatorOff",
                 SkinType.PungoDark => "UI/SkinSelection/IndicatorOff_PungoDark",
@@ -252,9 +256,10 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
-        public static string ExitPath(SkinType st)
+        public static string ExitPath(SkinType? st=null)
         {
-            return st switch
+            var st2 = st ??= GetSkinType();
+            return st2 switch
             {
                 SkinType.Simple => "UI/SkinSelection/Exit",
                 SkinType.PungoDark => "UI/SkinSelection/Exit_PungoDark",
@@ -375,7 +380,7 @@ namespace DefaultNamespace.GameData
             var st2 = st ??= GetSkinType();
             return st2 switch
             {
-                SkinType.Simple =>  new Color(236f/255f, 238f/255f, 243f/255f),
+                SkinType.Simple =>  new Color(217f/255f, 221f/255f, 232f/255f),
                 SkinType.PungoDark =>  new Color(50f/255f, 24f/255f, 69f/255f),
                 SkinType.Monochrome =>  new Color(213f/255f, 247f/255f, 234f/255f),
                 SkinType.Desert => new Color(209f/255f, 190f/255f, 174f/255f),

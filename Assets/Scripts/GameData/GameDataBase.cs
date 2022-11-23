@@ -4,6 +4,12 @@ namespace DefaultNamespace.GameData
 {
     public  static partial class GameDataBase
     {
+        public static List<LevelSeedData> FirstLevels = new()
+        {
+            new LevelSeedData("test level", 7, 5, 5, 40205, 3, 8, 8, LevelSeedData.SeedType.FrameLevel, 1)
+
+        };
+        
         public static List<LevelSeedData> LevelSeedDatas = new()
         {
 new LevelSeedData("9_5_1_7",9,5,820276643,345545550,5,5,5,LevelSeedData.SeedType.FrameLevel,5),
@@ -47,7 +53,6 @@ new LevelSeedData("9_5_20_68",9,5,1580332052,1471691323,5,10,10,LevelSeedData.Se
 new LevelSeedData("9_5_21_38",9,5,246607954,1543537195,5,10,15,LevelSeedData.SeedType.FrameLevel,5),
 new LevelSeedData("9_5_21_182",9,5,1010781928,147746300,5,10,15,LevelSeedData.SeedType.FrameLevel,5),
 new LevelSeedData("9_5_21_212",9,5,1616560462,57770940,5,10,15,LevelSeedData.SeedType.FrameLevel,5),
-new LevelSeedData("9_5_22_207",9,5,2039544996,430521746,5,10,15,LevelSeedData.SeedType.FrameLevel,5),
 new LevelSeedData("9_5_23_104",9,5,1997002705,1083665819,5,10,15,LevelSeedData.SeedType.FrameLevel,5),
 new LevelSeedData("9_5_23_133",9,5,1094937683,547247679,5,10,15,LevelSeedData.SeedType.FrameLevel,5),
 new LevelSeedData("9_5_24_64",9,5,748134487,1151247736,5,10,15,LevelSeedData.SeedType.FrameLevel,5),

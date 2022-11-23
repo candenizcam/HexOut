@@ -15,9 +15,9 @@ namespace DefaultNamespace
         public Action RightButtonAction = () =>{ };
 
         private VisualElement _progressBg;
-        private VisualElement _leftButton;
-        private VisualElement _rightButton;
-        private VisualElement _midButton;
+        private ButtonClickable _leftButton;
+        private ButtonClickable _rightButton;
+        private ButtonClickable _midButton;
         private VisualElement _gzText;
         private VisualElement _levelUpText;
         private VisualElement _leftBlock;
@@ -34,26 +34,38 @@ namespace DefaultNamespace
         private float _gzTextTop = -175;
         private float _sideButtonBottom = -180f;
         private float _leftTextLeft = 60f;
+
+        private bool _newSkinButtonActive;
+        private bool _otherButtonActive;
+        private Action _reSkin;
         
 
 
-        public BetweenLevels(int levelNoText=0, string newSkinText="", string rightText="", float filler = 0f, float oldFiller =0f, int levels=0, bool newSkin=false)
+        public BetweenLevels(int levelNoText=0, string newSkinText="", string rightText="", float filler = 0f, float oldFiller =0f, int levels=0, bool newSkin=false, bool newSkinActive = false, bool otherButtonActive=false)
         {
             this.StretchToParentSize();
-            var textColor = GameDataBase.TextColour();
+            
+            //var textColor = GameDataBase.TextColour();
             _oldFill = oldFiller;
             _newFill = filler;
             _levels = levels;
+            _newSkinButtonActive = newSkinActive;
+            _otherButtonActive = otherButtonActive; 
             
             
             style.justifyContent = Justify.Center;
             style.alignItems = Align.Center;
 
-            var stuffBar = new VisualElement();
+            var stuffBar = new VisualElement
+            {
+                style =
+                {
+                    height = 624f,
+                    justifyContent = Justify.Center,
+                    alignItems = Align.Center
+                }
+            };
             stuffBar.StretchToParentWidth();
-            stuffBar.style.height = 624f;
-            stuffBar.style.justifyContent = Justify.Center;
-            stuffBar.style.alignItems = Align.Center;
             Add(stuffBar);
             
             
@@ -66,48 +78,10 @@ namespace DefaultNamespace
                     backgroundImage = new StyleBackground(QuickAccess.LoadSprite(GameDataBase.ProgressBGPath()))
                 }
             };
-            
-            
 
-            _leftButton = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,LeftButtonFunction)
-            {
-                style =
-                {
-                    width = 264f,
-                    height = 164f,
-                    position = Position.Absolute,
-                    bottom = _sideButtonBottom,
-                    left = 0f
-                }
-            };
-            
-            
-            
-            _midButton = new ButtonClickable(imagePath:GameDataBase.NextPath(),Color.gray,MiddleButtonFunction)
-            {
-                style =
-                {
-                    width = 440f,
-                    height = 259f,
-                    position = Position.Absolute,
-                    top = 592f,
-                    left = 280f,
-                }
-            };
-            
-            
-            
-            _rightButton = new ButtonClickable(imagePath:GameDataBase.DoubleXPPath(),Color.gray,RightButtonFunction)
-            {
-                style =
-                {
-                    width = 264f,
-                    height = 164f,
-                    position = Position.Absolute,
-                    bottom = _sideButtonBottom,
-                    right = 0f,
-                }
-            };
+
+
+            InitializeButtons();
 
             _gzText = new Label("SUCCESS!")
             {
@@ -121,7 +95,7 @@ namespace DefaultNamespace
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 96f,
                     unityTextAlign = TextAnchor.MiddleCenter,
-                    color = textColor
+                    color = GameDataBase.TextColour()
                     
                 }
             };
@@ -138,12 +112,14 @@ namespace DefaultNamespace
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 96f + (newSkin ? 12f :48f),
                     unityTextAlign = TextAnchor.MiddleCenter,
-                    color = textColor
+                    color = GameDataBase.TextColour()
                     
                 }
             };
             _levelUpText.style.opacity = 0f;
 
+            
+            
             
 
             _progressBar = new ProgressBar(GameDataBase.BarBGPath(),GameDataBase.BarPath(),440f,60f, 9f,7f)
@@ -168,6 +144,8 @@ namespace DefaultNamespace
                     width = 440f
                 }
             };
+            
+            
 
             var levelProgress = new Label("Level Progress")
             {
@@ -179,7 +157,7 @@ namespace DefaultNamespace
                     unityFontDefinition = QuickAccess.LoadFont("fonts/DuzYazıFontu"),
                     fontSize = 48f,
                     unityTextAlign = TextAnchor.MiddleCenter,
-                    color = textColor
+                    color = GameDataBase.TextColour()
                 }
             };
 
@@ -195,7 +173,7 @@ namespace DefaultNamespace
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 96f,
                     unityTextAlign = TextAnchor.MiddleCenter,
-                    color = textColor
+                    color = GameDataBase.TextColour()
                 }
             };
             
@@ -210,7 +188,7 @@ namespace DefaultNamespace
                     unityFontDefinition = QuickAccess.LoadFont("fonts/DuzYazıFontu"),
                     fontSize = 32f,
                     unityTextAlign = TextAnchor.MiddleCenter,
-                    color = textColor
+                    color = GameDataBase.TextColour()
                 }
             };
             
@@ -227,15 +205,43 @@ namespace DefaultNamespace
                     unityFontDefinition = QuickAccess.LoadFont("fonts/DuzYazıFontu"),
                     fontSize = 32f,
                     unityTextAlign = TextAnchor.MiddleCenter,
-                    color = textColor
+                    color = GameDataBase.TextColour()
                 }
             };
+
+
             
 
+            _reSkin += () =>
+            {
+                _progressBg.style.backgroundImage =
+                    new StyleBackground(QuickAccess.LoadSprite(GameDataBase.ProgressBGPath()));
+                
+                _gzText.style.color = GameDataBase.TextColour();
+                _levelUpText.style.color = GameDataBase.TextColour();
+                var v = _progressBar.Fill;
+                _leftBlock.Remove(_progressBar);
+                _progressBar = new ProgressBar(GameDataBase.BarBGPath(),GameDataBase.BarPath(),440f,60f, 9f,7f)
+                {
+                    style =
+                    {
+                        position = Position.Absolute,
+                        left = 0f,
+                        top = 347f
+                    }
+                };
+                _progressBar.Refill(v);
+                _leftBlock.Add(_progressBar);
 
-            _progressBg.Add(_leftButton);
-            _progressBg.Add(_midButton);
-            _progressBg.Add(_rightButton);
+                levelProgress.style.color = GameDataBase.TextColour();
+                _levelNoTextLabel.style.color = GameDataBase.TextColour();
+                newLookCounter.style.color = GameDataBase.TextColour();
+                _rightText.style.color = GameDataBase.TextColour();
+
+            };
+
+
+            
             stuffBar.Add(_gzText);
             stuffBar.Add(_levelUpText);
             _progressBg.Add(_leftBlock);
@@ -246,7 +252,14 @@ namespace DefaultNamespace
             _progressBg.Add(_rightText);
             
             stuffBar.Add(_progressBg);
-            Debug.Log($"{_oldFill}, {_newFill}");
+            //Debug.Log($"{_oldFill}, {_newFill}");
+            
+            _leftButton.Disable(!_newSkinButtonActive);
+            _rightButton.Disable(!_otherButtonActive);
+            _leftButton.style.opacity = 0f;
+            _leftButton.style.bottom = 0f;
+            _rightButton.style.opacity = 0f;
+            _rightButton.style.bottom = 0f;
         }
 
         private void LeftButtonFunction()
@@ -286,10 +299,19 @@ namespace DefaultNamespace
             _midButton.style.opacity = alpha3;
             _midButton.style.top = -(1f - alpha3) * 100f + _midButtonTop;
 
-            _leftButton.style.opacity = alpha4;
-            _rightButton.style.opacity = alpha4;
-            _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
-            _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            if (_newSkinButtonActive)
+            {
+                _leftButton.style.opacity = alpha4;
+                _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            }
+
+            if (_otherButtonActive)
+            {
+                _rightButton.style.opacity = alpha4;
+                _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            }
+            
+            
 
             _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
 
@@ -322,16 +344,88 @@ namespace DefaultNamespace
             
             _midButton.style.opacity = alpha4;
             _midButton.style.top = -(1f - alpha4) * 100f + _midButtonTop;
-            _leftButton.style.opacity = alpha4;
-            _rightButton.style.opacity = alpha4;
-            _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
-            _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            
+            
+            
+            if (_newSkinButtonActive)
+            {
+                _leftButton.style.opacity = alpha4;
+                _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+                
+            }
+
+            
+            if (_otherButtonActive)
+            {
+                _rightButton.style.opacity = alpha4;
+                _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
+            }
+            
+            
+            
             
             _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
 
             _rightText.style.opacity = alpha5;
         }
 
-        
+
+        private void InitializeButtons()
+        {
+            _leftButton = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,LeftButtonFunction)
+            {
+                style =
+                {
+                    width = 264f,
+                    height = 164f,
+                    position = Position.Absolute,
+                    bottom = _sideButtonBottom,
+                    left = 0f
+                }
+            };
+            
+            
+            
+            _midButton = new ButtonClickable(imagePath:GameDataBase.NextPath(),Color.gray,MiddleButtonFunction)
+            {
+                style =
+                {
+                    width = 440f,
+                    height = 259f,
+                    position = Position.Absolute,
+                    top = 592f,
+                    left = 280f,
+                }
+            };
+            
+            
+            
+            _rightButton = new ButtonClickable(imagePath:GameDataBase.DoubleXPPath(),Color.gray,RightButtonFunction)
+            {
+                style =
+                {
+                    width = 264f,
+                    height = 164f,
+                    position = Position.Absolute,
+                    bottom = _sideButtonBottom,
+                    right = 0f,
+                }
+            };
+            
+            _reSkin += () =>
+            {
+                _leftButton.ChangeImage(GameDataBase.SkinsPath());
+                _midButton.ChangeImage(GameDataBase.NextPath());
+                _rightButton.ChangeImage(GameDataBase.DoubleXPPath());
+            };
+            _progressBg.Add(_leftButton);
+            _progressBg.Add(_midButton);
+            _progressBg.Add(_rightButton);
+        }
+
+        public void ReSkin()
+        {
+            _reSkin();
+        }
     }
 }

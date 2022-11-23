@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using Random = System.Random;
 
 namespace DefaultNamespace.GameData
 {
     public static class XPSystem
     {
         public static int BaseXp = 10;
-        public static int expectedInt = 5;
-        public static int expetedCapsule = 5; // buna bi bakalım sonra
-        public static int NewSkinUnlockLevels = 20;
+        public static int NewSkinUnlockLevels = 5; //5,15,30,50 = 
 
         public static int GameXP(int difficulty, int capsule, int offset = 0)
         {
@@ -55,16 +54,22 @@ namespace DefaultNamespace.GameData
             return (p[ind],ind);
         }
 
-        public static bool NewSkinInLevel(int levelNo)
+        public static bool NewSkinInLevel(int levelNo, int times = 1)
         {
-            return levelNo % NewSkinUnlockLevels == 0;
+            
+            if (levelNo < NewSkinUnlockLevels)
+            {
+                return levelNo == 0;
+            }
+
+            return NewSkinInLevel(levelNo - NewSkinUnlockLevels*times, times+1);
         }
 
         public static (int newLevel, int newXp, int newSkin) AddXP(int oldLevel, int oldXp, int deltaXp, int newSkin=0)
         {
             var newXp = oldXp + deltaXp;
             var levelXp = LevelXp(oldLevel);
-            return newXp >= levelXp ? AddXP(oldLevel + 1, 0, newXp - levelXp, NewSkinInLevel(oldLevel+1) ? newSkin+1:newSkin) : (oldLevel, newXp, 0);
+            return newXp >= levelXp ? AddXP(oldLevel + 1, 0, newXp - levelXp, NewSkinInLevel(oldLevel+1) ? newSkin+1:newSkin) : (oldLevel, newXp, newSkin);
             
             
         }

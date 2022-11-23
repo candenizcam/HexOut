@@ -10,6 +10,7 @@ namespace DefaultNamespace
         private float _inWidth;
         private float _fill;
         private VisualElement _inBar;
+        public float Fill => _fill;
         
         public ProgressBar(string outPath, string inPath, float outWidth, float outHeight, float horizontalDiff, float verticalDiff,float fill = 0f)
         {
@@ -54,6 +55,8 @@ namespace DefaultNamespace
 
         }
         
+        
+
         
     }
 }

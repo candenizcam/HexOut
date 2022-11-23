@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Punity;
 
 namespace DefaultNamespace.GameData
@@ -20,6 +21,35 @@ namespace DefaultNamespace.GameData
             playedLevels = new List<string>();
             activeSkins = new List<SkinType>(){SkinType.Simple};
             activeSkin = SkinType.Simple;
+        }
+
+        public bool SkinSelectionActive()
+        {
+            return activeSkins.Count>1;
+        }
+
+        public bool UnlockNewSkins(int newSkinNo)
+        {
+            if(newSkinNo<=0) return false;
+            var allSkins = Enum.GetValues(typeof(SkinType)).Cast<SkinType>().ToList();
+
+            var b = false;
+            var counter = newSkinNo;
+            for (int i = 0; i < allSkins.Count; i++)
+            {
+                if(activeSkins.Contains(allSkins[i])) continue;
+                b = true;
+                activeSkins.Add(allSkins[i]);
+                counter -= 1;
+                if (counter <= 0)
+                {
+                    break;
+                }
+
+            }
+
+            return b;
+
         }
 
         

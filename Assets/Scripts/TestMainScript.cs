@@ -39,7 +39,7 @@ namespace DefaultNamespace
             UIDocument.rootVisualElement.style.paddingBottom = Constants.UnsafeBottomUi;
             UIDocument.rootVisualElement.style.paddingTop = Constants.UnsafeTopUi;
             Application.targetFrameRate = 60;
-            
+
             
 
             
@@ -51,10 +51,9 @@ namespace DefaultNamespace
             }
 
             //TestLevels();
+            //9_5_22_207
             
-            //var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
-           //     testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
-           ;
+            
            
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
@@ -63,19 +62,22 @@ namespace DefaultNamespace
                    
                    GameDataBase.SetSkinType(skinType);
                }
-               
-               
+               else
+               {
+                   GameDataBase.GetSkinType();
+               }
                var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                ActivateLevel(f.data);
                levelIndex = f.index;
                levelId = f.data.Name;
                levelDiff = f.data.LevelDifficulty;
+               
            });
            
 
-           MainCamera.backgroundColor = GameDataBase.BackgroundColour();
-
            
+
+           MainCamera.backgroundColor = GameDataBase.BackgroundColour();
 
            //problematic: "9_5_3_17"
 
@@ -94,6 +96,18 @@ namespace DefaultNamespace
            //Debug.Log($"v: {v}");
 
         }
+
+        private void LevelFromEditorData()
+        {
+            var editorSeed2 = new LevelSeedData("test level",testRow, testCol, testCapsuleSeed, testObstacleSeed, testCapsuleNumber,
+            testObstacleNumber,testDoubleObstacleNumber,LevelSeedData.SeedType.FrameLevel,1);
+            GameDataBase.SetSkinType(skinType);
+            Debug.Log(editorSeed2.RecordMe());
+            ActivateLevel(editorSeed2);
+            levelId = editorSeed2.Name;
+            levelDiff = editorSeed2.LevelDifficulty;
+        }
+        
 
         private void SortGameData()
         {
@@ -146,8 +160,10 @@ namespace DefaultNamespace
             sgd.playerXp = n.newXp;
             
             sgd.playerLevel = n.newLevel;
-            Debug.Log($"{lcd.LevelId}");
+            
             sgd.playedLevels.Add(lcd.LevelId);
+
+            var fireNewSkins = sgd.UnlockNewSkins(n.newSkin);
             
             
             var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
@@ -155,17 +171,57 @@ namespace DefaultNamespace
 
             var rightText = $"+{lcd.LevelXp}\n{levelXP-thisXP}/{levelXP}\nto next level";
             
-            Debug.Log($"old level {oldLevel}, oldxp {oldXPForBar}, new level{sgd.playerLevel}, new xp {sgd.playerXp}");
+            //Debug.Log($"old level {oldLevel}, oldxp {oldXPForBar}, new level{sgd.playerLevel}, new xp {sgd.playerXp}");
+            
+            
+            
+            
+            
             
             var betweenLevels = new BetweenLevels(oldLevel,
                 filler: thisXP/ levelXP,
                 oldFiller:oldXPForBar/levelXP,
                 rightText:rightText,
-                levels:n.newLevel-oldLevel,newSkin:n.newSkin>0);
+                levels:n.newLevel-oldLevel,
+                newSkin:fireNewSkins,
+                newSkinActive:sgd.SkinSelectionActive());
             
             
             betweenLevels.LeftButtonAction = () =>
             {
+
+                UIDocument.rootVisualElement.Remove(betweenLevels);
+                var sgdn = Serializer.Load<SerialHexOutData>();
+                var se = new SkinSelectionElement(sgdn.activeSkins.ToArray(),sgdn.activeSkin)
+                {
+                    
+                    
+                    LeftButtonAction = ()=>
+                    {
+                        // at some point, maybe obsolete even then
+                    },
+                    RightButtonAction = ()=>
+                    {
+                        
+                    }
+                };
+
+                se.ExitButtonAction = () =>
+                {
+                    UIDocument.rootVisualElement.Remove(se);
+                    UIDocument.rootVisualElement.Add(betweenLevels);
+                };
+                se.SkinButtonAction = st =>
+                {
+                    GameDataBase.SetSkinType(st);
+                    MainCamera.backgroundColor = GameDataBase.BackgroundColour();
+                    se.ReSkin();
+                    betweenLevels.ReSkin();
+
+                };
+                
+                UIDocument.rootVisualElement.Add(se);
+                
 
             };
             betweenLevels.MiddleButtonAction = () =>
