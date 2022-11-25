@@ -2,6 +2,6 @@
 {
     public enum SkinType 
     {
-        Simple, PungoDark, Monochrome, Desert
+        Simple, PungoDark, Monochrome, Desert, PungoLight
     }
 }
