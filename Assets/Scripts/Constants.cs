@@ -32,6 +32,11 @@ namespace DefaultNamespace
         public const float SprayMovementPerTile = .2f;
         public const float BetweenLevelsTime = 2.5f;
 
+        public static readonly string[] CapsuleCollisionText = new string[] { "Soorry","Whoops","Coming over","Oops"};
+        public static readonly string[] ObstacleCollisionText = new string[] { "Ouch!","Aw!","Ow!","Duh!","The pain!"};
+        public static readonly string[] ObstacleReflectionText = new string[] { "Boing","Bling","Weeeee","Bing","Bong"};
+        public static readonly string[] ExitText = new string[] { "So long","Goodbye","I'm out","Toodaloo","C.U.L8ter","I'm freee"};
+
         
         
 

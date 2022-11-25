@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Mono.Collections.Generic;
@@ -19,6 +20,20 @@ namespace Punity
         {
             var rng = new System.Random();
             return enumerable.OrderBy(a => rng.Next());
+        }
+
+        public static T PickRandom<T>(this List<T> enumerable)
+        {
+            var rng = new System.Random();
+            var index = rng.Next(0, enumerable.Count());
+            return enumerable[index];
+        }
+
+        public static T PickRandom<T>(this T[] enumerable)
+        {
+            var rng = new System.Random();
+            var index = rng.Next(0, enumerable.Length);
+            return enumerable[index];
         }
         
     }

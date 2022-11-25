@@ -16,6 +16,8 @@ namespace DefaultNamespace
         public Action<Tween, float> AddTweenAction;
         public Action<LevelCompleteData> LevelDoneAction = (LevelCompleteData lcd) => {};
         public Action<int,int> CapsuleRemovedAction;
+        public Action<string> PopUpTextAction;
+        
 
         private HexGridScript _grid;
         private List<CapsuleScript> _capsules = new();
@@ -171,12 +173,14 @@ namespace DefaultNamespace
                 var reflectors = obstacled.Where(x => newData.FirstRow == x.Row && newData.FirstCol == x.Col && x.Length == 2);
                 ObstacleData clashing;
                 var ret = 0;
+                var reflecting = false;
                 if (reflectors.Any())
                 {
                     clashing = reflectors.First();
                     var newAngle = (newData.Angle + (newData.Angle == clashing.Direction ? 4:2))%6;
                     var newerData = new CapsuleData(newData.FirstRow, newData.FirstCol, newData.Length, newAngle,true); 
                     capsuleScript.NewTarget(newerData,CapsulePosition(newerData));
+                    reflecting = true;
                 }
                 else
                 {
@@ -202,7 +206,15 @@ namespace DefaultNamespace
                 
                 var u = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
                 
-                NewTween(.3f,duringAction: (alpha) =>
+                NewTween(.3f,
+                    startAction: () =>
+                    {
+                        if (reflecting)
+                        {
+                            PopupFunction(Constants.ObstacleReflectionText.PickRandom());
+                        }
+                    }
+                    ,duringAction: (alpha) =>
                 {
                     var a = Math.Clamp(alpha * (1f - alpha)*8f,0f,1f);
                     sr.color = new Color(
@@ -260,9 +272,12 @@ namespace DefaultNamespace
             {
                 md2 = oneTileDiff- initY*0.25f;
             }
-            var travelTime =  CollisionTween(md2, capsuleScript, oneTileDiff, delta, initY, andMove);
+            var travelTime =  CollisionTween(md2, capsuleScript, oneTileDiff, delta, initY, andMove,Constants.CapsuleCollisionText.PickRandom());
             var ud = newData.UnitDirection().ToVector3() * (_smallScale * 0.1f);
-            NewTween(travelTime*0.25f,duringAction: alpha =>
+            NewTween(travelTime*0.25f,startAction: () =>
+            {
+                
+            },duringAction: alpha =>
             {
                 try
                 {
@@ -287,10 +302,10 @@ namespace DefaultNamespace
             var oneTileDiff = delta.Magnitude2D();
             var initY = capsuleScript.capsuleRenderer.size.y;
             var md = oneTileDiff / 2f;
-            CollisionTween(md, capsuleScript, oneTileDiff, delta, initY, andMove);
+            CollisionTween(md, capsuleScript, oneTileDiff, delta, initY, andMove,Constants.ObstacleCollisionText.PickRandom());
         }
 
-        private float CollisionTween(float md, CapsuleScript capsuleScript, float oneTileDiff, Vector3 delta, float initY, bool andMove)
+        private float CollisionTween(float md, CapsuleScript capsuleScript, float oneTileDiff, Vector3 delta, float initY, bool andMove, string exitText)
         {
             var targetPoint = capsuleScript.transform.position;
             var initX = capsuleScript.capsuleRenderer.size.x;
@@ -319,12 +334,24 @@ namespace DefaultNamespace
 
             }, exitAction: () =>
             {
+                
                 if (andMove)
                 {
                     capsuleScript.ThisCapsuleData = capsuleScript.ThisCapsuleData.Revert();
                     capsuleScript.MovementState = 2;
+                    
+                }
+                else
+                {
+                    
                 }
             } ,callDuringWithStartFunction:true);
+            
+            NewTween(travelTime/2f,exitAction: () =>
+            {
+                PopupFunction(exitText);
+            });
+            
             return travelTime;
         }
         
@@ -344,6 +371,7 @@ namespace DefaultNamespace
                     var v = ProcessNewMovement(capsuleScript);
                     if (v == 1)
                     {
+                        PopupFunction(Constants.ExitText.PickRandom());
                         destroyList.Add(capsuleScript);
                     }
                 }
@@ -368,6 +396,11 @@ namespace DefaultNamespace
         private void LevelDoneFunction()
         {
             LevelDoneAction(_levelCompleteData);
+        }
+
+        private void PopupFunction(string s)
+        {
+            PopUpTextAction(s);
         }
 
 

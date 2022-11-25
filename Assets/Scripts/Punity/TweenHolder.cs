@@ -15,7 +15,7 @@ namespace Punity
         }
 
 
-        public void NewTween(Tween t, float delay = 0f)
+        public Tween NewTween(Tween t, float delay = 0f)
         {
             if (delay > 0f)
             {
@@ -30,16 +30,18 @@ namespace Punity
                 _tweenList.Add(t);
                 
             }
-            
-            
-            
+
+            return t;
+
+
+
         }
 
-        public void NewTween(float sec, Action startAction = null, Action exitAction = null,
+        public Tween NewTween(float sec, Action startAction = null, Action exitAction = null,
             Action<float> duringAction = null, int repeat = 1, bool callDuringWithStartFunction = false,
             float delay = 0f)
         {
-            NewTween(new Tween(sec, startAction,exitAction,duringAction,repeat,callDuringWithStartFunction),delay);
+            return NewTween(new Tween(sec, startAction,exitAction,duringAction,repeat,callDuringWithStartFunction),delay);
         }
 
 
