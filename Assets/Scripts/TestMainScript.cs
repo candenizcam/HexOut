@@ -25,6 +25,7 @@ namespace DefaultNamespace
         public int testObstacleNumber;
         public int testDoubleObstacleNumber;
         public bool resetSaves;
+        public bool unlockAllSkins;
         public int levelIndex;
         public string levelId;
         public int levelDiff;
@@ -52,11 +53,19 @@ namespace DefaultNamespace
 
             //TestLevels();
             //9_5_22_207
+
+            if (Application.isEditor && unlockAllSkins)
+            {
+                Serializer.Apply<SerialHexOutData>(sgd =>
+                {
+                    sgd.activeSkins = Enum.GetValues(typeof(SkinType)).Cast<SkinType>().ToList();
+                });
+            }
             
             
            
-           Serializer.Apply<SerialHexOutData>(sgd =>
-           {
+            Serializer.Apply<SerialHexOutData>(sgd =>
+            {
                
                GameDataBase.GetSkinType();
                var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
@@ -65,7 +74,7 @@ namespace DefaultNamespace
                levelId = f.data.Name;
                levelDiff = f.data.LevelDifficulty;
                
-           });
+            });
            
 
            
@@ -185,19 +194,33 @@ namespace DefaultNamespace
 
                 UIDocument.rootVisualElement.Remove(betweenLevels);
                 var sgdn = Serializer.Load<SerialHexOutData>();
-                var se = new SkinSelectionElement(sgdn.activeSkins.ToArray(),sgdn.activeSkin)
+                var se = new SkinSelectionElement(sgdn.activeSkins,sgdn.activeSkin)
                 {
                     
-                    
-                    LeftButtonAction = ()=>
-                    {
-                        // at some point, maybe obsolete even then
-                    },
-                    RightButtonAction = ()=>
-                    {
-                        
-                    }
                 };
+
+
+                se.LeftButtonAction = (activeFour) =>
+                {
+                    Debug.Log($"left {activeFour}");
+                    Serializer.Apply<SerialHexOutData>(sgd =>
+                    {
+                        if (activeFour <= 0) return;
+                        se.ChangePickableSkins(activeFour-1,sgd.activeSkins,sgd.activeSkin);
+                    });
+                };
+                se.RightButtonAction = (activeFour) =>
+                {
+                    
+                    Serializer.Apply<SerialHexOutData>(sgd =>
+                    {
+                        Debug.Log($"right {activeFour}");
+                        if (activeFour >= 5/4) return;
+                        Debug.Log($"right2 {activeFour}");
+                        se.ChangePickableSkins(activeFour+1,sgd.activeSkins,sgd.activeSkin);
+                    });
+                };
+                
 
                 se.ExitButtonAction = () =>
                 {

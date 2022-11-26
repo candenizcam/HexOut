@@ -47,8 +47,6 @@ namespace DefaultNamespace
             _pickButton = new ButtonClickable(GameDataBase.SkinSelectorFaceFromState(state,st),Color.gray, () =>
                 {
                     SkinButtonFunction(st);
-                    
-                        
                 }) // change here to actual skin path
                 {
                     style =
@@ -77,6 +75,7 @@ namespace DefaultNamespace
                 },
                 text = enabled ? GameDataBase.SkinName( st ): "???"
             };
+            Debug.Log(GameDataBase.SkinName( st ));
             Add(_pickButton);
             Add(_pickText);
             
@@ -84,7 +83,7 @@ namespace DefaultNamespace
 
         public void ReSkin()
         {
-            
+            _pickText.style.color = GameDataBase.TextColour();
         }
 
         private void SkinButtonFunction(SkinType st)
