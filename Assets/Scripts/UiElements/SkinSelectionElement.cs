@@ -15,7 +15,7 @@ namespace DefaultNamespace
         public Action RightButtonAction;
         public Action<SkinType> SkinButtonAction;
         public Action ExitButtonAction;
-
+        private  List<ButtonClickable> _pickButtonList = new List<ButtonClickable>();
         private Action _reSkin = ()=>{};
         
         
@@ -122,7 +122,7 @@ namespace DefaultNamespace
 
 
             var singleWidth = (uiFrameWidth - 32f) / 2f;
-            var l = new List<ButtonClickable>();
+            _pickButtonList = new List<ButtonClickable>();
             var s = activeIndex - (activeIndex % 4);
             for (int i = 0; i < 4; i++)
             {
@@ -180,7 +180,7 @@ namespace DefaultNamespace
                 {
                     pickButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f,0.6f,0.55f));
                 };
-                l.Add(pickButton);
+                _pickButtonList.Add(pickButton);
 
                 // warning, following is placeholder
                 if (thisSkin == activeSkin)
@@ -190,7 +190,8 @@ namespace DefaultNamespace
                 }else if (!activeSkins.Contains(thisSkin))
                 {
                     // locked
-                    pickButton.ChangeImage(GameDataBase.SkinSelectorOffFacePath(thisSkin));
+                    pickButton.style.backgroundImage =
+                        QuickAccess.LoadSpriteBg(GameDataBase.SkinSelectorOffFacePath(thisSkin));
                     pickButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.05f,0.1f,0.05f));
                     pickButton.Disable(true);
                 }
@@ -219,7 +220,7 @@ namespace DefaultNamespace
                 _reSkin += () =>
                 {
                     pickText.style.color = GameDataBase.TextColour();
-                    foreach (var buttonClickable in l)
+                    foreach (var buttonClickable in _pickButtonList)
                     {
                         if (!buttonClickable.DisableButton)
                         {
