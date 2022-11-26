@@ -11,10 +11,10 @@ namespace DefaultNamespace
     {
         public Action HomeButtonAction = () => { };
         private ProgressBar _progressBar;
-        private Label _bigText;
-        private Label _smallText;
         private float _top;
         private float _width;
+        private HudIndicator _hudIndicator;
+        private VisualElement _hudElement;
        
         
         
@@ -108,10 +108,15 @@ namespace DefaultNamespace
             Add(leftPart);
 
 
-            var hudFrame = new VisualElement();
-            hudFrame.style.width = 1170f;
-            hudFrame.style.height = 2532;
-            Add(hudFrame);
+            _hudElement = new VisualElement
+            {
+                style =
+                {
+                    width = 1170f,
+                    height = 2532
+                }
+            };
+            Add(_hudElement);
             
 
 
@@ -128,7 +133,7 @@ namespace DefaultNamespace
                 }
             };
             
-            hudFrame.Add(homeButton);
+            _hudElement.Add(homeButton);
 
             _progressBar = new ProgressBar(GameDataBase.LevelProgressBarBGPath(),
                 GameDataBase.LevelProgressBarPath(), 900f, 100f, 14f, 10f)
@@ -142,55 +147,16 @@ namespace DefaultNamespace
             };
 
 
-            hudFrame.Add(_progressBar);
+            _hudElement.Add(_progressBar);
 
 
-            var indicator = new VisualElement
-            {
-                style =
-                {
-                    width = 220f,
-                    height = 190f,
-                    position = Position.Absolute,
-                    top = 132f,
-                    left = 63f,
-                    backgroundImage = QuickAccess.LoadSpriteBg(GameDataBase.LevelIndicatorPath())
-                }
-            };
+            _hudIndicator = new HudIndicator();
+            _hudElement.Add(_hudIndicator);
+        }
 
-            _smallText = new Label()
-            {
-                style=
-                {
-                    position = Position.Absolute,
-                    top = 24,
-                    unityTextAlign = TextAnchor.UpperCenter,
-                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
-                    fontSize = 28f,
-                    color = GameDataBase.TextColour()
-                },
-                text = "level"
-            };
-            _smallText.StretchToParentWidth();
-            
-            _bigText = new Label()
-            {
-                style=
-                {
-                    position = Position.Absolute,
-                    top = 50,
-                    unityTextAlign = TextAnchor.UpperCenter,
-                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
-                    fontSize = 72f,
-                    color = GameDataBase.TextColour()
-                },
-                text = "1293"
-            };
-            _bigText.StretchToParentWidth();
-            indicator.Add(_bigText);
-            indicator.Add(_smallText);
-            
-            hudFrame.Add(indicator);
+        public void SetTutorial(bool isTutorial)
+        {
+            _hudElement.visible = !isTutorial;
         }
 
         public void SetBar(float f)
@@ -205,19 +171,7 @@ namespace DefaultNamespace
 
         public void SetIndicatorText(string bigText="", string smallText="level", bool levelUp=false)
         {
-            if (levelUp)
-            {
-                _smallText.text = smallText;
-                _bigText.text = "UP!";
-            }
-            else
-            {
-                _bigText.text = bigText;
-                _smallText.text = smallText;
-            }
-            
-            
-
+            _hudIndicator.UpdateText(levelUp ? "UP!" : bigText, smallText);
         }
 
         public (VisualElement ve, float top) TextPopup(string text)
