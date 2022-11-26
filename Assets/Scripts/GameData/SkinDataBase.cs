@@ -293,11 +293,11 @@ namespace DefaultNamespace.GameData
             var st2 = st ??= GetSkinType();
             return st2 switch
             {
-                SkinType.Simple => "gamefield/Hex",
-                SkinType.PungoDark => "gamefield/Hex_PungoDark",
-                SkinType.Monochrome => "gamefield/Hex_Monochrome",
-                SkinType.Desert => "gamefield/Hex_Desert",
-                SkinType.PungoLight => "gamefield/Hex_PungoLight",
+                SkinType.Simple => "UI/SkinSelection/Main_Unlocked",
+                SkinType.PungoDark => "UI/SkinSelection/PungoDark_Unlocked",
+                SkinType.Monochrome => "UI/SkinSelection/Monochrome_Unlocked",
+                SkinType.Desert => "UI/SkinSelection/Desert_Unlocked",
+                SkinType.PungoLight => "UI/SkinSelection/PungoLight_Unlocked",
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
@@ -308,11 +308,11 @@ namespace DefaultNamespace.GameData
             var st2 = st ??= GetSkinType();
             return st2 switch
             {
-                SkinType.Simple => "gamefield/Hex",
-                SkinType.PungoDark => "gamefield/Hex_PungoDark",
-                SkinType.Monochrome => "gamefield/Hex_Monochrome",
-                SkinType.Desert => "gamefield/Hex_Desert",
-                SkinType.PungoLight => "gamefield/Hex_PungoLight",
+                SkinType.Simple => "UI/SkinSelection/Main_Unlocked",
+                SkinType.PungoDark => "UI/SkinSelection/PungoDark_Locked",
+                SkinType.Monochrome => "UI/SkinSelection/Monochrome_Locked",
+                SkinType.Desert => "UI/SkinSelection/Desert_Locked",
+                SkinType.PungoLight => "UI/SkinSelection/PungoLight_Locked",
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
