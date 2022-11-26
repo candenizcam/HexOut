@@ -63,7 +63,30 @@ namespace DefaultNamespace
                     
                 }
             };
+            
+            var replayText = new Label("Replay")
+            {
+                style =
+                {
+                    width = 138f,
+                    height = 84f,
+                    position = Position.Absolute,
+                    bottom = 257f,
+                    left = 221f,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 64f,
+                    unityTextAlign = TextAnchor.MiddleLeft,
+                    color = GameDataBase.TextColour()
+                    
+                }
+            };
 
+            Add(back);
+            Add(skip);
+            Add(skipText);
+            Add(replay);
+            Add(replayText);
+            
         }
         
 
