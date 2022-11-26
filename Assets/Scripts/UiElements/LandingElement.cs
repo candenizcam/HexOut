@@ -8,6 +8,10 @@ namespace DefaultNamespace
 {
     public class LandingElement: VisualElement
     {
+        private VisualElement _capsuleVisual;
+        
+        
+        
         public LandingElement()
         {
             //the code'u buraya yazıcaksın
@@ -62,7 +66,7 @@ namespace DefaultNamespace
             Add(swipeText);
             
             
-            var aCapsule = new VisualElement
+            _capsuleVisual = new VisualElement
             {
                 style =
                 {
@@ -75,9 +79,21 @@ namespace DefaultNamespace
                 }
             };
             
-            Add(aCapsule);
+            Add(_capsuleVisual);
 
 
+        }
+
+
+        /** 
+         * alpha starts from 0 and goes to 1
+         */
+        public void Animator(float thatThingThatStartsFromZeroAndGoesToOne)
+        {
+
+            _capsuleVisual.style.left = (Constants.UiWidth - 264f) * 0.5f + 500f * thatThingThatStartsFromZeroAndGoesToOne;
+
+            //_capsuleVisual.style.opacity = 1f - alpha;
         }
         
     }

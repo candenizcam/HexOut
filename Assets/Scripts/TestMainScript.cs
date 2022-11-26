@@ -32,6 +32,7 @@ namespace DefaultNamespace
         public SkinType skinType;
         private Tween _activePopup;
         private GameState _gameState;
+        public float thatAlpha=0f;
         
         
         protected override void InitializeMain()
@@ -90,7 +91,15 @@ namespace DefaultNamespace
 
             var le = new LandingElement();
             le.StretchToParentSize();
+            //le.Animator(0.2f);
+            TweenHolder.NewTween(5f, duringAction: (alpha) =>
+            {
+                thatAlpha = alpha;
+                le.Animator(alpha);
+            });
+            
             UIDocument.rootVisualElement.Add(le);
+            
 
             MainCamera.backgroundColor = GameDataBase.BackgroundColour();
         }
