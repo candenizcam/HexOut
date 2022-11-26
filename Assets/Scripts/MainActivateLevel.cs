@@ -6,6 +6,78 @@ namespace DefaultNamespace
 {
     public partial class TestMainScript
     {
+        
+        
+        private void ActivateLevel(LevelSeedData seed)
+        {
+            var d = LevelGenerator.GenerateSeededLevel(seed);
+            d.Name = seed.Name;
+            ActivateLevel(d);
+        }
+
+
+
+        
+
+        /** This one starts from a seed and generates the relevant level
+         * seed contains all the relevant data, including row & col
+         * grid is initiated here too
+         */
+        private void ActivateLevel(LevelData d, bool tutorialLevel=false)
+        {
+            _activeLevel = GameLevelScript.Instantiate();
+            
+            
+            //var d = LevelGenerator.GenerateRawFrame(seed,2);
+            _activeLevel.SetGameLevelInfo(d);
+            _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
+            _activeLevel.FieldFrame.SetTutorial(tutorialLevel);
+            _activeLevel.SetCapsules(d.CapsuleDatas);
+            _activeLevel.AddTweenAction = (tween, delay) =>
+            {
+                TweenHolder.NewTween(tween, delay);
+            };
+            
+            _activeLevel.PopUpTextAction = PopupTextFunction;
+            
+
+            TweenHolder.NewTween(0.5f,duringAction: (alpha) =>
+            {
+                _activeLevel.StartAnimation(alpha);
+            }, exitAction: () =>
+            {
+                _activeLevel.StartAnimation(1f);
+                _gameState = GameState.Game;
+            }, delay:.4f);
+            _activeLevel.LevelDoneAction = (lcd) =>
+            {
+                TweenHolder.RemoveTween(_activePopup);
+                _activePopup.ExitAction();
+                if (tutorialLevel)
+                {
+                    TutorialLevelDoneFunction(lcd.LevelId);
+                }
+                else
+                {
+                    GameLevelDoneFunction(lcd);
+                }
+            };
+            
+            _activeLevel.CapsuleRemovedAction = CapsuleRemovedFunction;
+            UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
+            Serializer.Apply<SerialHexOutData>(sgd =>
+                {
+                    var levelXP = (float)XPSystem.LevelXp(sgd.playerLevel);
+                    _activeLevel.FieldFrame.SetBar(sgd.playerXp/levelXP);
+                    _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{sgd.playerLevel}");
+                }
+            );
+            
+
+        }
+        
+        
+        
         private void PopupTextFunction(string s)
         {
             if (_activePopup is not null)
