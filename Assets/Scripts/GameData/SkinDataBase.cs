@@ -92,6 +92,20 @@ namespace DefaultNamespace.GameData
             };
         }
         
+        public static string BackPath(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "UI/Game/Back",
+                SkinType.PungoDark => "UI/Game/Back_PungoDark",
+                SkinType.Monochrome => "UI/Game/Back_Monochrome",
+                SkinType.Desert => "UI/Game/Back_Desert",
+                SkinType.PungoLight => "UI/Game/Back_PungoLight",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
         public static string LevelIndicatorPath(SkinType? st=null)
         {
             var st2 = st ??= GetSkinType();
