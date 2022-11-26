@@ -57,15 +57,8 @@ namespace DefaultNamespace
            
            Serializer.Apply<SerialHexOutData>(sgd =>
            {
-               if (Application.isEditor)
-               {
-                   
-                   GameDataBase.SetSkinType(skinType);
-               }
-               else
-               {
-                   GameDataBase.GetSkinType();
-               }
+               
+               GameDataBase.GetSkinType();
                var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
                ActivateLevel(f.data);
                levelIndex = f.index;
