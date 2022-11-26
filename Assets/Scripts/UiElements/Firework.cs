@@ -1,5 +1,6 @@
 ﻿
 using System;
+using DefaultNamespace.Punity;
 using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,35 +18,41 @@ namespace DefaultNamespace
 
         public Firework(Vector2 origin, Vector2 explosionTarget, UnityEngine.Color colour)
         {
-            _origin = origin;
-            _explosionTarget = explosionTarget;
+            var width = 60f;
+            var height = 24f;
+            
+            _origin = origin - new Vector2(width*0.5f,height*0.5f);
+            _explosionTarget = explosionTarget- new Vector2(width*0.5f,height*0.5f);
             _colour = colour;
+            this.StretchToParentSize();
 
             
 
             var d = explosionTarget - origin;
-            var a = (float)Math.Atan2(d.x,d.y)*2f*3.141f;
-            
             _bullet = new VisualElement()
             {
                 style=
                 {
-                    width = 60f,
-                    height = 24f,
-                    rotate = new StyleRotate(new Rotate(a)),
+                    width = width,
+                    height = height,
+                    rotate = new StyleRotate(new Rotate(d.Angle())),
+                    
                     backgroundImage = QuickAccess.LoadSpriteBg("UI/Capsule"),
                     unityBackgroundImageTintColor = new StyleColor(_colour),
+                    unityBackgroundScaleMode = ScaleMode.StretchToFill
                     
                 }
             };
+            Add(_bullet);
             
         }
 
         public void Fly(float alpha)
         {
             var p = _explosionTarget * alpha + _origin * (1f - alpha);
-            _bullet.style.top = p.x;
-            _bullet.style.left = p.y;
+            Debug.Log(p);
+            _bullet.style.left = p.x;
+            _bullet.style.top = p.y;
         }
 
         public void Explode(float alpha)

@@ -17,6 +17,7 @@ namespace DefaultNamespace
         public Action<LevelCompleteData> LevelDoneAction = (LevelCompleteData lcd) => {};
         public Action<int,int> CapsuleRemovedAction;
         public Action<string> PopUpTextAction;
+        public Action HomeButtonAction;
         
 
         private HexGridScript _grid;
@@ -410,6 +411,11 @@ namespace DefaultNamespace
         {
             AddTweenAction(new Tween(sec, startAction, exitAction, duringAction, repeat, callDuringWithStartFunction),
                 delay);
+        }
+
+        private void HomeButtonFunction()
+        {
+            HomeButtonAction();
         }
         
         public static GameLevelScript Instantiate()

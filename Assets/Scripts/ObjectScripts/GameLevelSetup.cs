@@ -54,6 +54,7 @@ namespace DefaultNamespace
             var uiFieldX = (Constants.UiWidth - uiFieldWidth) / 2f;
             var uiFieldY = (Constants.UiHeight - uiFieldHeight) / 2f- centreY;
             FieldFrame = new GameFieldFrame(uiFieldX, uiFieldY, uiFieldWidth, uiFieldHeight);
+            FieldFrame.HomeButtonAction = HomeButtonFunction;
 
         }
 

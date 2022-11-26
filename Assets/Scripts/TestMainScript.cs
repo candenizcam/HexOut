@@ -88,7 +88,7 @@ namespace DefaultNamespace
                     },exitAction: () =>
                     {
                         UIDocument.rootVisualElement.Remove(le);
-                    });
+                    },delay:.1f);
                     UIDocument.rootVisualElement.Add(le);
                     
                 }
@@ -102,11 +102,6 @@ namespace DefaultNamespace
             });
            
 
-            /*
-            
-            */
-            
-            
             
 
             MainCamera.backgroundColor = GameDataBase.BackgroundColour();

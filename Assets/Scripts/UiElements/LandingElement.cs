@@ -105,6 +105,7 @@ namespace DefaultNamespace
             _capsuleVisual.style.left = (Constants.UiWidth - 264f) * 0.5f + 2000f * thatThingThatStartsFromZeroAndGoesToOne1;
             _swipeTitle.style.left = (Constants.UiWidth-956f) * 0.5f + 2000f * thatThingThatStartsFromZeroAndGoesToOne3;
             _swipeText.style.left = (Constants.UiWidth-834f) * 0.5f + 2000f * thatThingThatStartsFromZeroAndGoesToOne5;
+            style.opacity = 1f-thatThingThatStartsFromZeroAndGoesToOne6;
 
             //_capsuleVisual.style.opacity = 1f - alpha;
         }

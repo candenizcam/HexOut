@@ -42,6 +42,18 @@ namespace DefaultNamespace
                     _activeLevel.FieldFrame.TutorialTextAnimation(alpha);
                 });
             }
+
+            _activeLevel.HomeButtonAction = () =>
+            {
+                var n = new HomeMenuElement();
+                
+                
+                UIDocument.rootVisualElement.Add(n);
+                
+                
+                
+
+            };
             _activeLevel.SetCapsules(d.CapsuleDatas);
             _activeLevel.AddTweenAction = (tween, delay) =>
             {
