@@ -68,6 +68,9 @@ namespace DefaultNamespace
                 {
                     width = 264f,
                     height = 90f,
+                    position = Position.Absolute,
+                    top = 1064f,
+                    left = (Constants.UiWidth-264f)*0.5f,
                     backgroundImage = new StyleBackground(QuickAccess.LoadSprite(GameDataBase.LandingCapsule()))
                 }
             };
