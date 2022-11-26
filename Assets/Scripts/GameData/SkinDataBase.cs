@@ -332,6 +332,22 @@ namespace DefaultNamespace.GameData
             };
         }
 
+        public static string SkinSelectorFaceFromState(int i, SkinType? st = null)
+        {
+            if (i == 0)
+            {
+                return SkinSelectorFacePath(st);
+            }else if (i==1)
+            {
+                return SkinSelectorSelectedFacePath(st);
+            }
+            else
+            {
+                return SkinSelectorOffFacePath(st);
+            }
+            
+        }
+
 
         /** Only works up to the limits of capsule colours
          * if this game ever reaches a point where we change visuals, good for u chum

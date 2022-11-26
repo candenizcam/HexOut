@@ -259,7 +259,7 @@ MonoBehaviour:
   testCapsuleNumber: 3
   testObstacleNumber: 8
   testDoubleObstacleNumber: 8
-  resetSaves: 1
+  resetSaves: 0
   levelIndex: 6
   levelId: 
   levelDiff: 0

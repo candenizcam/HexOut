@@ -15,7 +15,7 @@ namespace DefaultNamespace
         public Action RightButtonAction;
         public Action<SkinType> SkinButtonAction;
         public Action ExitButtonAction;
-        private  List<ButtonClickable> _pickButtonList = new List<ButtonClickable>();
+        private  List<SkinPickerElement> _pickerList = new List<SkinPickerElement>();
         private Action _reSkin = ()=>{};
         
         
@@ -116,7 +116,30 @@ namespace DefaultNamespace
 
             };
 
+
+            var singleWidth = (uiFrameWidth - 32f) / 2f;
+            for (var i = 0; i < 4; i++)
+            {
+                var n = new SkinPickerElement(i, singleWidth, 468f);
+                _pickerList.Add(n);
+                _reSkin += () =>
+                {
+                    n.ReSkin();
+                };
+                frame.Add(n);
+            }
+
+
+
             
+            var activeIndex = allSkins.IndexOf(activeSkin);
+            var pickableFours = activeIndex/4;
+            
+            ChangePickableSkins(pickableFours,activeSkins,activeSkin);
+
+
+
+            /*
 
             var activeIndex = allSkins.IndexOf(activeSkin);
 
@@ -129,34 +152,8 @@ namespace DefaultNamespace
                 if(s+i>=allSkins.Count) break;
                 var thisSkin = allSkins[s + i];
 
-                var n = new VisualElement()
-                {
-                    style=
-                    {
-                        width = singleWidth,
-                        height = 468f,
-                        position = Position.Absolute,
-                        
-                    }
-                };
 
-                if (i / 2 == 0)
-                {
-                    n.style.top = 0f;
-                }
-                else
-                {
-                    n.style.bottom = 0f;
-                }
                 
-                if (i % 2 == 0)
-                {
-                    n.style.left = 0f;
-                }
-                else
-                {
-                    n.style.right = 0f;
-                }
                 
 
 
@@ -236,10 +233,31 @@ namespace DefaultNamespace
 
                 frame.Add(n);
             }
-            
+            */
             Add(frame);
 
         }
+
+
+        private void ChangePickableSkins(int pickableFours, SkinType[] enabledSkins, SkinType activeSkin)
+        {
+            var allSkins = Enum.GetValues(typeof(SkinType)).Cast<SkinType>().ToList();
+            
+            
+            for (var i = 0; i < 4; i++)
+            {
+                var ind = pickableFours * 4 + i;
+                if(ind>=allSkins.Count) break;
+                var thisSkin = allSkins[i];
+                var state = thisSkin == activeSkin ? 0 : enabledSkins.Contains(thisSkin) ? 1 : 2;
+                _pickerList[i].SetFace(allSkins[i],state);
+                _pickerList[i].SkinPickerAction = (st) =>
+                {
+                    SkinButtonFunction(thisSkin);
+                };
+            }
+        }
+        
 
         public void ReSkin()
         {
