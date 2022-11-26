@@ -88,9 +88,9 @@ namespace DefaultNamespace
             });
            
 
-            //var le = new LandingElement();
-            //le.StretchToParentSize();
-            //UIDocument.rootVisualElement.Add(le);
+            var le = new LandingElement();
+            le.StretchToParentSize();
+            UIDocument.rootVisualElement.Add(le);
 
             MainCamera.backgroundColor = GameDataBase.BackgroundColour();
         }
