@@ -1,6 +1,7 @@
 ﻿using System;
 using DefaultNamespace.GameData;
 using Punity;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -45,6 +46,7 @@ namespace DefaultNamespace
 
             _activeLevel.HomeButtonAction = () =>
             {
+                Debug.Log("home button pressed");
                 var n = new HomeMenuElement();
                 
                 

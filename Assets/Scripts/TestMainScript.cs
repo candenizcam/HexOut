@@ -88,7 +88,7 @@ namespace DefaultNamespace
                     },exitAction: () =>
                     {
                         UIDocument.rootVisualElement.Remove(le);
-                    },delay:.1f);
+                    },delay:.5f);
                     UIDocument.rootVisualElement.Add(le);
                     
                 }
@@ -105,6 +105,10 @@ namespace DefaultNamespace
             
 
             MainCamera.backgroundColor = GameDataBase.BackgroundColour();
+            
+            
+            
+            Firework(0f);
         }
 
         
@@ -233,50 +237,53 @@ namespace DefaultNamespace
                 
             }
 
-            Debug.Log("this is happening");
-            
-            for (int i = 0; i < 10; i++)
-            {
-                
-                var c = new Vector2(Constants.UiWidth*0.5f,Constants.UiHeight*0.5f);
-                var dx = (float)Math.Sin(i / 10f * 1.047f+1.047f)*500f;
-                var dy = (float)Math.Cos(i / 10f * 1.047f+1.047f)*500f;
-                
-                var f = new Firework(c,new Vector2(c.x+dx,c.y+dy),Color.blue);
-                Debug.Log($"this is happening {i}");
-                UIDocument.rootVisualElement.Add(f);
-                TweenHolder.NewTween(2f, duringAction: alpha =>
-                {
-                    f.Fly(alpha);
-
-                }, 
-                    exitAction: () =>
-                {
-                    UIDocument.rootVisualElement.Remove(f);
-                    
-                    TweenHolder.NewTween(1f, duringAction: alpha2 =>
-                        {
-                            f.Explode(alpha2);
-                        }, 
-                        exitAction: () =>
-                        {
-                            
-                        }
-                    );
-                        
-                },delay:3f);
-        
-            }
-
-         
             UIDocument.rootVisualElement.Add(betweenLevels);
+            
+
+            Firework(3f);
+         
+            
             
             
             
         }
 
 
+        private void Firework(float initDelay)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                
+                var c = new Vector2(Constants.UiWidth*0.5f,Constants.UiHeight*0.5f);
+                var dy = (float)Math.Sin(i / 10f * 1.047f+1.047f)*500f;
+                var dx = (float)Math.Cos(i / 10f * 1.047f+1.047f)*500f;
+                
+                var f = new Firework(c,new Vector2(c.x+dx,c.y+dy),Color.blue);
+                Debug.Log($"this is happening {i}");
+                UIDocument.rootVisualElement.Add(f);
+                TweenHolder.NewTween(2f, duringAction: alpha =>
+                    {
+                        f.Fly(alpha);
+
+                    }, 
+                    exitAction: () =>
+                    {
+                        UIDocument.rootVisualElement.Remove(f);
+                    
+                        TweenHolder.NewTween(1f, duringAction: alpha2 =>
+                            {
+                                f.Explode(alpha2);
+                            }, 
+                            exitAction: () =>
+                            {
+                            
+                            }
+                        );
+                        
+                    },delay:initDelay);
         
+            }
+        }
         
         
         
