@@ -127,5 +127,7 @@ namespace DefaultNamespace
                 capsuleScript.transform.localScale = new Vector3(capsuleSize, capsuleSize, 1f);
             }
         }
+
+        
     }
 }

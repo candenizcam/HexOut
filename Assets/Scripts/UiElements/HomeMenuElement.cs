@@ -1,4 +1,5 @@
-﻿using Classes;
+﻿using System;
+using Classes;
 using DefaultNamespace.GameData;
 using Punity.ui;
 using Unity.VisualScripting;
@@ -9,6 +10,10 @@ namespace DefaultNamespace
 {
     public class HomeMenuElement: VisualElement
     {
+        public Action BackAction;
+        public Action ReplayAction;
+        public Action SkipAction;
+        
         public HomeMenuElement()
         {
             this.StretchToParentSize();
@@ -35,7 +40,7 @@ namespace DefaultNamespace
                     width = 110f,
                     height = 95f,
                     position = Position.Absolute,
-                    bottom = 381f,
+                    bottom = 254f,
                     left = 79f
                 }
             };
@@ -47,7 +52,7 @@ namespace DefaultNamespace
                     width = 110f,
                     height = 95f,
                     position = Position.Absolute,
-                    bottom = 254f,
+                    bottom = 381f,
                     left = 79f
                 }
             };
@@ -114,17 +119,17 @@ namespace DefaultNamespace
 
         private void BackFunction()
         {
-            
+            BackAction();
         }
         
         private void ReplayFunction()
         {
-            
+            ReplayAction();
         }
         
         private void SkipFunction()
         {
-            
+            SkipAction();
         }
         
     }

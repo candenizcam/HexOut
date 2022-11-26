@@ -18,6 +18,7 @@ namespace DefaultNamespace
         private VisualElement _hudElement;
         private Label _tutorialElement;
         private VisualElement _tutorialBg;
+        private ButtonClickable _homeButton;
        
         
         
@@ -124,7 +125,7 @@ namespace DefaultNamespace
             
 
 
-            var homeButton = new ButtonClickable(GameDataBase.HomeButtonPath(),Color.gray,HomeButtonFunction)
+            _homeButton = new ButtonClickable(GameDataBase.HomeButtonPath(),Color.gray,HomeButtonFunction)
             {
                 style =
                 {
@@ -137,7 +138,7 @@ namespace DefaultNamespace
                 }
             };
             
-            _hudElement.Add(homeButton);
+            _hudElement.Add(_homeButton);
 
             _progressBar = new ProgressBar(GameDataBase.LevelProgressBarBGPath(),
                 GameDataBase.LevelProgressBarPath(), 900f, 100f, 14f, 10f)
@@ -244,6 +245,11 @@ namespace DefaultNamespace
             n.StretchToParentWidth();
             Add(n);
             return (n,top);
+        }
+        
+        public void DisableHome(bool b)
+        {
+            _homeButton.Disable(b,Color.clear);
         }
 
     }

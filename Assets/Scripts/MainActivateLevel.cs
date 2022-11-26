@@ -46,14 +46,43 @@ namespace DefaultNamespace
 
             _activeLevel.HomeButtonAction = () =>
             {
-                Debug.Log("home button pressed");
                 var n = new HomeMenuElement();
-                
-                
+                n.BackAction = () =>
+                {
+                    UIDocument.rootVisualElement.Remove(n);
+                    _activeLevel.FieldFrame.DisableHome(false);
+                };
+                n.ReplayAction = () =>
+                {
+                    UIDocument.rootVisualElement.Remove(_activeLevel.FieldFrame);
+                    Destroy(_activeLevel.gameObject);
+                    UIDocument.rootVisualElement.Remove(n);
+                    ActivateLevel(_activeLevel.ThisLevelData);
+                    
+                };
+                n.SkipAction = () =>
+                {
+                    UIDocument.rootVisualElement.Remove(n);
+                    UIDocument.rootVisualElement.Remove(_activeLevel.FieldFrame);
+                    Destroy(_activeLevel.gameObject);
+                    Serializer.Apply<SerialHexOutData>(sgd =>
+                    {
+                        var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
+                        ActivateLevel(f.data);
+                        levelIndex = f.index;
+                        levelId = f.data.Name;
+                        levelDiff = f.data.LevelDifficulty;
+                    });
+                    
+                };
+
+
                 UIDocument.rootVisualElement.Add(n);
+                _activeLevel.FieldFrame.DisableHome(true);
+
+
                 
-                
-                
+
 
             };
             _activeLevel.SetCapsules(d.CapsuleDatas);
