@@ -37,7 +37,7 @@ namespace DefaultNamespace.GameData
             {
                 new ObstacleData(3,4,0,2),
             },1),
-            new LevelData("Tutorial3",5,7,new CapsuleData[]
+            new LevelData("Tutorial4",5,7,new CapsuleData[]
             {
                 new CapsuleData(4,2,2,0,false)
             },new ObstacleData[]
