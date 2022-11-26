@@ -12,7 +12,7 @@ namespace DefaultNamespace
         {
             this.StretchToParentSize();
             // kod buraya
-            var back = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,BackFunction)
+            var back = new ButtonClickable(imagePath:GameDataBase.BackPath(),Color.gray,BackFunction)
             {
                 style =
                 {
@@ -24,7 +24,7 @@ namespace DefaultNamespace
                 }
             };
             
-            var replay = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,ReplayFunction)
+            var replay = new ButtonClickable(imagePath:GameDataBase.ReplayPath(),Color.gray,ReplayFunction)
             {
                 style =
                 {
@@ -36,7 +36,7 @@ namespace DefaultNamespace
                 }
             };
             
-            var skip = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,SkipFunction)
+            var skip = new ButtonClickable(imagePath:GameDataBase.SkipPath(),Color.gray,SkipFunction)
             {
                 style =
                 {
