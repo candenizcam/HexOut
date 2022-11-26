@@ -251,12 +251,13 @@ namespace DefaultNamespace
 
         private void Firework(float initDelay)
         {
-            for (int i = 0; i < 10; i++)
+            var fireworkNo = 10;
+            for (int i = 0; i < fireworkNo; i++)
             {
                 
                 var c = new Vector2(Constants.UiWidth*0.5f,Constants.UiHeight*0.5f);
-                var dy = (float)Math.Sin(i / 10f * 1.047f+1.047f)*500f;
-                var dx = (float)Math.Cos(i / 10f * 1.047f+1.047f)*500f;
+                var dy = (float)Math.Sin(i/ ((float)fireworkNo)*3.141f)*500f;
+                var dx = (float)Math.Cos(i/ ((float)fireworkNo)*3.141f)*500f;
                 
                 var f = new Firework(c,new Vector2(c.x+dx,c.y+dy),Color.blue);
                 Debug.Log($"this is happening {i}");

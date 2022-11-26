@@ -51,7 +51,7 @@ namespace DefaultNamespace
         {
             var p = _explosionTarget * alpha + _origin * (1f - alpha);
             _bullet.style.left = p.x;
-            _bullet.style.top = p.y;
+            _bullet.style.bottom = p.y;
         }
 
         public void Explode(float alpha)
