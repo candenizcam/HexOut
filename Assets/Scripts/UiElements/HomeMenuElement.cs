@@ -85,13 +85,30 @@ namespace DefaultNamespace
                     
                 }
             };
+            
+            var returnText = new Label("Return")
+            {
+                style =
+                {
+                    width = 221f,
+                    height = 89f,
+                    position = Position.Absolute,
+                    bottom = 117f,
+                    left = 221f,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 64f,
+                    unityTextAlign = TextAnchor.MiddleLeft,
+                    color = GameDataBase.TextColour()
+                    
+                }
+            };
 
             Add(back);
             Add(skip);
             Add(skipText);
             Add(replay);
             Add(replayText);
-            
+            Add(returnText);
         }
         
 
