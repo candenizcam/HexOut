@@ -14,17 +14,17 @@ namespace DefaultNamespace
             style.backgroundColor = GameDataBase.BackgroundColour();
             
             // bu bi yazı
-            var aText = new Label("SUCCESS!")
+            var swipeTitle = new Label("Swipe the capsules!")
             {
                 style =
                 {
                     // ebat
-                    width = 1000f,
+                    width = 956f,
                     height = 134,
                     // pozisyon bilgisi
                     position = Position.Absolute,
-                    top = 500f,
-                    left = (Constants.UiWidth-1000f)*0.5f,
+                    top = 1200f,
+                    left = (Constants.UiWidth-956f)*0.5f,
                     //yazı bilgisi
                     unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
                     fontSize = 96f,
@@ -36,22 +36,44 @@ namespace DefaultNamespace
             };
             
             
-            Add(aText);
+            Add(swipeTitle);
             
-            
-            var aVisual = new VisualElement
+            var swipeText = new Label("Clear the area by sending \n capsules away from the screen. \n Beware of the obstacles!")
             {
                 style =
                 {
-                    width = 1000f,
-                    height = 624f,
-                    backgroundImage = new StyleBackground(QuickAccess.LoadSprite(GameDataBase.ProgressBGPath()))
+                    // ebat
+                    width = 834f,
+                    height = 209,
+                    // pozisyon bilgisi
+                    position = Position.Absolute,
+                    top = 1333f,
+                    left = (Constants.UiWidth-834f)*0.5f,
+                    //yazı bilgisi
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
+                    fontSize = 48f,
+                    unityTextAlign = TextAnchor.MiddleCenter,
+                    //color yazı, backgroundColor bg rengi, its dumb, i blame css
+                    color = GameDataBase.TextColour()
+                    
                 }
             };
             
-            Add(aVisual);
-
+            Add(swipeText);
             
+            
+            var aCapsule = new VisualElement
+            {
+                style =
+                {
+                    width = 264f,
+                    height = 90f,
+                    backgroundImage = new StyleBackground(QuickAccess.LoadSprite(GameDataBase.LandingCapsule()))
+                }
+            };
+            
+            Add(aCapsule);
+
 
         }
         

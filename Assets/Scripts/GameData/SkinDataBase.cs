@@ -333,6 +333,22 @@ namespace DefaultNamespace.GameData
             };
         }
         */
+        
+        //Landing
+        public static string LandingCapsule(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "UI/Landing/Capsule",
+                SkinType.PungoDark => "UI/Landing/Capsule_PungoDark",
+                SkinType.Monochrome => "UI/Landing/Capsule_Monochrome",
+                SkinType.Desert => "UI/Landing/Capsule_Desert",
+                SkinType.PungoLight => "UI/Landing/Capsule_PungoDark",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
 
         public static string SkinSelectorFaceFromState(int i, SkinType? st = null)
         {
