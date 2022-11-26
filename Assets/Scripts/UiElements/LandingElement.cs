@@ -10,6 +10,8 @@ namespace DefaultNamespace
     public class LandingElement: VisualElement
     {
         private VisualElement _capsuleVisual;
+        private Label _swipeTitle;
+        private Label _swipeText;
         
         
         
@@ -19,7 +21,7 @@ namespace DefaultNamespace
             style.backgroundColor = GameDataBase.BackgroundColour();
             
             // bu bi yazı
-            var swipeTitle = new Label("Swipe the capsules!")
+            _swipeTitle = new Label("Swipe the capsules!")
             {
                 style =
                 {
@@ -41,9 +43,9 @@ namespace DefaultNamespace
             };
             
             
-            Add(swipeTitle);
+            Add(_swipeTitle);
             
-            var swipeText = new Label("Clear the area by sending \n capsules away from the screen. \n Beware of the obstacles!")
+            _swipeText = new Label("Clear the area by sending \n capsules away from the screen. \n Beware of the obstacles!")
             {
                 style =
                 {
@@ -64,7 +66,7 @@ namespace DefaultNamespace
                 }
             };
             
-            Add(swipeText);
+            Add(_swipeText);
             
             
             _capsuleVisual = new VisualElement
@@ -91,16 +93,18 @@ namespace DefaultNamespace
          */
         public void Animator(float thatThingThatStartsFromZeroAndGoesToOne)
         {
-            var phaseNo = 5f;
+            var phaseNo = 6f;
             var thatThingThatStartsFromZeroAndGoesToOne1 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo, 0f, 1f);
             var thatThingThatStartsFromZeroAndGoesToOne2 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-1f, 0f, 1f);
             var thatThingThatStartsFromZeroAndGoesToOne3 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-2f, 0f, 1f);
             var thatThingThatStartsFromZeroAndGoesToOne4 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-3f, 0f, 1f);
             var thatThingThatStartsFromZeroAndGoesToOne5 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-4f, 0f, 1f);
+            var thatThingThatStartsFromZeroAndGoesToOne6 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-5f, 0f, 1f);
             
             
-            
-            _capsuleVisual.style.left = (Constants.UiWidth - 264f) * 0.5f + 500f * thatThingThatStartsFromZeroAndGoesToOne3;
+            _capsuleVisual.style.left = (Constants.UiWidth - 264f) * 0.5f + 2000f * thatThingThatStartsFromZeroAndGoesToOne1;
+            _swipeTitle.style.left = (Constants.UiWidth-956f) * 0.5f + 2000f * thatThingThatStartsFromZeroAndGoesToOne3;
+            _swipeText.style.left = (Constants.UiWidth-834f) * 0.5f + 2000f * thatThingThatStartsFromZeroAndGoesToOne5;
 
             //_capsuleVisual.style.opacity = 1f - alpha;
         }
