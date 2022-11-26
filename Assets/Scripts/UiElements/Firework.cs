@@ -50,7 +50,6 @@ namespace DefaultNamespace
         public void Fly(float alpha)
         {
             var p = _explosionTarget * alpha + _origin * (1f - alpha);
-            Debug.Log(p);
             _bullet.style.left = p.x;
             _bullet.style.top = p.y;
         }
