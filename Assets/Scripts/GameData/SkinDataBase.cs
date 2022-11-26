@@ -148,7 +148,7 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string Replay(SkinType? st=null)
+        public static string ReplayPath(SkinType? st=null)
         {
             var st2 = st ??= GetSkinType();
             return st2 switch
@@ -162,7 +162,7 @@ namespace DefaultNamespace.GameData
             };
         }
         
-        public static string Skip(SkinType? st=null)
+        public static string SkipPath(SkinType? st=null)
         {
             var st2 = st ??= GetSkinType();
             return st2 switch
