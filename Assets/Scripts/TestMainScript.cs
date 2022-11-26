@@ -61,7 +61,7 @@ namespace DefaultNamespace
                     sgd.activeSkins = Enum.GetValues(typeof(SkinType)).Cast<SkinType>().ToList();
                 });
             }
-            
+
             
            
             Serializer.Apply<SerialHexOutData>(sgd =>
@@ -88,9 +88,11 @@ namespace DefaultNamespace
             });
            
 
-           
+            var le = new LandingElement();
+            le.StretchToParentSize();
+            UIDocument.rootVisualElement.Add(le);
 
-           MainCamera.backgroundColor = GameDataBase.BackgroundColour();
+            MainCamera.backgroundColor = GameDataBase.BackgroundColour();
         }
 
         
