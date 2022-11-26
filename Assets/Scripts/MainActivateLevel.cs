@@ -31,7 +31,17 @@ namespace DefaultNamespace
             //var d = LevelGenerator.GenerateRawFrame(seed,2);
             _activeLevel.SetGameLevelInfo(d);
             _activeLevel.SetGrid(MainCamera,d.Row,d.Col, d.ObstacleDatas);
-            _activeLevel.FieldFrame.SetTutorial(tutorialLevel);
+            
+            
+            
+            _activeLevel.FieldFrame.SetTutorial(tutorialLevel,GameDataBase.TutorialText(d.Name));
+            if (tutorialLevel)
+            {
+                TweenHolder.NewTween(2f, duringAction: (alpha) =>
+                {
+                    _activeLevel.FieldFrame.TutorialTextAnimation(alpha);
+                });
+            }
             _activeLevel.SetCapsules(d.CapsuleDatas);
             _activeLevel.AddTweenAction = (tween, delay) =>
             {

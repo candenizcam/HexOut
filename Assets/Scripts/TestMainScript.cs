@@ -78,6 +78,19 @@ namespace DefaultNamespace
                     levelIndex = f.index;
                     levelId = f.data.Name;
                     levelDiff = f.data.LevelDifficulty;
+                    
+                    var le = new LandingElement();
+                    le.StretchToParentSize();
+                    TweenHolder.NewTween(5f, duringAction: (alpha) =>
+                    {
+                        thatAlpha = alpha;
+                        le.Animator(alpha);
+                    },exitAction: () =>
+                    {
+                        UIDocument.rootVisualElement.Remove(le);
+                    });
+                    UIDocument.rootVisualElement.Add(le);
+                    
                 }
                 else
                 {
@@ -89,16 +102,11 @@ namespace DefaultNamespace
             });
            
 
-            var le = new LandingElement();
-            le.StretchToParentSize();
-            //le.Animator(0.2f);
-            TweenHolder.NewTween(5f, duringAction: (alpha) =>
-            {
-                thatAlpha = alpha;
-                le.Animator(alpha);
-            });
+            /*
             
-            UIDocument.rootVisualElement.Add(le);
+            */
+            
+            
             
 
             MainCamera.backgroundColor = GameDataBase.BackgroundColour();
