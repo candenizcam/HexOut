@@ -108,6 +108,16 @@ namespace DefaultNamespace
                 }
             };
 
+            
+
+
+            var screenButton = new ButtonClickable();
+            screenButton.StretchToParentSize();
+            screenButton.ClickAction = BackFunction;
+            Add(screenButton);
+            
+            
+            
             Add(back);
             Add(skip);
             Add(skipText);
