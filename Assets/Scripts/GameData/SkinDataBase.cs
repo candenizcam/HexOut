@@ -316,6 +316,37 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+        
+        // bura da seçiliyle değişicek
+        public static string SkinSelectorSelectedFacePath(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "gamefield/Hex",
+                SkinType.PungoDark => "gamefield/Hex_PungoDark",
+                SkinType.Monochrome => "gamefield/Hex_Monochrome",
+                SkinType.Desert => "gamefield/Hex_Desert",
+                SkinType.PungoLight => "gamefield/Hex_PungoLight",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+
+        public static string SkinSelectorFaceFromState(int i, SkinType? st = null)
+        {
+            if (i == 0)
+            {
+                return SkinSelectorFacePath(st);
+            }else if (i==1)
+            {
+                return SkinSelectorSelectedFacePath(st);
+            }
+            else
+            {
+                return SkinSelectorOffFacePath(st);
+            }
+            
+        }
 
 
         /** Only works up to the limits of capsule colours
@@ -419,10 +450,11 @@ namespace DefaultNamespace.GameData
                 SkinType.PungoDark =>  new Color(196f/255f, 177f/255f, 209f/255f),
                 SkinType.Monochrome =>  new Color(29f/255f, 45f/255f, 37f/255f),
                 SkinType.Desert => new Color(37f/255f, 35f/255f, 54f/255f),
-                SkinType.PungoLight =>  new Color(178f/255f, 164f/255f, 194f/255f),
+                SkinType.PungoLight =>  new Color(78f/255f, 49f/255f, 119f/255f),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+        //78, 49, 119
         
         public static Color TextColour(SkinType? st=null)
         {

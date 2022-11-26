@@ -259,7 +259,8 @@ MonoBehaviour:
   testCapsuleNumber: 3
   testObstacleNumber: 8
   testDoubleObstacleNumber: 8
-  resetSaves: 1
+  resetSaves: 0
+  unlockAllSkins: 1
   levelIndex: 6
   levelId: 
   levelDiff: 0

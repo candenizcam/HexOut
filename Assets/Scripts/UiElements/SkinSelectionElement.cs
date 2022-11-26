@@ -11,16 +11,18 @@ namespace DefaultNamespace
 {
     public class SkinSelectionElement: VisualElement
     {
-        public Action LeftButtonAction;
-        public Action RightButtonAction;
+        public Action<int> LeftButtonAction;
+        public Action<int> RightButtonAction;
         public Action<SkinType> SkinButtonAction;
         public Action ExitButtonAction;
-
+        private  List<SkinPickerElement> _pickerList = new List<SkinPickerElement>();
         private Action _reSkin = ()=>{};
+        private int _activeFour = 0;
         
         
         
-        public SkinSelectionElement(SkinType[] activeSkins, SkinType activeSkin)
+        
+        public SkinSelectionElement(List<SkinType> activeSkins, SkinType activeSkin)
         {
             this.StretchToParentSize();
             var allSkins = Enum.GetValues(typeof(SkinType)).Cast<SkinType>().ToList();
@@ -116,129 +118,56 @@ namespace DefaultNamespace
 
             };
 
-            
-
-            var activeIndex = allSkins.IndexOf(activeSkin);
-
 
             var singleWidth = (uiFrameWidth - 32f) / 2f;
-            var l = new List<ButtonClickable>();
-            var s = activeIndex - (activeIndex % 4);
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
-                if(s+i>=allSkins.Count) break;
-                var thisSkin = allSkins[s + i];
-
-                var n = new VisualElement()
-                {
-                    style=
-                    {
-                        width = singleWidth,
-                        height = 468f,
-                        position = Position.Absolute,
-                        
-                    }
-                };
-
-                if (i / 2 == 0)
-                {
-                    n.style.top = 0f;
-                }
-                else
-                {
-                    n.style.bottom = 0f;
-                }
-                
-                if (i % 2 == 0)
-                {
-                    n.style.left = 0f;
-                }
-                else
-                {
-                    n.style.right = 0f;
-                }
-                
-
-
-                var pickButton = new ButtonClickable(GameDataBase.SkinSelectorFacePath(thisSkin),Color.gray, () =>
-                    {
-                        SkinButtonFunction(thisSkin);
-                        
-                    }) // change here to actual skin path
-                {
-                    style =
-                    {
-                        width = 440f,
-                        height = 380f,
-                        position = Position.Absolute,
-                        top = 0f,
-                        left = 0f,
-                        
-                    }
-                };
-                pickButton.ClickAction += () =>
-                {
-                    pickButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f,0.6f,0.55f));
-                };
-                l.Add(pickButton);
-
-                // warning, following is placeholder
-                if (thisSkin == activeSkin)
-                {
-                    // active
-                    pickButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f,0.6f,0.55f));
-                }else if (!activeSkins.Contains(thisSkin))
-                {
-                    // locked
-                    pickButton.ChangeImage(GameDataBase.SkinSelectorOffFacePath(thisSkin));
-                    pickButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.05f,0.1f,0.05f));
-                    pickButton.Disable(true);
-                }
-                else
-                {
-                    
-                }
-
-
-                var pickText = new Label
-                {
-                    style =
-                    {
-                        unityFontDefinition = QuickAccess.LoadFont("fonts/BaslikFontu"),
-                        fontSize = 48f,
-                        unityTextAlign = TextAnchor.MiddleCenter,
-                        color = GameDataBase.TextColour(),
-                        height = 60f,
-                        bottom = 0f,
-                        left = 0f,
-                        position = Position.Absolute
-                    },
-                    text = GameDataBase.SkinName(thisSkin)
-                };
-                
+                var n = new SkinPickerElement(i, singleWidth, 468f);
+                _pickerList.Add(n);
                 _reSkin += () =>
                 {
-                    pickText.style.color = GameDataBase.TextColour();
-                    foreach (var buttonClickable in l)
-                    {
-                        if (!buttonClickable.DisableButton)
-                        {
-                            buttonClickable.style.unityBackgroundImageTintColor = Color.white;
-                        }
-                    }
+                    n.ReSkin();
                 };
-                
-                pickText.StretchToParentWidth();
-                n.Add(pickButton);
-                n.Add(pickText);
-
-
                 frame.Add(n);
             }
+
+
+
             
+            var activeIndex = allSkins.IndexOf(activeSkin);
+            var pickableFours = activeIndex/4;
+            
+            ChangePickableSkins(pickableFours,activeSkins,activeSkin);
+
+
             Add(frame);
 
         }
+
+
+        public void ChangePickableSkins(int pickableFours, List<SkinType> enabledSkins, SkinType activeSkin)
+        {
+            var allSkins = Enum.GetValues(typeof(SkinType)).Cast<SkinType>().ToList();
+            _activeFour = pickableFours;
+            for (var i = 0; i < 4; i++)
+            {
+                var ind = pickableFours * 4 + i;
+                if (ind >= allSkins.Count)
+                {
+                    _pickerList[i].Clear();
+                    continue;
+                }
+
+                var thisSkin = allSkins[ind];
+                var state = thisSkin == activeSkin ? 0 : enabledSkins.Contains(thisSkin) ? 1 : 2;
+                _pickerList[i].SetFace(thisSkin,state);
+                _pickerList[i].SkinPickerAction = (st) =>
+                {
+                    SkinButtonFunction(thisSkin);
+                };
+            }
+        }
+        
 
         public void ReSkin()
         {
@@ -258,12 +187,12 @@ namespace DefaultNamespace
 
         private void LeftButtonFunction()
         {
-            LeftButtonAction();
+            LeftButtonAction(_activeFour);
         }
 
         public void RightButtonFunction()
         {
-            RightButtonAction();
+            RightButtonAction(_activeFour);
         }
     }
 }
