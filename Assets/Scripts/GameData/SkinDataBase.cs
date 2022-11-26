@@ -450,10 +450,11 @@ namespace DefaultNamespace.GameData
                 SkinType.PungoDark =>  new Color(196f/255f, 177f/255f, 209f/255f),
                 SkinType.Monochrome =>  new Color(29f/255f, 45f/255f, 37f/255f),
                 SkinType.Desert => new Color(37f/255f, 35f/255f, 54f/255f),
-                SkinType.PungoLight =>  new Color(178f/255f, 164f/255f, 194f/255f),
+                SkinType.PungoLight =>  new Color(78f/255f, 49f/255f, 119f/255f),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+        //78, 49, 119
         
         public static Color TextColour(SkinType? st=null)
         {
