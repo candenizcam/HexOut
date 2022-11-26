@@ -1,4 +1,5 @@
-﻿using DefaultNamespace.GameData;
+﻿using System;
+using DefaultNamespace.GameData;
 using Punity.ui;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -90,8 +91,16 @@ namespace DefaultNamespace
          */
         public void Animator(float thatThingThatStartsFromZeroAndGoesToOne)
         {
-
-            _capsuleVisual.style.left = (Constants.UiWidth - 264f) * 0.5f + 500f * thatThingThatStartsFromZeroAndGoesToOne;
+            var phaseNo = 5f;
+            var thatThingThatStartsFromZeroAndGoesToOne1 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo, 0f, 1f);
+            var thatThingThatStartsFromZeroAndGoesToOne2 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-1f, 0f, 1f);
+            var thatThingThatStartsFromZeroAndGoesToOne3 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-2f, 0f, 1f);
+            var thatThingThatStartsFromZeroAndGoesToOne4 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-3f, 0f, 1f);
+            var thatThingThatStartsFromZeroAndGoesToOne5 = Math.Clamp(thatThingThatStartsFromZeroAndGoesToOne * phaseNo-4f, 0f, 1f);
+            
+            
+            
+            _capsuleVisual.style.left = (Constants.UiWidth - 264f) * 0.5f + 500f * thatThingThatStartsFromZeroAndGoesToOne3;
 
             //_capsuleVisual.style.opacity = 1f - alpha;
         }
