@@ -317,6 +317,7 @@ namespace DefaultNamespace.GameData
             };
         }
         
+        /*
         // bura da seçiliyle değişicek
         public static string SkinSelectorSelectedFacePath(SkinType? st=null)
         {
@@ -331,15 +332,16 @@ namespace DefaultNamespace.GameData
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
+        */
 
         public static string SkinSelectorFaceFromState(int i, SkinType? st = null)
         {
-            if (i == 0)
+            if (i == 1)
             {
                 return SkinSelectorFacePath(st);
-            }else if (i==1)
+            }else if (i==0)
             {
-                return SkinSelectorSelectedFacePath(st);
+                return SkinSelectorFacePath(st);
             }
             else
             {

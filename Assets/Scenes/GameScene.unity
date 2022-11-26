@@ -260,7 +260,7 @@ MonoBehaviour:
   testObstacleNumber: 8
   testDoubleObstacleNumber: 8
   resetSaves: 0
-  unlockAllSkins: 1
+  unlockAllSkins: 0
   levelIndex: 6
   levelId: 
   levelDiff: 0

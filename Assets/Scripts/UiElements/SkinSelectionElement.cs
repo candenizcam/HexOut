@@ -159,11 +159,17 @@ namespace DefaultNamespace
                 }
 
                 var thisSkin = allSkins[ind];
-                var state = thisSkin == activeSkin ? 0 : enabledSkins.Contains(thisSkin) ? 1 : 2;
+                var state = thisSkin == activeSkin ? 1 : enabledSkins.Contains(thisSkin) ? 0 : 2;
+                
                 _pickerList[i].SetFace(thisSkin,state);
                 _pickerList[i].SkinPickerAction = (st) =>
                 {
                     SkinButtonFunction(thisSkin);
+                    foreach (var skinPickerElement in _pickerList)
+                    {
+                        skinPickerElement.SetPicked(st);
+                        
+                    }
                 };
             }
         }
