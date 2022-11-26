@@ -10,6 +10,7 @@ namespace DefaultNamespace
     {
         public HomeMenuElement()
         {
+            this.StretchToParentSize();
             // kod buraya
             var back = new ButtonClickable(imagePath:GameDataBase.SkinsPath(),Color.gray,BackFunction)
             {
