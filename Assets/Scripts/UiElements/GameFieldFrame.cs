@@ -13,8 +13,11 @@ namespace DefaultNamespace
         private ProgressBar _progressBar;
         private float _top;
         private float _width;
+        private float _height;
         private HudIndicator _hudIndicator;
         private VisualElement _hudElement;
+        private Label _tutorialElement;
+        private VisualElement _tutorialBg;
        
         
         
@@ -22,6 +25,7 @@ namespace DefaultNamespace
         {
             _top = top;
             _width = width;
+            _height = height;
             this.StretchToParentSize();
             style.flexDirection = FlexDirection.Column;
             style.justifyContent = Justify.Center;
@@ -152,11 +156,56 @@ namespace DefaultNamespace
 
             _hudIndicator = new HudIndicator();
             _hudElement.Add(_hudIndicator);
+
+            _tutorialBg = new VisualElement();
+            _tutorialBg.StretchToParentSize();
+            _tutorialBg.style.backgroundColor = new StyleColor(GameDataBase.BackgroundColour());
+            Add(_tutorialBg);
+            
+            _tutorialElement = new Label("TutorialText")
+            {
+                style=
+                {
+                    width = 960f,
+                    height = 200f,
+                    position = Position.Absolute,
+                    top = Constants.UiHeight*0.5f-100f,
+                    left = (Constants.UiWidth-960f)*0.5f,
+                    unityFontDefinition = QuickAccess.LoadFont("fonts/DuzYazıFontu"),
+                    fontSize = 76f,
+                    unityTextAlign = TextAnchor.UpperCenter,
+                    color = GameDataBase.TextColour(),
+                    whiteSpace = WhiteSpace.Normal
+                }
+            };
+            Add(_tutorialElement);
+            
+            
+            
+
+
         }
 
-        public void SetTutorial(bool isTutorial)
+        public void SetTutorial(bool isTutorial, string tutorialText = "")
         {
             _hudElement.visible = !isTutorial;
+            _tutorialElement.visible = isTutorial;
+            _tutorialElement.text = tutorialText;
+            _tutorialBg.visible = isTutorial;
+        }
+
+        public void TutorialTextAnimation(float alpha)
+        {
+            var phaseNo = 3f;
+            var alpha1 = Math.Clamp(alpha * phaseNo, 0f, 1f);
+            var alpha2 = Math.Clamp(alpha * 2f-.5f, 0f, 1f);
+            var alpha3 = Math.Clamp(alpha * phaseNo-2f, 0f, 1f);
+            
+            
+            _tutorialElement.style.top =
+                (1f - alpha2) * Constants.UiHeight * 0.5f - 100f + (_top + _height + 150f) * alpha2;
+            
+            _tutorialBg.style.opacity = 1f-alpha3;
         }
 
         public void SetBar(float f)

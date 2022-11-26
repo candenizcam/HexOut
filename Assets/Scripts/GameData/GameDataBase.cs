@@ -21,36 +21,60 @@ namespace DefaultNamespace.GameData
             //new LevelSeedData("test level", 7, 5, 5, 40205, 3, 8, 8, LevelSeedData.SeedType.FrameLevel, 1)
             new LevelData("Tutorial1",5,5,new CapsuleData[]
             {
-                new CapsuleData(3,2,2,1,false)
+                new (3,2,2,1,false)
             },new ObstacleData[]{},1),
-            new LevelData("Tutorial2",5,7,new CapsuleData[]
+            new LevelData("Tutorial2",5,5,new CapsuleData[]
             {
-                new CapsuleData(3,2,2,1,false)
+                new (3,2,2,1,false)
             },new ObstacleData[]
             {
-                new ObstacleData(3,4,1,1)
+                new (3,4,1,1)
             },1),
-            new LevelData("Tutorial3",5,7,new CapsuleData[]
+            new LevelData("Tutorial3",5,5,new CapsuleData[]
             {
-                new CapsuleData(3,2,2,1,false)
+                new (3,2,2,1,false)
             },new ObstacleData[]
             {
-                new ObstacleData(3,4,0,2),
+                new (3,4,0,2),
             },1),
-            new LevelData("Tutorial4",5,7,new CapsuleData[]
+            new LevelData("Tutorial4",5,5,new CapsuleData[]
             {
-                new CapsuleData(4,2,2,0,false)
+                new (4,2,2,0,false)
             },new ObstacleData[]
             {
-                new ObstacleData(1,4,3,2),
+                new (1,4,3,2),
             },1),
-            new LevelData("Tutorial5",5,7,new CapsuleData[]
+            new LevelData("Tutorial5",5,5,new CapsuleData[]
             {
-                new CapsuleData(3,2,2,1,false),
-                new CapsuleData(3,4,2,2,false)
+                new (3,2,2,1,false),
+                new (3,4,2,2,false)
             },new ObstacleData[]{},1),
 
         };
+
+        public static string TutorialText(string id)
+        {
+            if (id == "Tutorial1")
+            {
+                return "Swipe the capsule to send it out.";
+            }else if (id == "Tutorial2")
+            {
+                return "Obstacles stop the capsules.";
+            }else if (id == "Tutorial3")
+            {
+                return "Reflectors bounce the capsules and change their direction.";
+            }else if (id == "Tutorial4")
+            {
+                return "Short sides of reflectors stop capsules.";
+            }else if (id == "Tutorial5")
+            {
+                return "Other capsules block the movement.";
+            }
+            else
+            {
+                return "";
+            }
+        }
         
         public static List<LevelSeedData> LevelSeedDatas = new()
         {
