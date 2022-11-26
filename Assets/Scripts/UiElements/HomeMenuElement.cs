@@ -1,6 +1,7 @@
 ﻿using Classes;
 using DefaultNamespace.GameData;
 using Punity.ui;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,9 @@ namespace DefaultNamespace
         public HomeMenuElement()
         {
             this.StretchToParentSize();
+            style.backgroundColor = new StyleColor(GameDataBase.BackgroundColour().WithAlpha(.5f));
+            
+            
             // kod buraya
             var back = new ButtonClickable(imagePath:GameDataBase.BackPath(),Color.gray,BackFunction)
             {

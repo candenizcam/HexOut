@@ -107,8 +107,6 @@ namespace DefaultNamespace
             MainCamera.backgroundColor = GameDataBase.BackgroundColour();
             
             
-            
-            Firework(0f);
         }
 
         
@@ -226,6 +224,7 @@ namespace DefaultNamespace
                 {
                     betweenLevels.LevelUpAnimation(alpha);
                 });
+                Firework(1.6f);
             }
             else
             {
@@ -236,11 +235,12 @@ namespace DefaultNamespace
                 });
                 
             }
-
-            UIDocument.rootVisualElement.Add(betweenLevels);
             
 
-            Firework(3f);
+            
+            Firework(.6f);
+            UIDocument.rootVisualElement.Add(betweenLevels);
+            
          
             
             
@@ -252,36 +252,43 @@ namespace DefaultNamespace
         private void Firework(float initDelay)
         {
             var fireworkNo = 10;
-            for (int i = 0; i < fireworkNo; i++)
+            var r = new Random();
+            var baseRadius = Constants.UiHeight * 0.3f;
+            
+            for (int i = 0; i <= fireworkNo; i++)
             {
                 
                 var c = new Vector2(Constants.UiWidth*0.5f,Constants.UiHeight*0.5f);
-                var dy = (float)Math.Sin(i/ ((float)fireworkNo)*3.141f)*500f;
-                var dx = (float)Math.Cos(i/ ((float)fireworkNo)*3.141f)*500f;
+                var radius = baseRadius + r.Next(-50, 150);
+                var dy = -1f*(float)Math.Sin((float)i/ ((float)fireworkNo)*1.047f+1.047f)*radius;
+                var dx = (float)Math.Cos((float)i/ ((float)fireworkNo)*1.047f+1.047f)*radius;
                 
                 var f = new Firework(c,new Vector2(c.x+dx,c.y+dy),Color.blue);
-                Debug.Log($"this is happening {i}");
+                f.visible = false;
+                
                 UIDocument.rootVisualElement.Add(f);
-                TweenHolder.NewTween(2f, duringAction: alpha =>
+                TweenHolder.NewTween(1f, duringAction: alpha =>
                     {
-                        f.Fly(alpha);
+                        f.visible = true;
+                        f.Fly(AnimationFunctions.EaseOut(alpha));
 
                     }, 
                     exitAction: () =>
                     {
-                        UIDocument.rootVisualElement.Remove(f);
+                        
                     
-                        TweenHolder.NewTween(1f, duringAction: alpha2 =>
+                        TweenHolder.NewTween(.6f, duringAction: alpha2 =>
                             {
                                 f.Explode(alpha2);
                             }, 
                             exitAction: () =>
                             {
+                                UIDocument.rootVisualElement.Remove(f);
                             
                             }
                         );
                         
-                    },delay:initDelay);
+                    },delay:initDelay+(float)r.NextDouble()*0.5f);
         
             }
         }

@@ -132,7 +132,7 @@ namespace DefaultNamespace
                     left = 100f,
                     bottom = 100f,
                     width = 140f,
-                    height = 140f,
+                    height = 120f,
                     //backgroundImage = QuickAccess.LoadSpriteBg("UI/Game/HomeButton")
                 }
             };
