@@ -254,8 +254,8 @@ namespace DefaultNamespace
             stuffBar.Add(_progressBg);
             //Debug.Log($"{_oldFill}, {_newFill}");
             
-            _leftButton.Disable(!_newSkinButtonActive);
-            _rightButton.Disable(!_otherButtonActive);
+            _leftButton.Disable(!_newSkinButtonActive,Color.gray);
+            _rightButton.Disable(!_otherButtonActive,Color.gray);
             _leftButton.style.opacity = 0f;
             _leftButton.style.bottom = 0f;
             _rightButton.style.opacity = 0f;
@@ -312,6 +312,9 @@ namespace DefaultNamespace
             }
             
             
+            
+            
+            
 
             _leftBlock.style.left = _leftTextLeft * alpha5 + (1000f - 440f) * 0.5f * (1f - alpha5);
 
@@ -351,7 +354,6 @@ namespace DefaultNamespace
             {
                 _leftButton.style.opacity = alpha4;
                 _leftButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
-                
             }
 
             
@@ -360,6 +362,9 @@ namespace DefaultNamespace
                 _rightButton.style.opacity = alpha4;
                 _rightButton.style.bottom = (1f - alpha4) * 100f+_sideButtonBottom;
             }
+            
+
+            
             
             
             

@@ -12,7 +12,7 @@ using Random = System.Random;
 
 namespace DefaultNamespace
 {
-    public class TestMainScript : MainScript
+    public partial class TestMainScript : MainScript
     {
 
         
@@ -66,14 +66,25 @@ namespace DefaultNamespace
            
             Serializer.Apply<SerialHexOutData>(sgd =>
             {
-               
-               GameDataBase.GetSkinType();
-               var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
-               ActivateLevel(f.data);
-               levelIndex = f.index;
-               levelId = f.data.Name;
-               levelDiff = f.data.LevelDifficulty;
-               
+                GameDataBase.GetSkinType();
+
+                var d = GameDataBase.FirstLevelData(sgd.playedLevels);
+
+                if (d is null)
+                {
+                    var f = XPSystem.DrawGameLevelFromNo(sgd.playerLevel,sgd.playedLevels);
+                    ActivateLevel(f.data); 
+                    levelIndex = f.index;
+                    levelId = f.data.Name;
+                    levelDiff = f.data.LevelDifficulty;
+                }
+                else
+                {
+                    var ld = (LevelData) d;
+                    ActivateLevel(ld,true);
+                }
+                
+                
             });
            
 
@@ -194,15 +205,11 @@ namespace DefaultNamespace
 
                 UIDocument.rootVisualElement.Remove(betweenLevels);
                 var sgdn = Serializer.Load<SerialHexOutData>();
-                var se = new SkinSelectionElement(sgdn.activeSkins,sgdn.activeSkin)
-                {
-                    
-                };
+                var se = new SkinSelectionElement(sgdn.activeSkins,sgdn.activeSkin);
 
 
                 se.LeftButtonAction = (activeFour) =>
                 {
-                    Debug.Log($"left {activeFour}");
                     Serializer.Apply<SerialHexOutData>(sgd =>
                     {
                         if (activeFour <= 0) return;
@@ -214,9 +221,7 @@ namespace DefaultNamespace
                     
                     Serializer.Apply<SerialHexOutData>(sgd =>
                     {
-                        Debug.Log($"right {activeFour}");
                         if (activeFour >= 5/4) return;
-                        Debug.Log($"right2 {activeFour}");
                         se.ChangePickableSkins(activeFour+1,sgd.activeSkins,sgd.activeSkin);
                     });
                 };
@@ -279,15 +284,23 @@ namespace DefaultNamespace
         }
 
 
+        private void ActivateLevel(LevelSeedData seed)
+        {
+            var d = LevelGenerator.GenerateSeededLevel(seed);
+            d.Name = seed.Name;
+            ActivateLevel(d);
+        }
+
+
+
+        
 
         /** This one starts from a seed and generates the relevant level
          * seed contains all the relevant data, including row & col
          * grid is initiated here too
          */
-        private void ActivateLevel(LevelSeedData seed)
+        private void ActivateLevel(LevelData d, bool tutorialLevel=false)
         {
-            var d = LevelGenerator.GenerateSeededLevel(seed);
-            d.Name = seed.Name;
             _activeLevel = GameLevelScript.Instantiate();
             
             //var d = LevelGenerator.GenerateRawFrame(seed,2);
@@ -298,28 +311,9 @@ namespace DefaultNamespace
             {
                 TweenHolder.NewTween(tween, delay);
             };
-            _activeLevel.PopUpTextAction = s =>
-            {
-                if (_activePopup is not null)
-                {
-                    
-                    TweenHolder.RemoveTween(_activePopup);
-                    _activePopup.ExitAction();
-                }
-                var n = _activeLevel.FieldFrame.TextPopup(s);
-                n.ve.style.opacity = 0f;
-                _activePopup = TweenHolder.NewTween(.6f,duringAction: (alpha) =>
-                {
-                    var a = Math.Clamp(alpha * 3f, 0f, 1f);
-                    n.ve.style.opacity = a;
-                    n.ve.style.top = n.top - a * 50f;
-                },exitAction: () =>
-                {
-                    _activeLevel.FieldFrame.Remove(n.ve);
-                    _activePopup = null;
-                });
-
-            };
+            
+            _activeLevel.PopUpTextAction = PopupTextFunction;
+            
 
             TweenHolder.NewTween(0.5f,duringAction: (alpha) =>
             {
@@ -331,69 +325,19 @@ namespace DefaultNamespace
             }, delay:.4f);
             _activeLevel.LevelDoneAction = (lcd) =>
             {
-                Serializer.Apply<SerialHexOutData>( sgd =>
+                TweenHolder.RemoveTween(_activePopup);
+                _activePopup.ExitAction();
+                if (tutorialLevel)
                 {
-                    ActivateBetweenLevels(sgd,lcd);
-                });
-                
-                
-                UIDocument.rootVisualElement.Remove(_activeLevel.FieldFrame);
-                Destroy(_activeLevel.gameObject);
-
+                    TutorialLevelDoneFunction(lcd.LevelId);
+                }
+                else
+                {
+                    GameLevelDoneFunction(lcd);
+                }
             };
-            _activeLevel.CapsuleRemovedAction = (oldXP, newXP) =>
-            {
-                Serializer.Apply<SerialHexOutData>( sgd =>
-                {
-                    var playerLevel = sgd.playerLevel;
-                    var oldN = XPSystem.AddXP(playerLevel, sgd.playerXp, oldXP);
-                    var newN = XPSystem.AddXP(playerLevel, sgd.playerXp, newXP+oldXP);
-                    
-                    var oldLevel = oldN.newLevel;
-                    var oldXPForBar =(float) oldN.newXp;
-                    
-                    var levelXP = (float)XPSystem.LevelXp(playerLevel);
-                    var levelUp = newN.newLevel > playerLevel; // if it ever increases in level, change here
-                    var levelUpWasTheCase = oldLevel > playerLevel; // if it ever increases in level, change here
-                    if (levelUpWasTheCase)
-                    {
-                        _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{newN.newLevel}",levelUp:true);
-                    }
-                    else
-                    {
-                        TweenHolder.NewTween(0.15f,duringAction: (alpha) =>
-                        {
-                            if (levelUp)
-                            {
-                                _activeLevel.FieldFrame.SetBar(oldXPForBar*(1f-alpha)/levelXP + alpha );
-                            
-                            }
-                            else
-                            {
-                                _activeLevel.FieldFrame.SetBar((oldXPForBar*(1f-alpha) + (float)alpha*newN.newXp)/levelXP );
-                            }
-                        
-                        },exitAction: () =>
-                        {
-                            _activeLevel.FieldFrame.SetIndicatorText(bigText:$"{newN.newLevel}",levelUp:levelUp);
-                        });
-                    }
-                });
-
-                /*
-                var n = _activeLevel.FieldFrame.TextPopup("boing");
-                n.ve.style.opacity = 0f;
-                TweenHolder.NewTween(.6f,duringAction: (alpha) =>
-                {
-                    var a = Math.Clamp(alpha * 3f, 0f, 1f);
-                    n.ve.style.opacity = a;
-                    n.ve.style.top = n.top - a * 50f;
-                },exitAction: () =>
-                {
-                    _activeLevel.FieldFrame.Remove(n.ve);
-                });
-                */
-            };
+            
+            _activeLevel.CapsuleRemovedAction = CapsuleRemovedFunction;
             UIDocument.rootVisualElement.Add(_activeLevel.FieldFrame);
             Serializer.Apply<SerialHexOutData>(sgd =>
                 {
