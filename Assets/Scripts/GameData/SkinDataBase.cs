@@ -134,6 +134,34 @@ namespace DefaultNamespace.GameData
             };
         }
         
+        public static string Replay(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "UI/Game/Replay",
+                SkinType.PungoDark => "UI/Game/Replay_PungoDark",
+                SkinType.Monochrome => "UI/Game/Replay_Monochrome",
+                SkinType.Desert => "UI/Game/Replay_Desert",
+                SkinType.PungoLight => "UI/Game/Replay_PungoLight",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
+        public static string Skip(SkinType? st=null)
+        {
+            var st2 = st ??= GetSkinType();
+            return st2 switch
+            {
+                SkinType.Simple => "UI/Game/Skip",
+                SkinType.PungoDark => "UI/Game/Skip_PungoDark",
+                SkinType.Monochrome => "UI/Game/Skip_Monochrome",
+                SkinType.Desert => "UI/Game/Skip_Desert",
+                SkinType.PungoLight => "UI/Game/Skip_PungoLight",
+                _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
+            };
+        }
+        
         //BetweenLevels
         public static string BarPath(SkinType? st=null)
         {
