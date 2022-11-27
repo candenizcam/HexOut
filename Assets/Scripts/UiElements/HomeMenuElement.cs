@@ -17,7 +17,7 @@ namespace DefaultNamespace
         public HomeMenuElement()
         {
             this.StretchToParentSize();
-            style.backgroundColor = new StyleColor(GameDataBase.BackgroundColour().WithAlpha(.5f));
+            style.backgroundColor = new StyleColor(GameDataBase.BackgroundColour(alpha:.5f));
             
             
             // kod buraya

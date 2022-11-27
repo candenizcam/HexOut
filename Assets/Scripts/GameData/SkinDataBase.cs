@@ -531,16 +531,16 @@ namespace DefaultNamespace.GameData
         }
         
         
-        public static Color BackgroundColour(SkinType? st=null)
+        public static Color BackgroundColour(SkinType? st=null, float alpha = 1f)
         {
             var st2 = st ??= GetSkinType();
             return st2 switch
             {
-                SkinType.Simple =>  new Color(217f/255f, 221f/255f, 232f/255f),
-                SkinType.PungoDark =>  new Color(50f/255f, 24f/255f, 69f/255f),
-                SkinType.Monochrome =>  new Color(213f/255f, 247f/255f, 234f/255f),
-                SkinType.Desert => new Color(209f/255f, 190f/255f, 174f/255f),
-                SkinType.PungoLight =>  new Color(178f/255f, 164f/255f, 194f/255f),
+                SkinType.Simple =>  new Color(217f/255f, 221f/255f, 232f/255f,alpha),
+                SkinType.PungoDark =>  new Color(50f/255f, 24f/255f, 69f/255f,alpha),
+                SkinType.Monochrome =>  new Color(213f/255f, 247f/255f, 234f/255f,alpha),
+                SkinType.Desert => new Color(209f/255f, 190f/255f, 174f/255f,alpha),
+                SkinType.PungoLight =>  new Color(178f/255f, 164f/255f, 194f/255f,alpha),
                 _ => throw new ArgumentOutOfRangeException(nameof(st), st, null)
             };
         }
